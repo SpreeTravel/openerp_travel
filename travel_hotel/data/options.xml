@@ -1,0 +1,18 @@
+<?xml version="1.0" ?>
+<openerp>
+	<data>
+		
+		<!-- Plans -->
+		<record id="option_type_meal_plan" model="option.type">
+			<field name="code">mp</field>
+			<field name="name">Meal Plan</field>
+		</record>
+		
+		<!-- Rooms -->
+		<record id="option_type_room_type" model="option.type">
+			<field name="code">rt</field>
+			<field name="name">Room</field>
+		</record>
+
+	</data>
+</openerp>

@@ -1,0 +1,16 @@
+<?xml version="1.0" ?>
+<openerp>
+
+	<data>
+		
+		<record id="item1" model="product.pricelist.item">
+            <field name="price_version_id" ref="product.ver0"/>
+            <field name="base" eval="-2" />
+            <field name="price_discount" eval="0.15" />
+            <field name="sequence">4</field>
+            <field name="name">Default (Cost + Profit) Pricelist Line</field>
+        </record>
+				
+	</data>
+
+</openerp>

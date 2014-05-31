@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+    
+    	<record id="travel_data_form" model="ir.ui.view">
+            <field name="name">travel.data.form</field>
+            <field name="model">travel.data</field>
+            <field name="arch" type="xml">
+                <form string="Import" version="7.0"> 
+				     <group>
+				        <field name="category_id" />	
+						<field name="file" />
+						<field name="sheet" />
+				     </group>
+					 <group>
+					 	<field name="result" colspan="4"/>
+					 </group>
+					 <footer>
+                        <button name="import_file" string="Import" type="object" class="oe_highlight"/>
+                        or
+                        <button string="Cancel" class="oe_link" special="cancel"/>
+                     </footer>
+                </form>
+            </field>
+        </record>
+        
+        <record id="travel_data_action" model="ir.actions.act_window">
+            <field name="name">Import Products</field>
+            <field name="res_model">travel.data</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>            
+            <field name="view_id" ref="travel_data_form"/>
+            <field name="target">new</field> 
+        </record>
+		
+        <menuitem id="travel_data_menu" sequence="100" parent="base.menu_product" action="travel_data_action" />
+
+    </data>
+</openerp>

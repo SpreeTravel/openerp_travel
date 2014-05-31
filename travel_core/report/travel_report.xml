@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+        <report auto="False" id="report_travel_order" model="sale.order" name="travel.order"
+                rml="travel_core/report/travel_order.rml" string="Travel Order"
+                usage="default"/>
+
+    </data>
+</openerp>

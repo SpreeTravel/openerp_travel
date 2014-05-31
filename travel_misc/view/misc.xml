@@ -1,0 +1,192 @@
+<?xml version="1.0"?>
+<openerp>
+    <data>
+        
+        <record id="travel_product_misc_search_view" model="ir.ui.view">
+            <field name="name">travel.product.misc.search.view</field>
+            <field name="model">product.misc</field>
+            <field name="arch" type="xml">
+                <search string="Product">
+                    <field name="name" string="Product" filter_domain="[('name','ilike',self)]"/>
+                    <group expand='0' string='Group by...'>
+                        <filter string='Origin' icon="terp-stock_symbol-selection" domain="[]" context="{'group_by' : 'origin'}"/>
+                        <filter string='To' icon="terp-mrp" domain="[]" context="{'group_by' : 'to'}"/>
+                        <filter string='Company' icon="terp-go-home" domain="[]" context="{'group_by' : 'company_id'}" groups="base.group_multi_company"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+        
+        <record id="travel_product_misc_tree_view" model="ir.ui.view">
+            <field name="name">travel.product.misc.tree.view</field>
+            <field name="model">product.misc</field>
+            <field eval="7" name="priority"/>
+            <field name="arch" type="xml">
+                <tree string="Products">
+                    <field name="misc_name"/>
+                    <field name="categ_id" invisible="1"/>
+                    <field name="type" invisible="1"/>
+                    <field name="lst_price" invisible="1"/>
+                    <field name="price" invisible="not context.get('pricelist',False)"/>
+                    <field name="standard_price" invisible="1"/>
+                    <field name="company_id" groups="base.group_multi_company" invisible="1"/>
+                </tree>
+            </field>
+        </record>
+        
+        <record id="travel_product_misc_form_view" model="ir.ui.view">
+            <field name="name">travel_product_misc_form_view</field>
+            <field name="model">product.misc</field>
+            <field eval="7" name="priority"/>
+            <field name="arch" type="xml">
+                <form string="Product" version="7.0">
+                    <sheet>
+                        <field name="image_medium" widget="image" class="oe_avatar oe_left"/>
+                        <div class="oe_title">
+                            <div class="oe_edit_only">
+                                <label for="name" string="Product Name"/>
+                            </div>
+                            <h1>
+                                <field name="name"/>
+                            </h1>
+                            <label for="categ_id" class="oe_edit_only"/>
+                            <h2>
+                                <field name="categ_id" options='{"no_open": True}'/> <!-- readonly="context.get('category', False)" -->
+                            </h2>
+                        </div>
+                        <group>
+                            <field name="active"/>
+                        </group>
+                        <notebook>
+                            <page string="Information">
+                                <group>
+                                    <group>
+                                        <field name="type" invisible="1"/>
+                                        <field name="list_price"/>
+                                    </group>
+                                    <group>
+                                        <field groups="product.group_product_variant" name="variants"/>
+                                        <field name="price_margin" groups="product.group_product_variant"/>
+                                        <field name="price_extra" groups="product.group_product_variant"/>
+                                    </group>
+                                </group>
+                                <field name="description" placeholder="describe the product characteristics..."/>
+                            </page>
+                            <page string="Procurements" groups="base.group_user">
+                                <group name="procurement">
+                                    <group name="general">
+                                        <field name="cost_method" groups="product.group_costing_method"/>
+                                        <field name="standard_price" attrs="{'readonly':[('cost_method','=','average')]}"/>
+                                    </group>
+                                    <group name="procurement_uom" groups="product.group_uom" string="Purchase">
+                                        <field name="uom_po_id"/>
+                                    </group>
+                                </group>
+                                <separator string="Suppliers"/>
+                                <field name="seller_ids">
+                                    <tree>
+                                        <field name="name"/>
+                                        <field name="sequence"/>
+                                        <field name="min_qty"/>
+                                    </tree>
+                                    <form string="Supplier Information" version="7.0">
+                                        <group col="4">
+                                            <field name="name" context="{'default_customer': 0, 'search_default_supplier': 1, 'default_supplier': 1}"/>
+                                            <field name="sequence"/>
+                                            <field name="min_qty"/>
+                                        </group>
+                                        <p groups="product.group_purchase_pricelist" class="oe_grey">
+                                            The prices below will only be taken into account when your pricelist is set as based on supplier prices.
+                                        </p>
+                                        <field name="pricelist_ids">
+                                            <tree string="Pricelist" editable="bottom">
+                                                <field name="start_date"/>
+                                                <field name="end_date"/>
+                                                <field name="price" string="Adults"/>
+                                                <field name="child"/>
+                                                <field name="min_quantity" invisible="1"/>
+                                            </tree>
+                                        </field>
+                                    </form>
+                                </field>
+                                <separator string="Description for Suppliers"/>
+                                <field name="description_purchase" placeholder="This note will be displayed on requests for quotation..."/>
+                            </page>
+                            <page string="Reservations">
+                                <field name="reservation_ids">
+                                    <tree string="Reservations">
+                                        <field name="customer_id"/>
+                                        <field name="reservation_number"/>
+                                        <field name="start_date"/>
+                                        <field name="end_date"/>
+                                        <field name="supplier_id"/>
+                                        <field name="state" invisible="1"/>
+                                        <button name="to_confirm" type="object" string="Confirm" states="draft,cancel" icon="gtk-apply"/>
+                                        <button name="to_cancel" type="object" string="Cancel" states="confirmed" icon="gtk-cancel"/>
+                                        <button name="to_send" type="object" string="Send Email" states="draft" icon="gtk-index"/>
+                                    </tree>
+                                </field>
+                            </page>
+                        </notebook>
+                        <div class="oe_right oe_button_box" name="buttons">
+                        </div>
+                    </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids" widget="mail_followers"/>
+                        <field name="message_ids" widget="mail_thread"/>
+                    </div>
+                </form>
+            </field>
+        </record>
+        
+        <record id="travel_product_misc_action" model="ir.actions.act_window">
+            <field name="name">Miscellaneous</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">product.misc</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="travel_product_misc_tree_view"/>
+            <field name="search_view_id" ref="travel_product_misc_search_view"/>
+            <field name="context">{'category': 'misc'}</field>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">
+                    Click to define a new product.
+                </p>
+            </field>
+        </record>
+        
+        <menuitem action="travel_product_misc_action" id="travel_product_misc_menu" parent="base.menu_product" sequence="51"/>
+		
+		<record id="travel_product_category_change_form_view" model="ir.ui.view">
+            <field name="name">travel.product.category.change.view</field>
+            <field name="model">product.category.change</field>
+            <field name="arch" type="xml">
+                <form string="Change Category" version="7.0">
+                    <field name="category_id"/>
+					<footer>
+						<button string="Change Category" name="convert" type="object" class="oe_highlight"/>
+						or
+						<button string="Cancel" class="oe_link" special="cancel"/>
+					</footer>
+                </form>
+            </field>
+        </record>
+		
+		<act_window id="change_product_category_wizard_action"
+            name="Change Category"
+            src_model="product.misc"
+            res_model="product.category.change"
+            view_type="form" view_mode="form"
+            key2="client_action_multi" target="new"/>
+		
+		<record id="travel_product_categroy_change_action" model="ir.actions.act_window">
+            <field name="name">Change Category</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">product.category.change</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+			<field name="target">new</field>
+        </record>
+
+    </data>
+</openerp>

@@ -1,0 +1,47 @@
+<?xml version="1.0" ?>
+<openerp>
+	<data>
+		
+		<!-- Transfers -->
+		<record id="option_type_vehicle_type" model="option.type">
+			<field name="code">vt</field>
+			<field name="name">Vehicle Type</field>
+		</record>
+		<record id="vehicle_type_taxi" model="option.value">
+			<field name="option_type_id" ref="option_type_vehicle_type"/>
+			<field name="code">taxi</field>
+			<field name="name">Taxi</field>
+		</record>
+		<record id="vehicle_type_micro" model="option.value">
+			<field name="option_type_id" ref="option_type_vehicle_type"/>
+			<field name="code">micro</field>
+			<field name="name">Microbus</field>
+		</record>
+		<record id="vehicle_type_mini" model="option.value">
+			<field name="option_type_id" ref="option_type_vehicle_type"/>
+			<field name="code">mini</field>
+			<field name="name">Minibus</field>
+		</record>
+		<record id="vehicle_type_omni" model="option.value">
+			<field name="option_type_id" ref="option_type_vehicle_type"/>
+			<field name="code">omni</field>
+			<field name="name">Omnibus</field>
+		</record>
+
+		<record id="option_type_vehicle_confort" model="option.type">
+			<field name="code">vc</field>
+			<field name="name">Vehicle Confort</field>
+		</record>
+		<record id="vehicle_confort_standard" model="option.value">
+			<field name="option_type_id" ref="option_type_vehicle_confort"/>
+			<field name="code">vcs</field>
+			<field name="name">Standard</field>
+		</record>
+		<record id="vehicle_confort_luxury" model="option.value">
+			<field name="option_type_id" ref="option_type_vehicle_confort"/>
+			<field name="code">vcl</field>
+			<field name="name">Luxury</field>
+		</record>
+
+	</data>
+</openerp>

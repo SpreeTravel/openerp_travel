@@ -1,0 +1,28 @@
+<?xml version="1.0"?>
+<openerp>
+	<data>
+        
+        <record id="travel_sale_report_activity_search_view" model="ir.ui.view">
+            <field name="name">travel.sale.report.activity.search.view</field>
+            <field name="model">sale.report</field>
+            <field name="inherit_id" ref="travel_core.travel_sale_report_search_view" />
+            <field name="arch" type="xml">
+				<separator name="products" position="after">
+					<filter icon="terp-check" string="Activity" domain="[('categ_id.name','=','activity')]"/>
+				</separator>
+            </field>
+        </record>
+		
+		<record id="travel_sale_order_line_activity_search_view" model="ir.ui.view">
+            <field name="name">travel.sale.order.line.activity.search.view</field>
+            <field name="model">sale.order.line</field>
+            <field name="inherit_id" ref="travel_core.travel_sale_order_line_search_view" />
+            <field name="arch" type="xml">
+				<separator name="products" position="after">
+					<filter icon="terp-check" string="Activity" domain="[('category_id.name','=','Activity')]"/>
+				</separator>
+            </field>
+        </record>
+		
+	</data>
+</openerp>

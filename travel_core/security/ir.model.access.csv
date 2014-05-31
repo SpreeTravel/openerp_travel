@@ -1,0 +1,7 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_destination_sale_manager,destination.sale.manager,model_destination,base.group_sale_manager,1,1,1,1
+access_destination_distance_sale_manager,destination.distance.sale.manager,model_destination_distance,base.group_sale_manager,1,1,1,1
+access_option_type_sale_manager,option.type.sale.manager,model_option_type,base.group_sale_manager,1,1,1,1
+access_option_value_sale_manager,option.value.sale.manager,model_option_value,base.group_sale_manager,1,1,1,1
+access_product_rate_sale_manager,product.rate.sale.manager,model_product_rate,base.group_sale_manager,1,1,1,1
+access_sale_context_sale_manager,sale.context.sale.manager,model_sale_context,base.group_sale_manager,1,1,1,1

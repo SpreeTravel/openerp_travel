@@ -1,0 +1,11 @@
+<?xml version="1.0" ?>
+<openerp>
+	<data>
+
+		<record id="option_type_supplement" model="option.type">
+			<field name="code">sup</field>
+			<field name="name">Supplement</field>
+		</record>
+
+	</data>
+</openerp>

@@ -1,0 +1,25 @@
+<?xml version="1.0" ?>
+<openerp>
+	<data>
+
+		<record id="option_type_transmission" model="option.type">
+			<field name="code">tm</field>
+			<field name="name">Transmission</field>
+		</record>
+		<record id="transmission_automatic" model="option.value">
+			<field name="option_type_id" ref="option_type_transmission"/>
+			<field name="code">automatic</field>
+			<field name="name">Automatic</field>
+		</record>
+		<record id="transmission_mechanic" model="option.value">
+			<field name="option_type_id" ref="option_type_transmission"/>
+			<field name="code">mechanic</field>
+			<field name="name">Mechanic</field>
+		</record>
+		<record id="option_type_model" model="option.type">
+			<field name="code">md</field>
+			<field name="name">Model</field>
+		</record>
+
+	</data>
+</openerp>

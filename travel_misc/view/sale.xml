@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<openerp>
+	<data>
+        
+        <record id="travel_sale_report_flight_search_view" model="ir.ui.view">
+            <field name="name">travel.sale.report.flight.search.view</field>
+            <field name="model">sale.report</field>
+            <field name="inherit_id" ref="travel_core.travel_sale_report_search_view" />
+            <field name="arch" type="xml">
+				<separator name="products" position="after">
+					<filter icon="terp-check" string="Flight" domain="[('categ_id.name','=','Flight')]"/>
+				</separator>
+            </field>
+        </record>
+		
+	</data>
+</openerp>

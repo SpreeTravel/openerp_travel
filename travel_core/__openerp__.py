@@ -31,7 +31,7 @@ Base module for managing sales, prices and accounting in a Travel Agency
 ========================================================================
 
     """,
-    "depends": ['sale', 'contacts', 'web_printscreen'],
+    "depends": ['sale', 'contacts'],
     "init_xml": [
         'data/options.xml',
         'data/pricelist.xml',

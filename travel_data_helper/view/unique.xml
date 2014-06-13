@@ -1,0 +1,44 @@
+<?xml version="1.0"?>
+<openerp>
+  <data>
+
+    <record id="travel_unique_product_form_view" model="ir.ui.view">
+      <field name="name">travel.unique.product.view</field>
+      <field name="model">unique.product</field>
+      <field name="arch" type="xml">
+	<form string="Unify Product" version="7.0">
+	  <group>
+	    <field name="unique_product_detail_ids" >
+	      <tree string="Producst" editable="top">
+		<field name="product_id" />
+		<field name="final_product" />
+	      </tree>
+	    </field>
+	  </group>
+	  <footer>
+	    <button string="Unify" name="unify" type="object" class="oe_highlight"/>
+	    or
+	    <button string="Cancel" class="oe_link" special="cancel"/>
+	  </footer>
+	</form>
+      </field>
+    </record>
+
+    <record id="unique_product_action" model="ir.actions.act_window">
+      <field name="name">Unify Products</field>
+      <field name="type">ir.actions.act_window</field>
+      <field name="res_model">unique.product</field>
+      <field name="view_type">form</field>
+      <field name="view_mode">form</field>
+      <field name="target">new</field>
+    </record>
+
+    <act_window id="unique_product_hotel_wizard_action"
+		name="Unify Product"
+		src_model="product.hotel"
+		res_model="unique.product"
+		view_type="form" view_mode="form"
+		key2="client_action_multi" target="new"/>
+
+  </data>
+</openerp>

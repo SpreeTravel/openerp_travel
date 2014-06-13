@@ -117,9 +117,12 @@ class product_rate(Model):
         res = {}
         product = self.pool.get('product.product')
         order_line = self.pool.get('sale.order.line')
+        pricelist = self.pool.get('pricelist.partnerinfo')
         for obj in self.browse(cr, uid, ids, context):
             res[obj.id] = 0
-            tmpl_id = obj.suppinfo_id.product_id.id
+            pp_id = pricelist.search(cr, uid, [('product_rate_id', '=', obj.id)], context=context)
+            pp = pricelist.browse(cr, uid, pp_id[0], context)
+            tmpl_id = pp.suppinfo_id.product_id.id
             product_id = product.search(cr, uid, [('product_tmpl_id', '=', tmpl_id)], context=context)[0]
             to_search = [
                 ('product_id', '=', product_id),

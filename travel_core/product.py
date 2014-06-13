@@ -129,7 +129,7 @@ class product_rate(Model):
                                      size=256, string='Ref'),
         'start_date': fields.date('Start'),
         'end_date': fields.date('End'),
-        'child': fields.integer('Child'),
+        'child': fields.float('Child'),
         'per_pax': fields.boolean('Per Pax')
     }
 

@@ -41,8 +41,6 @@ class product_hotel(Model):
         'stars': fields.selection([('1', '1'), ('2', '2'), ('3', '3'),
                                    ('4', '4'), ('5', '5')], 'Stars'),
         'destination': fields.many2one('destination', 'Destination'),
-        # TODO: tener en cuenta el todo incluido para escenarios de precios
-        'all_inclusive': fields.boolean('All Inclusive'),
         'hotel_name': fields.related('product_id', 'name', type='char',
                                      string='Name', size=128, select=True,
                                      store=True)
@@ -114,6 +112,28 @@ class product_hotel(Model):
 class product_rate(Model):
     _name = 'product.rate'
     _inherit = 'product.rate'
+
+    def _get_occupation(self, cr, uid, ids, fields, args, context=None):
+        res = {}
+        product = self.pool.get('product.product')
+        order_line = self.pool.get('sale.order.line')
+        for obj in self.browse(cr, uid, ids, context):
+            res[obj.id] = 0
+            tmpl_id = obj.suppinfo_id.product_id.id
+            product_id = product.search(cr, uid, [('product_tmpl_id', '=', tmpl_id)], context=context)[0]
+            to_search = [
+                ('product_id', '=', product_id),
+                ('start_date', '>=', obj.start_date),
+                ('end_date', '<=', obj.end_date),
+                ('state', 'not in', ['draft', 'cancel'])
+            ]
+            ol_ids = order_line.search(cr, uid, to_search, context=context)
+            for ol in order_line.browse(cr, uid, ol_ids, context=context):
+                for rooming in ol.hotel_1_rooming_ids:
+                    if rooming.room_type_id.id == obj.room_type_id.id:
+                        res[obj.id] += obj.quantity
+        return res
+
     _columns = {
         'room_type_id': fields.many2one('option.value', 'Room',
                             domain="[('option_type_id.code', '=', 'rt')]"),
@@ -122,5 +142,8 @@ class product_rate(Model):
         'simple': fields.float('Simple'),
         'triple': fields.float('Triple'),
         'extra_adult': fields.float('Extra Adult'),
-        'second_child': fields.float('Second Child')
+        'second_child': fields.float('Second Child'),
+        'allotment': fields.integer('Allotment'),
+        'occupation': fields.function(_get_occupation, method=True,
+                                      type='integer', string='Occupation')
     }

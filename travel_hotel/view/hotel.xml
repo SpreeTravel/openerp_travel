@@ -122,6 +122,8 @@
                                                 <field name="extra_adult"/>
                                                 <field name="child"/>
                                                 <field name="second_child"/>
+												<field name="allotment"/>
+												<field name="occupation"/>
                                                 <field name="min_quantity" invisible="1"/>
                                             </tree>
                                         </field>

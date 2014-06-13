@@ -1,20 +1,20 @@
 <?xml version="1.0"?>
 <openerp>
-	<data>
-		
-		<record id="travel_sale_rooming_tree_view" model="ir.ui.view">
-            <field name="name">travel.sale.rooming.tree.view</field>
-            <field name="model">sale.rooming</field>
-            <field name="arch" type="xml">
-            	<tree string="Occupation" editable="top">
-                    <field name="room" on_change="onchange_room(room)"/>
-                    <field name="adults" on_change="onchange_adults(adults)"/>
-                    <field name="children"/>
-                    <field name="quantity"/>
-					<field name="room_type_id"/>
-                </tree>
-            </field>
-        </record>
-		
-	</data>
+  <data>
+
+    <record id="travel_sale_rooming_tree_view" model="ir.ui.view">
+      <field name="name">travel.sale.rooming.tree.view</field>
+      <field name="model">sale.rooming</field>
+      <field name="arch" type="xml">
+	<tree string="Occupation" editable="top">
+	  <field name="room" on_change="onchange_room(room)"/>
+	  <field name="adults" on_change="onchange_adults(adults)"/>
+	  <field name="children"/>
+	  <field name="quantity"/>
+	  <field name="room_type_id"/>
+	</tree>
+      </field>
+    </record>
+
+  </data>
 </openerp>

@@ -10,8 +10,8 @@
 	  <group>
 	    <field name="unique_product_detail_ids" >
 	      <tree string="Producst" editable="top">
-		<field name="product_id" />
-		<field name="final_product" />
+			<field name="product_field_id" readonly="1" />
+			<field name="product_id" widget="selection" />
 	      </tree>
 	    </field>
 	  </group>

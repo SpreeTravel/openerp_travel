@@ -109,34 +109,48 @@
                                         <p groups="product.group_purchase_pricelist" class="oe_grey">
                                             The prices below will only be taken into account when your pricelist is set as based on supplier prices.
                                         </p>
-                                        <field name="pricelist_ids">
-                                            <tree string="Pricelist" editable="bottom">
-                                            	<field name="reference" readonly="1" />
-                                                <field name="start_date"/>
-                                                <field name="end_date"/>
-                                                <field name="room_type_id"/>
-                                                <field name="meal_plan_id"/>
-                                                <field name="simple"/>
-                                                <field name="price" string="Double"/>
-                                                <field name="triple"/>
-                                                <field name="extra_adult"/>
-                                                <field name="child"/>
-                                                <field name="second_child"/>
-												<field name="allotment"/>
-												<field name="occupation"/>
-                                                <field name="min_quantity" invisible="1"/>
-                                            </tree>
-                                        </field>
-										<separator />
-										<field name="supplement_ids">
-											<tree string="Supplements" editable="bottom">
-												<field name="start_date"/>
-                                                <field name="end_date"/>
-												<field name="supplement_id" />
-												<field name="rate_ids" widget="many2many_tags"/>
-												<field name="price" />
-											</tree>
-										</field>
+										<notebook>
+											<page string="Pricelist">
+												<field name="pricelist_ids">
+		                                            <tree string="Pricelist" editable="bottom">
+		                                            	<field name="reference" readonly="1" />
+		                                                <field name="start_date"/>
+		                                                <field name="end_date"/>
+		                                                <field name="room_type_id"/>
+		                                                <field name="meal_plan_id"/>
+		                                                <field name="simple"/>
+		                                                <field name="price" string="Double"/>
+		                                                <field name="triple"/>
+		                                                <field name="extra_adult"/>
+		                                                <field name="child"/>
+		                                                <field name="second_child"/>
+		                                                <field name="min_quantity" invisible="1"/>
+		                                            </tree>
+		                                        </field>		
+											</page>
+											<page string="Allotment">
+												<field name="allotment_ids" >
+													<tree string="Allotment" editable="bottom">
+														<field name="start_date"/>
+			                                            <field name="end_date"/>
+														<field name="room_type_id" />
+														<field name="allotment" />
+														<field name="occupation" />
+													</tree>
+												</field>
+											</page>
+											<page string="Supplements">
+												<field name="supplement_ids">
+													<tree string="Supplements" editable="bottom">
+														<field name="start_date"/>
+			                                            <field name="end_date"/>
+														<field name="supplement_id" />
+														<field name="rate_ids" widget="many2many_tags"/>
+														<field name="price" />
+													</tree>
+												</field>
+											</page>
+										</notebook>
                                     </form>
                                 </field>
                                 <separator string="Description for Suppliers"/>

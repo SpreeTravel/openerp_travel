@@ -56,6 +56,7 @@ class product_hotel(Model):
 
         if params['start_date'] and params['end_date']:
             occupation = sr.extract_values(cr, uid, rooming, context)
+            pp = False
             for occ in occupation:
                 if occ['room_type_id']:
                     to_search.append(('room_type_id', '=', occ['room_type_id']))
@@ -79,8 +80,9 @@ class product_hotel(Model):
             dsdate = dt.datetime.strptime(params['start_date'], DF)
             dedate = dt.datetime.strptime(params['end_date'], DF)
             price *= (dedate - dsdate).days
-            price += self.price_get_partner_supp(cr, uid, pp, params,
-                                                 to_search_sup, context)
+            if pp:
+                price += self.price_get_partner_supp(cr, uid, pp, params,
+                                                     to_search_sup, context)
         return price
 
     def price_get_partner_supp(self, cr, uid, pp, params, to_search_sup,
@@ -112,17 +114,46 @@ class product_hotel(Model):
 class product_rate(Model):
     _name = 'product.rate'
     _inherit = 'product.rate'
+    _columns = {
+        'room_type_id': fields.many2one('option.value', 'Room',
+                            domain="[('option_type_id.code', '=', 'rt')]"),
+        'meal_plan_id': fields.many2one('option.value', 'Plan',
+                            domain="[('option_type_id.code', '=', 'mp')]"),
+        'simple': fields.float('Simple'),
+        'triple': fields.float('Triple'),
+        'extra_adult': fields.float('Extra Adult'),
+        'second_child': fields.float('Second Child')
+    }
 
+
+class product_supplierinfo(Model):
+    _name = 'product.supplierinfo'
+    _inherit = 'product.supplierinfo'
+    _columns = {
+        'allotment_ids': fields.one2many('product.rate.allotment',
+                                          'suppinfo_id',
+                                          'Allotment')
+    }
+
+
+class product_rate_allotment(Model):
+    _name = 'product.rate.allotment'
+
+    # TODO: revisar formato de las fechas
+    def _get_total(self, cr, uid, ids, fields, args, context=None):
+        res = {}
+        for obj in self.browse(cr, uid, ids, context):
+            res[obj.id] = obj.allotment * (obj.end_date - obj.start_date)
+        return res
+
+    # TODO: poner en porciento, agregar campo para que quede diario y ocupacion
     def _get_occupation(self, cr, uid, ids, fields, args, context=None):
         res = {}
         product = self.pool.get('product.product')
         order_line = self.pool.get('sale.order.line')
-        pricelist = self.pool.get('pricelist.partnerinfo')
         for obj in self.browse(cr, uid, ids, context):
             res[obj.id] = 0
-            pp_id = pricelist.search(cr, uid, [('product_rate_id', '=', obj.id)], context=context)
-            pp = pricelist.browse(cr, uid, pp_id[0], context)
-            tmpl_id = pp.suppinfo_id.product_id.id
+            tmpl_id = obj.suppinfo_id.product_id.id
             product_id = product.search(cr, uid, [('product_tmpl_id', '=', tmpl_id)], context=context)[0]
             to_search = [
                 ('product_id', '=', product_id),
@@ -134,19 +165,19 @@ class product_rate(Model):
             for ol in order_line.browse(cr, uid, ol_ids, context=context):
                 for rooming in ol.hotel_1_rooming_ids:
                     if rooming.room_type_id.id == obj.room_type_id.id:
-                        res[obj.id] += obj.quantity
+                        res[obj.id] += rooming.quantity
         return res
 
     _columns = {
+        'start_date': fields.date('Start date'),
+        'end_date': fields.date('End date'),
+        'suppinfo_id': fields.many2one('product.supplierinfo',
+                                           'Supplier'),
         'room_type_id': fields.many2one('option.value', 'Room',
                             domain="[('option_type_id.code', '=', 'rt')]"),
-        'meal_plan_id': fields.many2one('option.value', 'Plan',
-                            domain="[('option_type_id.code', '=', 'mp')]"),
-        'simple': fields.float('Simple'),
-        'triple': fields.float('Triple'),
-        'extra_adult': fields.float('Extra Adult'),
-        'second_child': fields.float('Second Child'),
         'allotment': fields.integer('Allotment'),
+        'allotment_total': fields.function(_get_total, method=True,
+                                      type='integer', string='Total'),
         'occupation': fields.function(_get_occupation, method=True,
                                       type='integer', string='Occupation')
     }

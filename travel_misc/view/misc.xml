@@ -98,15 +98,19 @@
                                         <p groups="product.group_purchase_pricelist" class="oe_grey">
                                             The prices below will only be taken into account when your pricelist is set as based on supplier prices.
                                         </p>
-                                        <field name="pricelist_ids">
-                                            <tree string="Pricelist" editable="bottom">
-                                                <field name="start_date"/>
-                                                <field name="end_date"/>
-                                                <field name="price" string="Adults"/>
-                                                <field name="child"/>
-                                                <field name="min_quantity" invisible="1"/>
-                                            </tree>
-                                        </field>
+										<notebook>
+											<page string="Pricelist">
+		                                        <field name="pricelist_ids">
+		                                            <tree string="Pricelist" editable="bottom">
+		                                                <field name="start_date"/>
+		                                                <field name="end_date"/>
+		                                                <field name="price" string="Adults"/>
+		                                                <field name="child"/>
+		                                                <field name="min_quantity" invisible="1"/>
+		                                            </tree>
+		                                        </field>
+											</page>
+										</notebook>
                                     </form>
                                 </field>
                                 <separator string="Description for Suppliers"/>

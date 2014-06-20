@@ -113,6 +113,7 @@
                                 <field name="supplier_id"/>
                                 <button name="to_confirm" type="object" string="Confirm" states="draft,cancel" icon="gtk-apply"/>
                                 <button name="to_cancel" type="object" string="Cancel" states="confirmed" icon="gtk-cancel"/>
+								<button name="print_voucher" type="object" string="Voucher" states="confirmed" icon="gtk-file"/>
                             </tree>
                             <!-- End Tree -->
                         </field>
@@ -301,6 +302,9 @@
 					<field name="price_unit" string="Price"/>
 					<field name="supplier_id"/>
 					<field name="state" />
+					<button name="to_confirm" type="object" string="Confirm" states="draft,cancel" icon="gtk-apply"/>
+                    <button name="to_cancel" type="object" string="Cancel" states="confirmed" icon="gtk-cancel"/>
+					<button name="print_voucher" type="object" string="Voucher" states="confirmed" icon="gtk-file"/>
                 </tree>
             </field>
         </record>

@@ -402,6 +402,16 @@ class sale_order_line(Model):
             res['value'] = {'category': name}
         return res
 
+    def print_voucher(self, cr, uid, ids, context=None):
+        assert len(ids) == 1, 'This option should only be used for a single id at a time'
+        order_id = self.browse(cr, uid, ids[0], context).order_id.id
+        datas = {
+                 'model': 'sale.order',
+                 'ids': [order_id],
+                 'form': self.read(cr, uid, order_id, context=context),
+        }
+        return {'type': 'ir.actions.report.xml', 'report_name': 'sale.order', 'datas': datas, 'nodestroy': True}
+
     def default_currency_cost(self, cr, uid, context=None):
         company = self.pool.get('res.company')
         company_id = company._company_default_get(cr, uid, 'sale.order.line',

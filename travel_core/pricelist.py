@@ -292,7 +292,7 @@ class customer_price(TransientModel):
         category_fields = [(k, v.string, v._type) for k, v in categ.product_rate._columns.items()]
         return core_fields + category_fields
 
-    # TODO: incluir la logica de suma por pax y revisar contra el calculo de la venta
+    # TODO: incluir la logica de suma por pax y revisar contra el calculo de la venta, tener en cuenta la moneda
     def write_prices(self, product, fields, ws, rule):
         x = 0
         suppinfo = product.seller_info_id

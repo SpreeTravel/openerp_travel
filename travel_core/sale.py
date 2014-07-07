@@ -21,6 +21,7 @@
 
 import time
 import simplejson
+import datetime as dt
 from lxml import etree
 
 from openerp.osv import fields, osv
@@ -89,11 +90,23 @@ class sale_context(Model):
             result[obj.id] = obj.adults + obj.children
         return result
 
+    def _get_duration(self, cr, uid, ids, fields, args, context=None):
+        result = {}
+        for obj in self.browse(cr, uid, ids, context):
+            result[obj.id] = 1
+            if obj.end_date:
+                dsdate = dt.datetime.strptime(obj.start_date, DF)
+                dedate = dt.datetime.strptime(obj.end_date, DF)
+                result[obj.id] = (dedate - dsdate).days
+        return result
+
     _columns = {
         'category_id': fields.many2one('product.category', 'Category'),
         'category': fields.char('Category', size=64),
         'start_date': fields.date('Start Date'),
         'end_date': fields.date('End Date'),
+        'duration': fields.function(_get_duration, method=True, type='float',
+                                    string='Duration'),
         'adults': fields.integer('Adults'),
         'children': fields.integer('Children'),
         'start_time': fields.char('Start Time', size=64),

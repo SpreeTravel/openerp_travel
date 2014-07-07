@@ -1,0 +1,50 @@
+<?xml version="1.0"?>
+<openerp>
+    <data>
+    	
+		<record id="travel_allotment_state_search_view" model="ir.ui.view">
+            <field name="name">travel.allotment_state.search.view</field>
+            <field name="model">allotment.state</field>
+            <field name="arch" type="xml">
+                <search string="Product">
+                    <field name="hotel_id" string="Hotel" filter_domain="[('hotel_id.name','ilike', self)]"/>
+                    <group expand='0' string='Group by...'>
+                        <filter string='Day' icon="terp-stock_symbol-selection" domain="[]" context="{'group_by' : 'day'}"/>
+						<filter string='Hotel' icon="terp-stock_symbol-selection" domain="[]" context="{'group_by' : 'hotel_id'}"/>
+						<filter string='Supplier' icon="terp-stock_symbol-selection" domain="[]" context="{'group_by' : 'supplier_id'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+        
+        <record id="travel_allotment_state_tree_view" model="ir.ui.view">
+            <field name="name">travel.allotment.state.tree.view</field>
+            <field name="model">allotment.state</field>
+            <field eval="7" name="priority"/>
+            <field name="arch" type="xml">
+                <tree string="Allotment">
+                    <field name="day"/>
+                    <field name="hotel_id" />
+                    <field name="room_id" />
+					<field name="supplier_id" />
+                    <field name="allotment"/>
+                    <field name="reserved"/>
+					<field name="available"/>                    
+                </tree>
+            </field>
+        </record>
+        
+        <record id="travel_allotment_state_action" model="ir.actions.act_window">
+            <field name="name">Allotment</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">allotment.state</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree</field>
+			<field name="search_view_id" ref="travel_allotment_state_search_view"/>
+        </record>
+        
+        <menuitem action="travel_allotment_state_action" id="travel_allotment_state_menu" parent="base.menu_sales" />
+        
+        
+    </data>
+</openerp>

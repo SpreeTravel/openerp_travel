@@ -21,10 +21,12 @@
 
 
 from openerp.osv import fields, osv
-from openerp.osv.orm import Model
+from openerp.osv.orm import Model, TransientModel
 from openerp.tools.translate import _
 
 import time
+import xlwt
+import base64
 
 
 class product_pricelist(Model):
@@ -237,3 +239,80 @@ class product_pricelist(Model):
                     results[product_id] = {pricelist_id: price}
 
         return results
+
+
+class customer_price(TransientModel):
+    _name = 'customer.price'
+    _columns = {
+        'category_id': fields.many2one('product.category', 'Category'),
+        'product_ids': fields.many2many('product.product',
+                                        'customer_price_product_rel',
+                                        'customer_price_id', 'product_id',
+                                        'Products'),
+        'file_price': fields.binary('File')
+    }
+
+    def export_prices(self, cr, uid, ids, context=None):
+        wb = xlwt.Workbook()
+
+        pricelist_obj = self.pool.get('product.pricelist')
+        pricelist = pricelist_obj.browse(cr, uid, context['active_id'])
+        rule = pricelist.pricelist_item_ids[0].price_surcharge
+
+        obj = self.browse(cr, uid, ids[0], context)
+        category = obj.category_id.name.lower()
+        fields = self.get_category_price_fields(category)
+        for product in obj.product_ids:
+            ws = wb.add_sheet(product.name)
+            self.write_prices(product, fields, ws, rule)
+        wb.save('/tmp/prices.xls')
+        f = open('/tmp/prices.xls', 'r')
+        self.write(cr, uid, obj.id,
+                   {'file_price': base64.encodestring(f.read())}, context)
+        return {
+            'name': 'Export Prices',
+            'type': 'ir.actions.act_window',
+            'view_type': 'form',
+            'view_mode': 'form',
+            'res_model': 'customer.price',
+            'res_id': obj.id,
+            'target': 'new',
+            'context': context,
+        }
+
+    def get_category_price_fields(self, category):
+        core_fields = [
+            ('start_date', 'Start Date', 'date'),
+            ('end_date', 'End Date', 'date'),
+            ('price', 'Price', 'float'),
+            ('child', 'Child', 'float')
+        ]
+        import importlib
+        categ = importlib.import_module('openerp.addons.travel_' + category + '.' + category)
+        category_fields = [(k, v.string, v._type) for k, v in categ.product_rate._columns.items()]
+        return core_fields + category_fields
+
+    # TODO: incluir la logica de suma por pax y revisar contra el calculo de la venta
+    def write_prices(self, product, fields, ws, rule):
+        x = 0
+        suppinfo = product.seller_info_id
+        if suppinfo:
+            ws.write(x, 0, suppinfo.name.name)
+            y = 1
+            for f in fields:
+                ws.write(x, y, f[1])
+                y += 1
+            x += 1
+            for pr in suppinfo.pricelist_ids:
+                y = 1
+                for f in fields:
+                    if f[2] == 'many2one':
+                        value = getattr(pr, f[0]).name
+                    elif f[2] == 'float':
+                        value = getattr(pr, f[0]) * (1 + rule.price_discount) + rule.price_surcharge
+                    else:
+                        value = getattr(pr, f[0])
+                    ws.write(x, y, value)
+                    y += 1
+                x += 1
+        return True

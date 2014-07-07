@@ -40,9 +40,12 @@ class sale_context(Model):
         res = super(sale_context, self).update_view_with_context_fields(cr, uid, res, context)
         modifiers = {'invisible': [('category', '=', 'hotel')]}
         doc = etree.XML(res['arch'])
-        gp = doc.xpath("//group[@name='paxs_fields']")[0]
-        gp.set('modifiers', simplejson.dumps(modifiers))
-        res['arch'] = etree.tostring(doc)
+        try:
+            gp = doc.xpath("//group[@name='paxs_fields']")[0]
+            gp.set('modifiers', simplejson.dumps(modifiers))
+            res['arch'] = etree.tostring(doc)
+        except:
+            pass
         return res
 
 

@@ -13,5 +13,49 @@
     		</field>
 	</record>
 
+	<!-- Export customer prices -->
+		
+		<record id="travel_customer_price_form_view" model="ir.ui.view">
+            <field name="name">travel.customer.price.view</field>
+            <field name="model">customer.price</field>
+            <field name="arch" type="xml">
+                <form string="Export Prices" version="7.0">
+                	<group>
+                		<field name="category_id" />
+						<field name="product_ids" domain="[('categ_id', '=', category_id)]">
+							<tree string="Products">
+								<field name="categ_id" />
+								<field name="name" />
+								<field name="seller_id" />
+							</tree>
+						</field>
+						<field name="file_price"/>
+					</group>
+					<footer>
+						<button string="Export" name="export_prices" type="object" class="oe_highlight"/>
+						or
+						<button string="Cancel" class="oe_link" special="cancel"/>
+					</footer>
+                </form>
+            </field>
+        </record>
+		
+		<act_window id="export_customer_price_wizard_action"
+            name="Export Customer Prices"
+            src_model="product.pricelist"
+            res_model="customer.price"
+            view_type="form" view_mode="form"
+            key2="client_action_multi" target="new"/>
+		
+		<record id="travel_customer_price_action" model="ir.actions.act_window">
+            <field name="name">Export Prices</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">customer.price</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+			<field name="target">new</field>
+        </record>
+
+
   </data>
 </openerp>

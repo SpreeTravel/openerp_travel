@@ -41,7 +41,6 @@ Base module for managing sales, prices and accounting in a Travel Agency
         'view/base.xml',
         'view/pricelist.xml',
         'view/sale.xml',
-        'view/data.xml',
         'report/sale_report_view.xml',
         'report/travel_report.xml',
         'security/ir.model.access.csv'

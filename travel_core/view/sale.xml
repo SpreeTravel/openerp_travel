@@ -1,6 +1,8 @@
 <?xml version="1.0"?>
 <openerp>
     <data>
+    	
+		<!-- Orders -->
         
         <record id="travel_sale_order_search_view" model="ir.ui.view">
             <field name="name">travel.sale.order.search.view</field>
@@ -113,6 +115,7 @@
                                 <field name="supplier_id"/>
                                 <button name="to_confirm" type="object" string="Confirm" states="draft,cancel" icon="gtk-apply"/>
                                 <button name="to_cancel" type="object" string="Cancel" states="confirmed" icon="gtk-cancel"/>
+								<button name="print_voucher" type="object" string="Voucher" states="confirmed" icon="gtk-file"/>
                             </tree>
                             <!-- End Tree -->
                         </field>
@@ -261,7 +264,8 @@
             <field name="model">sale.order.line</field>
             <field name="arch" type="xml">
                 <search string="Reservations">
-                    <field name="customer_id" string="Reservation" filter_domain="['|', ('customer_id.name', 'ilike', self), ('name', 'ilike', self)]"/>
+                    <field name="customer_id" string="Customer" filter_domain="['|', ('customer_id.name', 'ilike', self), ('name', 'ilike', self)]"/>
+					<field name="product_id" string="Product" filter_domain="[('product_id.name', 'ilike', self)]"/>
                     <filter name="upcoming" string="Upcoming" domain="[('end_date', '&lt;=', (context_today() + datetime.timedelta(30)).strftime('%%Y-%%m-%%d')), ('end_date', '&gt;=', (context_today() + datetime.timedelta(1)).strftime('%%Y-%%m-%%d')), ('state', '!=', 'cancel')]"/>
                     <filter name="now" string="Now" domain="[('start_date', '&lt;=', (context_today() - datetime.timedelta(1)).strftime('%%Y-%%m-%%d')), ('end_date', '&gt;=', (context_today() + datetime.timedelta(1)).strftime('%%Y-%%m-%%d')), ('state', '!=', 'cancel')]"/>
                     <filter name="next" string="Next" domain="[('start_date', '&gt;=', (context_today() + datetime.timedelta(1)).strftime('%%Y-%%m-%%d')), ('state', '!=', 'cancel')]"/>
@@ -301,6 +305,9 @@
 					<field name="price_unit" string="Price"/>
 					<field name="supplier_id"/>
 					<field name="state" />
+					<button name="to_confirm" type="object" string="Confirm" states="draft,cancel" icon="gtk-apply"/>
+                    <button name="to_cancel" type="object" string="Cancel" states="confirmed" icon="gtk-cancel"/>
+					<button name="print_voucher" type="object" string="Voucher" states="confirmed" icon="gtk-file"/>
                 </tree>
             </field>
         </record>
@@ -310,7 +317,7 @@
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">sale.order.line</field>
             <field name="view_type">form</field>
-            <field name="view_mode">tree,form</field>
+            <field name="view_mode">tree</field>
             <field name="view_id" ref="travel_sale_order_line_tree_view"/>
 			<field name="search_view_id" ref="travel_sale_order_line_search_view"/>
         </record>

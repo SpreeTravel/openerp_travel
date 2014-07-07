@@ -135,7 +135,7 @@
 			                                            <field name="end_date"/>
 														<field name="room_type_id" />
 														<field name="allotment" />
-														<field name="occupation" />
+														<field name="release" />
 													</tree>
 												</field>
 											</page>

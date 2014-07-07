@@ -21,4 +21,5 @@
 
 import hotel
 import rooming
+import allotment
 import sale

@@ -1,9 +1,14 @@
 eclipse.preferences.version=1
+encoding//travel/__init__.py=utf-8
+encoding//travel/__openerp__.py=utf-8
 encoding//travel_core/pricelist.py=utf-8
 encoding//travel_core/product.py=utf-8
 encoding//travel_data_helper/__init__.py=utf-8
 encoding//travel_data_helper/__openerp__.py=utf-8
 encoding//travel_data_helper/unique.py=utf-8
+encoding//travel_hotel/__init__.py=utf-8
+encoding//travel_hotel/__openerp__.py=utf-8
+encoding//travel_hotel/data.py=utf-8
 encoding//travel_hotel/hotel.py=utf-8
 encoding//travel_hotel/rooming.py=utf-8
 encoding//travel_hotel/sale.py=utf-8

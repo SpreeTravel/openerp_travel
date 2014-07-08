@@ -2,6 +2,7 @@ eclipse.preferences.version=1
 encoding//travel_car/car.py=utf-8
 encoding//travel_core/__init__.py=utf-8
 encoding//travel_core/base.py=utf-8
+encoding//travel_core/contract.py=utf-8
 encoding//travel_core/invoice.py=utf-8
 encoding//travel_core/pricelist.py=utf-8
 encoding//travel_core/product.py=utf-8

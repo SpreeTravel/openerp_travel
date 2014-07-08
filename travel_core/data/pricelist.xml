@@ -10,6 +10,8 @@
             <field name="sequence">4</field>
             <field name="name">Default (Cost + Profit) Pricelist Line</field>
         </record>
+		
+		<!-- Cost Pricelist -->
 				
 	</data>
 

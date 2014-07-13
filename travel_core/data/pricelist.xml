@@ -12,6 +12,23 @@
         </record>
 		
 		<!-- Cost Pricelist -->
+		
+		<record id="cost_pricelist" model="product.pricelist" >
+			<field name="name">Cost Pricelist</field>
+			<field name="type">sale</field>
+		</record>
+		
+		<record id="cost_pricelist_version" model="product.pricelist.version">
+			<field name="name">Default Version</field>
+			<field name="pricelist_id" ref="cost_pricelist"/>
+		</record>
+		
+		<record id="cost_pricelist_item" model="product.pricelist.item">
+            <field name="price_version_id" ref="cost_pricelist_version"/>
+            <field name="base" eval="-2" />
+            <field name="sequence">4</field>
+            <field name="name">Default (Cost) Pricelist Line</field>
+        </record>
 				
 	</data>
 

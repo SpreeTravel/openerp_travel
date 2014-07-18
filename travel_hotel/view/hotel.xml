@@ -150,6 +150,9 @@
 													</tree>
 												</field>
 											</page>
+											<page string="Additional Information">
+												<field name="info"/>
+											</page>
 										</notebook>
                                     </form>
                                 </field>

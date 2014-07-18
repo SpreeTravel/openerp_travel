@@ -108,7 +108,8 @@ class product_supplierinfo(Model):
     _columns = {
         'supplement_ids': fields.one2many('product.rate.supplement',
                                           'suppinfo_id',
-                                          'Supplements')
+                                          'Supplements'),
+                  'info': fields.text('Additional Information')
     }
     _defaults = {
         'min_qty': 0.0

@@ -3,6 +3,7 @@ encoding//travel/__init__.py=utf-8
 encoding//travel/__openerp__.py=utf-8
 encoding//travel_core/pricelist.py=utf-8
 encoding//travel_core/product.py=utf-8
+encoding//travel_core/sale.py=utf-8
 encoding//travel_data_helper/__init__.py=utf-8
 encoding//travel_data_helper/__openerp__.py=utf-8
 encoding//travel_data_helper/unique.py=utf-8

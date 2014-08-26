@@ -34,6 +34,15 @@ import openerp.addons.decimal_precision as dp
 class sale_order(Model):
     _name = 'sale.order'
     _inherit = 'sale.order'
+
+    def _get_lead_name(self, cr, uid, ids, fields, args, context=None):
+        result = {}
+        for obj in self.browse(cr, uid, ids, context):
+            result[obj.id] = False
+            if obj.pax_ids:
+                result[obj.id] = obj.pax_ids[0].name
+        return result
+
     _columns = {
         'date_order':
             fields.date('Start Date', required=True, readonly=True,
@@ -54,7 +63,10 @@ class sale_order(Model):
         'pax_ids':
             fields.many2many('res.partner', 'sale_order_res_partner_pax_rel',
                              'order_id', 'pax_id', 'Paxs',
-                             domain="[('pax', '=', True)]")
+                             domain="[('pax', '=', True)]"),
+        'lead_name':
+            fields.function(_get_lead_name, method=True, type='char',
+                            string='Lead Name', size=128)
     }
 
     _defaults = {

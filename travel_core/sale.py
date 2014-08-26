@@ -61,7 +61,7 @@ class sale_order(Model):
         'shop_id': 1
     }
 
-    _order = 'date_order asc'
+    #_order = 'date_order asc'
 
     def write(self, cr, uid, ids, vals, context=None):
         res = super(sale_order, self).write(cr, uid, ids, vals, context)
@@ -417,13 +417,12 @@ class sale_order_line(Model):
 
     def print_voucher(self, cr, uid, ids, context=None):
         assert len(ids) == 1, 'This option should only be used for a single id at a time'
-        order_id = self.browse(cr, uid, ids[0], context).order_id.id
         datas = {
-                 'model': 'sale.order',
-                 'ids': [order_id],
-                 'form': self.read(cr, uid, order_id, context=context),
+                 'model': 'sale.order.line',
+                 'ids': [ids],
+                 'form': self.read(cr, uid, ids, context=context),
         }
-        return {'type': 'ir.actions.report.xml', 'report_name': 'sale.order', 'datas': datas, 'nodestroy': True}
+        return {'type': 'ir.actions.report.xml', 'report_name': 'travel.voucher', 'datas': datas, 'nodestroy': True}
 
     def default_currency_cost(self, cr, uid, context=None):
         company = self.pool.get('res.company')

@@ -162,6 +162,9 @@ class pricelist_partnerinfo(Model):
     _columns = {
         'product_rate_id': fields.many2one('product.rate', 'Product Rate',
                                            ondelete="cascade", select=True),
+        'rate_start_date': fields.related('product_rate_id', 'start_date',
+                                          string='Start Date', type='date',
+                                          store=True),
         'product_id': fields.related('suppinfo_id', 'product_id',
                                      string='Product', type='many2one',
                                      relation='product.template'),
@@ -171,4 +174,4 @@ class pricelist_partnerinfo(Model):
         'min_quantity': 0.0,
         'sequence': 0
     }
-    _order = 'sequence'
+    _order = 'rate_start_date'

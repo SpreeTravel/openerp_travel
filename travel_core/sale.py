@@ -34,6 +34,15 @@ import openerp.addons.decimal_precision as dp
 class sale_order(Model):
     _name = 'sale.order'
     _inherit = 'sale.order'
+
+    def _get_lead_name(self, cr, uid, ids, fields, args, context=None):
+        result = {}
+        for obj in self.browse(cr, uid, ids, context):
+            result[obj.id] = False
+            if obj.pax_ids:
+                result[obj.id] = obj.pax_ids[0].name
+        return result
+
     _columns = {
         'date_order':
             fields.date('Start Date', required=True, readonly=True,
@@ -54,14 +63,17 @@ class sale_order(Model):
         'pax_ids':
             fields.many2many('res.partner', 'sale_order_res_partner_pax_rel',
                              'order_id', 'pax_id', 'Paxs',
-                             domain="[('pax', '=', True)]")
+                             domain="[('pax', '=', True)]"),
+        'lead_name':
+            fields.function(_get_lead_name, method=True, type='char',
+                            string='Lead Name', size=128)
     }
 
     _defaults = {
         'shop_id': 1
     }
 
-    _order = 'date_order asc'
+    #_order = 'date_order asc'
 
     def write(self, cr, uid, ids, vals, context=None):
         res = super(sale_order, self).write(cr, uid, ids, vals, context)
@@ -417,13 +429,12 @@ class sale_order_line(Model):
 
     def print_voucher(self, cr, uid, ids, context=None):
         assert len(ids) == 1, 'This option should only be used for a single id at a time'
-        order_id = self.browse(cr, uid, ids[0], context).order_id.id
         datas = {
-                 'model': 'sale.order',
-                 'ids': [order_id],
-                 'form': self.read(cr, uid, order_id, context=context),
+                 'model': 'sale.order.line',
+                 'ids': [ids],
+                 'form': self.read(cr, uid, ids, context=context),
         }
-        return {'type': 'ir.actions.report.xml', 'report_name': 'sale.order', 'datas': datas, 'nodestroy': True}
+        return {'type': 'ir.actions.report.xml', 'report_name': 'travel.voucher', 'datas': datas, 'nodestroy': True}
 
     def default_currency_cost(self, cr, uid, context=None):
         company = self.pool.get('res.company')

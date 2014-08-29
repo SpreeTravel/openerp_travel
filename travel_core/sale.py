@@ -83,7 +83,7 @@ class sale_order(Model):
         'shop_id': 1
     }
 
-    #_order = 'date_order asc'
+    _order = 'create_date desc'
 
     def write(self, cr, uid, ids, vals, context=None):
         res = super(sale_order, self).write(cr, uid, ids, vals, context)

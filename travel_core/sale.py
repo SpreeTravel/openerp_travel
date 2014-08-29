@@ -42,6 +42,16 @@ class sale_order(Model):
             if obj.pax_ids:
                 result[obj.id] = obj.pax_ids[0].name
         return result
+    
+    def _lead_name_search(self, cr, uid, obj, field_name, args, context=None):        
+        name = args[0][2]
+        values = []
+        ids = self.search(cr, uid, [])
+        for obj in self.browse(cr, uid, ids, context):
+            if obj.pax_ids and name.lower() in obj.pax_ids[0].name.lower():
+                values.append(obj.id)
+        result = [('id', 'in', values)]
+        return result
 
     _columns = {
         'date_order':
@@ -66,7 +76,7 @@ class sale_order(Model):
                              domain="[('pax', '=', True)]"),
         'lead_name':
             fields.function(_get_lead_name, method=True, type='char',
-                            string='Lead Name', size=128)
+                            string='Lead Name', size=128, fnct_search=_lead_name_search)
     }
 
     _defaults = {

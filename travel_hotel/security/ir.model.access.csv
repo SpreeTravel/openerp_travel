@@ -1,2 +1,3 @@
 id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
 access_product_hotel_sale_manager,product.hotel.sale.manager,model_product_hotel,base.group_sale_manager,1,1,1,1
+access_rooming_sale_manager,rooming.sale.manager,model_sale_rooming,base.group_sale_manager,1,1,1,1

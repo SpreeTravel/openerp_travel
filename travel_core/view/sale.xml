@@ -61,8 +61,6 @@
             <field name="inherit_id" ref="sale.view_order_form"/>
             <field name="arch" type="xml">
                 
-                <!--<field name="name" position="replace"/>-->
-                
                 <xpath expr="//form/sheet/group" position="replace">
                     <group>
                         <group>
@@ -72,6 +70,11 @@
                             <div>
                                 <field name="date_order" class="oe_inline" nolabel="1"/>-
                                 <field name="end_date" class="oe_inline" nolabel="1"/>
+                            </div>
+							<label for="flight_in" string="Flight"/>
+                            <div>
+                                <field name="flight_in" class="oe_inline" nolabel="1" style="width: 30%%"/>-
+                                <field name="flight_out" class="oe_inline" nolabel="1" style="width: 40%%"/>
                             </div>
                             <field name="partner_invoice_id" groups="sale.group_delivery_invoice_address" context="{'default_type':'invoice'}"/>
                             <field name="partner_shipping_id" groups="sale.group_delivery_invoice_address" context="{'default_type':'delivery'}"/>
@@ -195,14 +198,15 @@
 							<label for="price_unit" />
 							<div>
 								<field name="price_unit" class="oe_inline"/> - <field name="price_unit_cost" class="oe_inline"/>
+								<field name="currency_cost_id" widget="selection" class="oe_inline"/>
 							</div>
-							<field name="currency_cost_id" />
+							
                             <label for="discount" groups="sale.group_discount_per_so_line"/>
                             <div name="discount" groups="sale.group_discount_per_so_line">
                                 <field name="discount" class="oe_inline"/>%%
                             </div>
                             <field name="supplier_id"
-                             context="{'partner_id':parent.partner_id, 'quantity':product_uom_qty, 'pricelist':parent.pricelist_id, 'shop':parent.shop_id, 'uom':product_uom, 'supplier_id':supplier_id, 'params': {'start_date': start_date, 'end_date': end_date, 'adults': adults, 'children': children, 'supplement_ids': sale_line_supplement_ids} }"
+                             context="{'supplier': True ,'partner_id':parent.partner_id, 'quantity':product_uom_qty, 'pricelist':parent.pricelist_id, 'shop':parent.shop_id, 'uom':product_uom, 'supplier_id':supplier_id, 'params': {'start_date': start_date, 'end_date': end_date, 'adults': adults, 'children': children, 'supplement_ids': sale_line_supplement_ids} }"
                              groups="base.group_user"
                              on_change="product_id_change(parent.pricelist_id, product_id, product_uom_qty, product_uom, product_uos_qty, product_uos, name, parent.partner_id, False, True, parent.date_order, False, parent.fiscal_position, False, context)"
                             />
@@ -310,12 +314,13 @@
 					<button name="to_confirm" type="object" string="Confirm" states="draft,cancel" icon="gtk-apply"/>
                     <button name="to_cancel" type="object" string="Cancel" states="confirmed" icon="gtk-cancel"/>
 					<button name="print_voucher" type="object" string="Voucher" states="confirmed" icon="gtk-file"/>
+					<button name="go_to_order" type="object" string="Go to Order" icon="gtk-zoom-in"/>
                 </tree>
             </field>
         </record>
 		
 		<record id="travel_sale_order_line_action" model="ir.actions.act_window">
-            <field name="name">Reservations</field>
+            <field name="name">All</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">sale.order.line</field>
             <field name="view_type">form</field>
@@ -324,7 +329,8 @@
 			<field name="search_view_id" ref="travel_sale_order_line_search_view"/>
         </record>
         
-        <menuitem action="travel_sale_order_line_action" id="travel_sale_order_line_menu" parent="base.menu_sales" sequence="2"/>
+        <menuitem id="travel_reservations_menu" name="Reservations" parent="base.menu_base_partner" sequence="2"/>
+		<menuitem id="travel_sale_order_line_menu" action="travel_sale_order_line_action" parent="travel_reservations_menu" sequence="1"/>
         
     </data>
 </openerp>

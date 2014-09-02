@@ -146,7 +146,7 @@
                                         <field name="state" invisible="1"/>
                                         <button name="to_confirm" type="object" string="Confirm" states="draft,cancel" icon="gtk-apply"/>
                                         <button name="to_cancel" type="object" string="Cancel" states="confirmed" icon="gtk-cancel"/>
-                                        <button name="to_send" type="object" string="Send Email" states="draft" icon="gtk-index"/>
+                                        <button name="go_to_order" type="object" string="Go to Order" icon="gtk-zoom-in"/>
                                     </tree>
                                 </field>
                             </page>

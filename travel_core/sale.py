@@ -50,10 +50,14 @@ class sale_order(Model):
                         states={'draft': [('readonly', False)],
                                 'sent': [('readonly', False)]}),
         'end_date':
-            fields.date('End Date', required=True, readonly=True,
+            fields.date('End Date', readonly=True,
                         select=True,
                         states={'draft': [('readonly', False)],
                                 'sent': [('readonly', False)]}),
+        'flight_in':
+            fields.char('Flight In', size=64),
+        'flight_out':
+            fields.char('Flight Out', size=64),
         'order_line':
             fields.one2many('sale.order.line', 'order_id', 'Order Lines',
                             readonly=True,
@@ -72,8 +76,6 @@ class sale_order(Model):
     _defaults = {
         'shop_id': 1
     }
-
-    #_order = 'date_order asc'
 
     def write(self, cr, uid, ids, vals, context=None):
         res = super(sale_order, self).write(cr, uid, ids, vals, context)
@@ -441,6 +443,16 @@ class sale_order_line(Model):
         company_id = company._company_default_get(cr, uid, 'sale.order.line',
                                                   context=context)
         return company.browse(cr, uid, company_id).currency_id.id
+
+    def go_to_order(self, cr, uid, ids, context=None):
+        obj = self.browse(cr, uid, ids[0], context)
+        return {
+            'type': 'ir.actions.act_window',
+            'view_type': 'form',
+            'view_mode': 'form',
+            'res_model': 'sale.order',
+            'res_id': obj.order_id.id,
+        }
 
     _defaults = {
         'start_date': lambda s, c, u, ctx: ctx.get('start', False),

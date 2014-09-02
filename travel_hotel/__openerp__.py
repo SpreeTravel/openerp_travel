@@ -35,7 +35,7 @@
         'view/hotel.xml',
         'view/sale.xml',
         'view/rooming.xml',
-        'view/allotment.xml',
+        'view/reservation.xml',
         'security/ir.model.access.csv'
     ],
     "demo_xml": [],

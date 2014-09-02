@@ -456,6 +456,16 @@ class sale_order_line(Model):
                                                   context=context)
         return company.browse(cr, uid, company_id).currency_id.id
 
+    def go_to_order(self, cr, uid, ids, context=None):
+        obj = self.browse(cr, uid, ids[0], context)
+        return {
+            'type': 'ir.actions.act_window',
+            'view_type': 'form',
+            'view_mode': 'form',
+            'res_model': 'sale.order',
+            'res_id': obj.order_id.id,
+        }
+
     _defaults = {
         'start_date': lambda s, c, u, ctx: ctx.get('start', False),
         'end_date': lambda s, c, u, ctx: ctx.get('end', False),

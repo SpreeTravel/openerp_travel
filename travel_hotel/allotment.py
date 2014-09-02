@@ -21,7 +21,7 @@
 
 import datetime as dt
 
-from openerp.osv import fields
+from openerp.osv import fields, osv
 from openerp.osv.orm import Model
 from openerp.tools import DEFAULT_SERVER_DATE_FORMAT as DF
 
@@ -51,13 +51,6 @@ class product_rate_allotment(Model):
 
 class allotment_state(Model):
     _name = 'allotment.state'
-
-    def _get_diff(self, cr, uid, ids, fields, args, context=None):
-        res = {}
-        for obj in self.browse(cr, uid, ids, context):
-            res[obj.id] = obj.allotment - obj.reserved
-        return res
-
     _columns = {
         'day': fields.date('Day'),
         'hotel_id': fields.many2one('product.hotel', 'Hotel'),
@@ -66,18 +59,8 @@ class allotment_state(Model):
         'supplier_id': fields.many2one('res.partner', 'Supplier'),
         'allotment': fields.integer('Allotment'),
         'reserved': fields.integer('Reserved'),
-        'available': fields.function(_get_diff, method=True, type='integer',
-                                      string='Available')
+        'available': fields.integer('Available'),
     }
-
-    def fields_view_get(self, cr, uid, view_id=None, view_type='form',
-                        context=None, toolbar=False, submenu=False):
-        context = context or {}
-        res = super(allotment_state, self).fields_view_get(cr, uid, view_id,
-                view_type, context=context, toolbar=toolbar, submenu=submenu)
-        if view_type == 'tree':
-            self.calculate_allotment(cr, uid, context)
-        return res
 
     # TODO: incluir el chequeo del release
     def calculate_allotment(self, cr, uid, context=None):
@@ -98,7 +81,7 @@ class allotment_state(Model):
                         vals['day'] = current_date
                         vals['hotel_id'] = hotel.id
                         vals['room_id'] = allotment.room_type_id.id
-                        vals['supplier_id'] = supinfo.name
+                        vals['supplier_id'] = supinfo.name.id
                         vals['allotment'] = allotment.allotment
 
                         to_search_allotment = [(k, '=', v) for k, v in vals.items()]
@@ -109,7 +92,7 @@ class allotment_state(Model):
                             ('product_id', '=', hotel.product_id.id),
                             ('start_date', '<=', current_date),
                             ('end_date', '>=', current_date),
-                            ('supplier_id', '=', supinfo.name),
+                            ('supplier_id', '=', supinfo.name.id),
                             ('state', 'not in', ['draft', 'cancel'])
                         ]
                         line_ids = line_obj.search(cr, uid, to_search_line)
@@ -118,8 +101,14 @@ class allotment_state(Model):
                                 if rooming.room_type_id.id == allotment.room_type_id.id:
                                     vals['reserved'] += rooming.quantity
 
+                        vals['available'] = allotment.allotment - vals['reserved']
+                        if vals['available'] < 0:
+                            raise osv.except_osv('Error!',
+                                                 "No room available in allotment.")
                         if allotment_id:
-                            self.write(cr, uid, allotment_id[0], {'reserved': vals['reserved']})
+                            self.write(cr, uid, allotment_id[0],
+                                       {'reserved': vals['reserved'],
+                                        'available': vals['available']})
                         else:
                             self.create(cr, uid, vals)
                         current_date = current_date + dt.timedelta(1)

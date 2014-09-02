@@ -34,6 +34,7 @@
     "update_xml": [
         'view/transfer.xml',
         'view/sale.xml',
+        'view/reservation.xml',
         'security/ir.model.access.csv'
     ],
     "demo_xml": [],

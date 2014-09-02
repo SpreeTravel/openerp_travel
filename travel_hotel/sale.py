@@ -56,13 +56,17 @@ class sale_order_line(Model):
     def create(self, cr, uid, vals, context=None):
         res = super(sale_order_line, self).create(cr, uid, vals, context)
         obj = self.browse(cr, uid, res, context)
-        self.set_paxs_for_hotel(cr, uid, obj, context)
+        if obj.category == 'hotel':
+            self.set_paxs_for_hotel(cr, uid, obj, context)
+            self.update_allotment(cr, uid, context)
         return res
 
     def write(self, cr, uid, ids, vals, context=None):
         res = super(sale_order_line, self).write(cr, uid, ids, vals, context)
         for obj in self.browse(cr, uid, ids, context):
-            self.set_paxs_for_hotel(cr, uid, obj, context)
+            if obj.category == 'hotel':
+                self.set_paxs_for_hotel(cr, uid, obj, context)
+                self.update_allotment(cr, uid, context)
         return res
 
     def set_paxs_for_hotel(self, cr, uid, obj, context=None):
@@ -72,3 +76,6 @@ class sale_order_line(Model):
             children += x.children * x.quantity
         cr.execute('update sale_context set adults=%s, children=%s where id=%s', (adults, children, obj.sale_context_id.id))
         return True
+
+    def update_allotment(self, cr, uid, obj, context=None):
+        self.pool.get('allotment.state').calculate_allotment(cr, uid, context)

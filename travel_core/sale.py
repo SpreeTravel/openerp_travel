@@ -64,6 +64,10 @@ class sale_order(Model):
                         select=True,
                         states={'draft': [('readonly', False)],
                                 'sent': [('readonly', False)]}),
+        'flight_in':
+            fields.char('Flight In', size=64),
+        'flight_out':
+            fields.char('Flight Out', size=64),
         'order_line':
             fields.one2many('sale.order.line', 'order_id', 'Order Lines',
                             readonly=True,

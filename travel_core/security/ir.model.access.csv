@@ -5,3 +5,5 @@ access_option_type_sale_manager,option.type.sale.manager,model_option_type,base.
 access_option_value_sale_manager,option.value.sale.manager,model_option_value,base.group_sale_manager,1,1,1,1
 access_product_rate_sale_manager,product.rate.sale.manager,model_product_rate,base.group_sale_manager,1,1,1,1
 access_sale_context_sale_manager,sale.context.sale.manager,model_sale_context,base.group_sale_manager,1,1,1,1
+access_product_rate_supplement_sale_manager,product.rate.supplement.sale.manager,model_product_rate_supplement,base.group_sale_manager,1,1,1,1
+

@@ -61,8 +61,8 @@ class product_hotel(Model):
                 if occ['room_type_id']:
                     to_search.append(('room_type_id', '=', occ['room_type_id']))
                 pp_ids = model.search(cr, uid, to_search, context=context)
-                if pp_ids:
-                    pp = model.browse(cr, uid, pp_ids[0], context)
+                for pp_id in pp_ids:
+                    pp = model.browse(cr, uid, pp_id, context)
                     r_price = 0.0
                     if occ['adults'] <= 3:
                         room = occ['room'] == 'double' and 'price' or occ['room']
@@ -76,10 +76,17 @@ class product_hotel(Model):
                         r_price += self.get_percent_or_int(pp.price, pp.child)
                         r_price += self.get_percent_or_int(pp.price, pp.second_child)
                     r_price *= occ['quantity']
+                    dsdate = dt.datetime.strptime(params['start_date'], DF)
+                    dedate = dt.datetime.strptime(params['end_date'], DF)
+                    isdate = dt.datetime.strptime(pp.start_date, DF)
+                    iedate = dt.datetime.strptime(pp.end_date, DF)
+                    ini = max(isdate, dsdate)                     
+                    end = min(iedate, dedate)
+                    if end != dedate:
+                        r_price *= (end - ini).days + 1
+                    else:
+                        r_price *= (end - ini).days                        
                     price += r_price
-            dsdate = dt.datetime.strptime(params['start_date'], DF)
-            dedate = dt.datetime.strptime(params['end_date'], DF)
-            price *= (dedate - dsdate).days
             if pp:
                 price += self.price_get_partner_supp(cr, uid, pp, params,
                                                      to_search_sup, context)

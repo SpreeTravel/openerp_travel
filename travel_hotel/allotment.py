@@ -38,6 +38,34 @@ class product_supplierinfo(Model):
 
 class product_rate_allotment(Model):
     _name = 'product.rate.allotment'
+                
+    def create(self, cr, uid, values, context=None):
+        res = super(product_rate_allotment, self).create(cr, uid, values, context)
+        self.pool.get('allotment.state').calculate_allotment(cr, uid, context)              
+        return res
+    
+    def write(self, cr, uid, ids, values, context=None):
+        res = super(product_rate_allotment, self).write(cr, uid, ids, values, context)
+        self.pool.get('allotment.state').calculate_allotment(cr, uid, context)              
+        return res
+     
+    def unlink(self, cr, uid, ids, context=None):
+        daily_allotment = self.pool.get('allotment.state')
+        suppinfo = self.pool.get('product.supplierinfo')   
+        hotel = self.pool.get('product.hotel')
+        for obj in self.browse(cr, uid, ids, context):  
+            suppinfo_obj = suppinfo.browse(cr, uid, obj.suppinfo_id.id, context) 
+            hotel_id = hotel.search(cr, uid, [('product_id', '=', suppinfo_obj.product_id.id)])                      
+            daily_allotment_ids = daily_allotment.search(cr, uid, [('hotel_id', '=', hotel_id[0]),
+                                                                   ('room_id', '=', obj.room_type_id.id),
+                                                                   ('supplier_id', '=', suppinfo_obj.name.id),
+                                                                   ('day', '>=', obj.start_date),
+                                                                   ('day', '<=', obj.end_date)])
+            daily_allotment.unlink(cr, uid, daily_allotment_ids, context)
+            
+        res = super(product_rate_allotment, self).unlink(cr, uid, ids, context)       
+        return res   
+    
     _columns = {
         'start_date': fields.date('Start date'),
         'end_date': fields.date('End date'),
@@ -47,10 +75,30 @@ class product_rate_allotment(Model):
         'allotment': fields.integer('Allotment'),
         'release': fields.integer('Release')
     }
-
+    
+    _order = 'start_date asc'
 
 class allotment_state(Model):
     _name = 'allotment.state'
+    
+    def _rl_availability(self, cr, uid, ids, field, value, args, context=None):
+        res = {}
+        prod_allotment = self.pool.get('product.rate.allotment')
+        suppinfo = self.pool.get('product.supplierinfo')
+        for obj in self.browse(cr, uid, ids, context):        
+            suppinfo_ids = suppinfo.search(cr, uid, [('name', '=', obj.supplier_id.id), 
+                                                     ('product_id', '=', obj.hotel_id.product_id.id)], context)
+            allotment_ids = prod_allotment.search(cr, uid, [('suppinfo_id', 'in', suppinfo_ids),
+                                                            ('start_date', '<=', obj.day),
+                                                            ('end_date', '>=', obj.day)], context)
+            release = prod_allotment.browse(cr, uid, allotment_ids, context)[0].release
+            difference = (dt.datetime.strptime(obj.day, DF) - dt.datetime.today().replace(hour=0, minute=0, second=0, microsecond=0)).days
+            if difference <= release:
+                res[obj.id] = 0
+            else: 
+                res[obj.id] = obj.available
+        return res
+
     _columns = {
         'day': fields.date('Day'),
         'hotel_id': fields.many2one('product.hotel', 'Hotel'),
@@ -60,7 +108,10 @@ class allotment_state(Model):
         'allotment': fields.integer('Allotment'),
         'reserved': fields.integer('Reserved'),
         'available': fields.integer('Available'),
+        'rl_available': fields.function(_rl_availability, string='Available', type='integer'),
     }
+    
+    _order = 'day asc'
 
     # TODO: incluir el chequeo del release
     def calculate_allotment(self, cr, uid, context=None):

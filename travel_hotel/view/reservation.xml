@@ -103,7 +103,7 @@
 					<field name="supplier_id" />
                     <field name="allotment"/>
                     <field name="reserved"/>
-					<field name="available"/>                    
+					<field name="rl_available"/>                  
                 </tree>
             </field>
         </record>

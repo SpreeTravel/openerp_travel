@@ -10,7 +10,7 @@
                     <field name="name" string="Product" filter_domain="[('hotel_name','ilike',self)]"/>
                     <group expand='0' string='Group by...'>
                         <filter string='Stars' icon="terp-stock_symbol-selection" domain="[]" context="{'group_by' : 'stars'}"/>
-                        <filter string='State' icon="terp-stock_symbol-selection" domain="[]" context="{'group_by' : 'res_partner_state_id'}"/>
+                        <filter string='Destination' icon="terp-stock_symbol-selection" domain="[]" context="{'group_by' : 'destination'}"/>
                         <filter string='Company' icon="terp-go-home" domain="[]" context="{'group_by' : 'company_id'}" groups="base.group_multi_company"/>
                     </group>
                 </search>

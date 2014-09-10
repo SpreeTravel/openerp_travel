@@ -42,8 +42,8 @@ class sale_order(Model):
             if obj.pax_ids:
                 result[obj.id] = obj.pax_ids[0].name
         return result
-    
-    def _lead_name_search(self, cr, uid, obj, field_name, args, context=None):        
+
+    def _lead_name_search(self, cr, uid, obj, field_name, args, context=None):
         name = args[0][2]
         values = []
         ids = self.search(cr, uid, [])
@@ -440,15 +440,6 @@ class sale_order_line(Model):
             name = category.browse(cr, uid, category_id).name.lower()
             res['value'] = {'category': name}
         return res
-
-    def print_voucher(self, cr, uid, ids, context=None):
-        assert len(ids) == 1, 'This option should only be used for a single id at a time'
-        datas = {
-                 'model': 'sale.order.line',
-                 'ids': [ids],
-                 'form': self.read(cr, uid, ids, context=context),
-        }
-        return {'type': 'ir.actions.report.xml', 'report_name': 'travel.voucher', 'datas': datas, 'nodestroy': True}
 
     def default_currency_cost(self, cr, uid, context=None):
         company = self.pool.get('res.company')

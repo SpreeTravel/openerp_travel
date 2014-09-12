@@ -23,6 +23,7 @@
 from openerp.osv import fields, osv
 from openerp.osv.orm import Model, TransientModel
 from openerp.tools.translate import _
+import openerp.addons.decimal_precision as dp
 
 import time
 import xlwt
@@ -146,6 +147,12 @@ class product_pricelist(Model):
                 else:
                     categ_where = '(categ_id IS NULL)'
 
+                supplier_where = ''
+                if context.get('supplier_id', False):
+                    supplier_id = context['supplier_id']
+                    supplier_where = 'supplier_id = ' + str(supplier_id) + ' OR '
+                supplier_where += 'supplier_id IS NULL'
+
                 if partner:
                     partner_where = 'base <> -2 OR %s IN (SELECT name FROM product_supplierinfo WHERE product_id = %s) '
                     partner_args = (partner, tmpl_id)
@@ -162,6 +169,7 @@ class product_pricelist(Model):
                     'WHERE (product_tmpl_id IS NULL OR product_tmpl_id = %s) '
                         'AND (product_id IS NULL OR product_id = %s) '
                         'AND (' + categ_where + ' OR (categ_id IS NULL)) '
+                        'AND (' + supplier_where + ') '
                         'AND (' + partner_where + ') '
                         'AND price_version_id = %s '
                         'AND (min_quantity IS NULL OR min_quantity <= %s) '
@@ -206,13 +214,12 @@ class product_pricelist(Model):
                                     price_type.currency_id.id, res['currency_id'],
                                     product_obj.price_get(cr, uid, [product_id],
                                     price_type.field, context=context)[product_id], round=False, context=context)
-                            params = context.get('params', {})
-                            paxs = params.get('adults', 0) + params.get('children', 0)
-                            if price and paxs > 0:
-                                price = price * paxs
 
+                        params = context.get('params', {})
+                        paxs = self.pool.get('sale.order.line').get_total_paxs(cr, uid, params, context)
                         if price is not False:
                             price_limit = price
+                            price += paxs * (res['margin_per_pax'] or 0.0)
                             price = price * (1.0 + (res['price_discount'] or 0.0))
                             price += (res['price_surcharge'] or 0.0)
                             if res['price_min_margin']:
@@ -239,6 +246,17 @@ class product_pricelist(Model):
                     results[product_id] = {pricelist_id: price}
 
         return results
+
+
+class product_pricelist_item(Model):
+    _inherit = 'product.pricelist.item'
+
+    _columns = {
+        'margin_per_pax': fields.float('Margin per Pax',
+                            digits_compute=dp.get_precision('Product Price')),
+        'supplier_id': fields.many2one('res.partner', 'Supplier',
+                                       domain=[('supplier', '=', True)])
+    }
 
 
 class customer_price(TransientModel):

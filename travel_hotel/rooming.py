@@ -110,6 +110,15 @@ class sale_rooming(Model):
                            'room_type_id': room_type_id})
         return result
 
+    def get_total_paxs(self, cr, uid, occupation, context=None):
+        result = self.extract_values(cr, uid, occupation, context)
+        adults = 0
+        children = 0
+        for r in result:
+            adults += r['adults'] * r['quantity']
+            children += r['children'] * r['quantity']
+        return adults + children
+
     _defaults = {
         'room': 'double',
         'adults': 2,

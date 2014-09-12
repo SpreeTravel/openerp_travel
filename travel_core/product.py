@@ -90,7 +90,10 @@ class product_product(Model):
         if params.get('start_date', False) and params.get('end_date', False):
             sdate = params['start_date']
             edate = params['end_date']
-            to_srch += ['|', '&', ('start_date', '>=', sdate), ('start_date', '<=', edate), '&', ('end_date', '>=', sdate), ('end_date', '<=', edate)]
+            to_srch += ['|', '|', '&', ('start_date', '>=', sdate), ('start_date', '<=', edate),
+                                  '&', ('end_date', '>=', sdate), ('end_date', '<=', edate),
+                             '|', '&', ('start_date', '<=', sdate), ('end_date', '>=', sdate),
+                                  '&',  ('start_date', '<=', edate), ('end_date', '>=', edate),]
         categ = self.browse(cr, uid, pid, context).categ_id.name.lower()
         for k, v in params.items():
             if k.startswith(categ) and k.endswith('_id') and params[k]:

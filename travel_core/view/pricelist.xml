@@ -3,15 +3,43 @@
   <data>
 
 	<record id="travel_product_pricelist_view" model="ir.ui.view">
-            <field name="name">travel.product.pricelist.form</field>
-            <field name="model">product.pricelist</field>
-			<field name="inherit_id" ref="product.product_pricelist_view"/>
-            <field name="arch" type="xml">
-            	<field name="version_id" position="replace">
-            		<field name="pricelist_item_ids" />
-				</field>
-    		</field>
+        <field name="name">travel.product.pricelist.form</field>
+        <field name="model">product.pricelist</field>
+		<field name="inherit_id" ref="product.product_pricelist_view"/>
+        <field name="arch" type="xml">
+        	<field name="version_id" position="replace">
+        		<field name="pricelist_item_ids" />
+			</field>
+		</field>
 	</record>
+	
+	<record id="travel_product_pricelist_item_view" model="ir.ui.view">
+        <field name="name">travel.product.pricelist.item.form</field>
+        <field name="model">product.pricelist.item</field>
+		<field name="inherit_id" ref="product.product_pricelist_item_form_view"/>
+        <field name="arch" type="xml">
+        	<field name="categ_id" position="after">
+        		<field name="supplier_id" />
+			</field>
+			<xpath expr="//group[@col='6']" position="replace">
+				<group col="7" >
+                    <label string="New Price ="/>
+                    <label string="(Base Price +"/>
+					<field name="margin_per_pax" nolabel="1"/>
+                    <label string="*paxs) *( 1 + "/>
+                    <field name="price_discount" nolabel="1"/>
+                    <label string=" ) + "/>
+                    <field name="price_surcharge" nolabel="1"/>
+                    <newline/>
+                    <field name="price_round" string="Rounding Method"/>
+                    <field name="price_min_margin" string="Min. Margin"/>
+                    <field name="price_max_margin" string="Max. Margin"/>
+                </group>
+			</xpath>
+		</field>
+	</record>
+	
+	
 
 	<!-- Export customer prices -->
 		

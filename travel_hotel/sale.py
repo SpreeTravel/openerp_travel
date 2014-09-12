@@ -79,3 +79,9 @@ class sale_order_line(Model):
 
     def update_allotment(self, cr, uid, obj, context=None):
         self.pool.get('allotment.state').calculate_allotment(cr, uid, context)
+
+    def get_total_paxs(self, cr, uid, params, context=None):
+        if params.get('category', False) == 'hotel':
+            occupation = params.get('hotel_1_rooming_ids', [])
+            return self.pool.get('sale.rooming').get_total_paxs(cr, uid, occupation, context)
+        return params.get('adults', 0) + params.get('children', 0)

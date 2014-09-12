@@ -457,6 +457,9 @@ class sale_order_line(Model):
             'res_id': obj.order_id.id,
         }
 
+    def get_total_paxs(self, cr, uid, params, context=None):
+        return params.get('adults', 0) + params.get('children', 0)
+
     _defaults = {
         'start_date': lambda s, c, u, ctx: ctx.get('start', False),
         'end_date': lambda s, c, u, ctx: ctx.get('end', False),

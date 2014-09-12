@@ -80,12 +80,12 @@ class product_hotel(Model):
                     dedate = dt.datetime.strptime(params['end_date'], DF)
                     isdate = dt.datetime.strptime(pp.start_date, DF)
                     iedate = dt.datetime.strptime(pp.end_date, DF)
-                    ini = max(isdate, dsdate)                     
+                    ini = max(isdate, dsdate)
                     end = min(iedate, dedate)
                     if end != dedate:
                         r_price *= (end - ini).days + 1
                     else:
-                        r_price *= (end - ini).days                        
+                        r_price *= (end - ini).days
                     price += r_price
             if pp:
                 price += self.price_get_partner_supp(cr, uid, pp, params,

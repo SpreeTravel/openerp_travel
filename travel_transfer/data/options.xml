@@ -42,6 +42,21 @@
 			<field name="code">vcl</field>
 			<field name="name">Luxury</field>
 		</record>
+		
+		<record id="option_type_vehicle_guide" model="option.type">
+			<field name="code">guide</field>
+			<field name="name">Vehicle Guide</field>
+		</record>
+		<record id="vehicle_guide" model="option.value">
+			<field name="option_type_id" ref="option_type_vehicle_guide"/>
+			<field name="code">guide</field>
+			<field name="name">Guide</field>
+		</record>
+		<record id="vehicle_no_guide" model="option.value">
+			<field name="option_type_id" ref="option_type_vehicle_guide"/>
+			<field name="code">no_guide</field>
+			<field name="name">No Guide</field>
+		</record>
 
 	</data>
 </openerp>

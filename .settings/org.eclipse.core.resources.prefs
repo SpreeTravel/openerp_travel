@@ -10,7 +10,6 @@ encoding//travel_core/pricelist.py=utf-8
 encoding//travel_core/product.py=utf-8
 encoding//travel_core/report/__init__.py=utf-8
 encoding//travel_core/report/sale_report.py=utf-8
-encoding//travel_core/report/travel_order.py=utf-8
 encoding//travel_core/sale.py=utf-8
 encoding//travel_hotel/__init__.py=utf-8
 encoding//travel_hotel/__openerp__.py=utf-8

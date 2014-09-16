@@ -190,10 +190,6 @@ class product_pricelist(Model):
                                 ptype_src = self.browse(cr, uid, res['base_pricelist_id']).currency_id.id
                                 uom_price_already_computed = True
                                 price = currency_obj.compute(cr, uid, ptype_src, res['currency_id'], price_tmp, round=False)
-                            params = context.get('params', {})
-                            paxs = params.get('adults', 0) + params.get('children', 0)
-                            if price and paxs > 0:
-                                price = price * paxs
                         elif res['base'] == -2:
                             # TODO: revisar que funcione bien el cambio de moneda
                             sup_id = context.get('supplier_id', False)
@@ -262,29 +258,28 @@ class product_pricelist_item(Model):
 class customer_price(TransientModel):
     _name = 'customer.price'
     _columns = {
-        'category_id': fields.many2one('product.category', 'Category'),
-        'product_ids': fields.many2many('product.product',
-                                        'customer_price_product_rel',
-                                        'customer_price_id', 'product_id',
-                                        'Products'),
+        'start_date': fields.date('Start date'),
+        'end_date': fields.date('End date'),
         'file_price': fields.binary('File')
     }
 
     def export_prices(self, cr, uid, ids, context=None):
         wb = xlwt.Workbook()
 
-        pricelist_obj = self.pool.get('product.pricelist')
-        pricelist = pricelist_obj.browse(cr, uid, context['active_id'])
-        rule = pricelist.pricelist_item_ids[0].price_surcharge
+        partner_obj = self.pool.get('res.partner')
+        partner = partner_obj.browse(cr, uid, context['active_id'])
+        pricelist = partner.property_product_pricelist
 
-        obj = self.browse(cr, uid, ids[0], context)
-        category = obj.category_id.name.lower()
-        fields = self.get_category_price_fields(category)
-        for product in obj.product_ids:
-            ws = wb.add_sheet(product.name)
-            self.write_prices(product, fields, ws, rule)
+        category_obj = self.pool.get('product.category')
+        category_ids = category_obj.search(cr, uid, [('type', '=', 'normal')], context=context)
+        for categ in category_obj.browse(cr, uid, category_ids):
+            name = categ.name.lower()
+            fields = self.get_category_price_fields(name)
+            ws = wb.add_sheet(name)
+            self.write_prices(cr, uid, ws, fields, categ, pricelist, context)
         wb.save('/tmp/prices.xls')
         f = open('/tmp/prices.xls', 'r')
+        obj = self.browse(cr, uid, ids[0], context)
         self.write(cr, uid, obj.id,
                    {'file_price': base64.encodestring(f.read())}, context)
         return {
@@ -310,27 +305,23 @@ class customer_price(TransientModel):
         category_fields = [(k, v.string, v._type) for k, v in categ.product_rate._columns.items()]
         return core_fields + category_fields
 
-    # TODO: incluir la logica de suma por pax y revisar contra el calculo de la venta, tener en cuenta la moneda
-    def write_prices(self, product, fields, ws, rule):
-        x = 0
-        suppinfo = product.seller_info_id
-        if suppinfo:
-            ws.write(x, 0, suppinfo.name.name)
-            y = 1
-            for f in fields:
-                ws.write(x, y, f[1])
-                y += 1
-            x += 1
-            for pr in suppinfo.pricelist_ids:
-                y = 1
-                for f in fields:
-                    if f[2] == 'many2one':
-                        value = getattr(pr, f[0]).name
-                    elif f[2] == 'float':
-                        value = getattr(pr, f[0]) * (1 + rule.price_discount) + rule.price_surcharge
-                    else:
-                        value = getattr(pr, f[0])
-                    ws.write(x, y, value)
-                    y += 1
-                x += 1
-        return True
+    def write_prices(self, cr, uid, ws, fields, categ, pricelist, context=None):
+        product_obj = self.pool.get('product.product')
+        product_ids = product_obj.search(cr, uid, [('categ_id', '=', categ.id)], context=context)
+
+        for prod in product_obj.browse(cr, uid, product_ids):
+            x = 0
+            suppinfo = prod.seller_info_id
+            if suppinfo:
+                for pr in suppinfo.pricelist_ids:
+                    y = 0
+                    for f in fields:
+                        if f[2] == 'many2one':
+                            value = getattr(pr, f[0]).name
+                        elif f[2] == 'float':
+                            value = getattr(pr, f[0])
+                        else:
+                            value = getattr(pr, f[0])
+                        ws.write(x, y, value)
+                        y += 1
+                    x += 1

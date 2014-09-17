@@ -307,7 +307,8 @@ class customer_price(TransientModel):
 
     def write_prices(self, cr, uid, ws, fields, categ, pricelist, context=None):
         product_obj = self.pool.get('product.product')
-        product_ids = product_obj.search(cr, uid, [('categ_id', '=', categ.id)], context=context)
+        product_ids = product_obj.search(cr, uid, [('categ_id', '=', categ.id)],
+                                         context=context)
 
         for prod in product_obj.browse(cr, uid, product_ids):
             x = 0

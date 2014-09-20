@@ -302,27 +302,49 @@ class customer_price(TransientModel):
         ]
         import importlib
         categ = importlib.import_module('openerp.addons.travel_' + category + '.' + category)
-        category_fields = [(k, v.string, v._type) for k, v in categ.product_rate._columns.items()]
-        return core_fields + category_fields
+        category_fields = core_fields
+        if hasattr(categ, 'product_rate'):
+            category_fields += [(k, v.string, v._type) for k, v in categ.product_rate._columns.items()]
+        return category_fields
 
     def write_prices(self, cr, uid, ws, fields, categ, pricelist, context=None):
         product_obj = self.pool.get('product.product')
         product_ids = product_obj.search(cr, uid, [('categ_id', '=', categ.id)],
                                          context=context)
-
+        ws.write(0, 0, 'Product')
+        x, y = 0, 1
+        for f in fields:
+            ws.write(x, y, f[1])
+            y += 1
+        x = 1
         for prod in product_obj.browse(cr, uid, product_ids):
-            x = 0
+            y = 0
+            ws.write(x, y, prod.name)
             suppinfo = prod.seller_info_id
             if suppinfo:
                 for pr in suppinfo.pricelist_ids:
-                    y = 0
+                    y = 1
                     for f in fields:
                         if f[2] == 'many2one':
                             value = getattr(pr, f[0]).name
                         elif f[2] == 'float':
-                            value = getattr(pr, f[0])
+                            value = self.get_customer_price(cr, uid, pricelist,
+                                                            prod, suppinfo,
+                                                            getattr(pr, f[0]))
                         else:
                             value = getattr(pr, f[0])
                         ws.write(x, y, value)
                         y += 1
                     x += 1
+
+    def get_customer_price(self, cr, uid, pricelist, prod, suppinfo, value):
+        for rule in pricelist.pricelist_item_ids:
+            if rule.categ_id and rule.categ_id.id != prod.categ_id.id:
+                continue
+            if rule.product_id and rule.product_id.id != prod.id:
+                continue
+            if rule.supplier_id and rule.supplier_id.id != suppinfo.name:
+                continue
+            value += (rule.margin_per_pax or 0.0)
+            value = value * (1.0 + (rule.price_discount or 0.0))
+            return value

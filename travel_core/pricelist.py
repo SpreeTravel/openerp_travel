@@ -29,6 +29,14 @@ import time
 import xlwt
 import base64
 
+FIELD_TYPES = {'date': 1, 'many2one': 2, 'float': 3, 'integer': 4}
+CORE_FIELDS = [
+    (1, 'start_date', 'Start Date'),
+    (1, 'end_date', 'End Date'),
+    (3, 'price', 'Price'),
+    (3, 'child', 'Child')
+]
+
 
 class product_pricelist(Model):
     _name = 'product.pricelist'
@@ -271,10 +279,11 @@ class customer_price(TransientModel):
         pricelist = partner.property_product_pricelist
 
         category_obj = self.pool.get('product.category')
-        category_ids = category_obj.search(cr, uid, [('type', '=', 'normal')], context=context)
+        category_ids = category_obj.search(cr, uid, [('type', '=', 'normal')],
+                                           context=context)
         for categ in category_obj.browse(cr, uid, category_ids):
-            name = categ.name.lower()
-            fields = self.get_category_price_fields(name)
+            name = categ.name
+            fields = self.get_category_price_fields(name.lower())
             ws = wb.add_sheet(name)
             self.write_prices(cr, uid, ws, fields, categ, pricelist, context)
         wb.save('/tmp/prices.xls')
@@ -290,21 +299,17 @@ class customer_price(TransientModel):
             'res_model': 'customer.price',
             'res_id': obj.id,
             'target': 'new',
-            'context': context,
+            'context': context
         }
 
+    # TODO: sort fields just for first index
     def get_category_price_fields(self, category):
-        core_fields = [
-            ('start_date', 'Start Date', 'date'),
-            ('end_date', 'End Date', 'date'),
-            ('price', 'Price', 'float'),
-            ('child', 'Child', 'float')
-        ]
         import importlib
         categ = importlib.import_module('openerp.addons.travel_' + category + '.' + category)
-        category_fields = core_fields
+        category_fields = [x for x in CORE_FIELDS]
         if hasattr(categ, 'product_rate'):
-            category_fields += [(k, v.string, v._type) for k, v in categ.product_rate._columns.items()]
+            category_fields += [(FIELD_TYPES[v._type], k, v.string) for k, v in categ.product_rate._columns.items()]
+            category_fields.sort()
         return category_fields
 
     def write_prices(self, cr, uid, ws, fields, categ, pricelist, context=None):
@@ -314,7 +319,7 @@ class customer_price(TransientModel):
         ws.write(0, 0, 'Product')
         x, y = 0, 1
         for f in fields:
-            ws.write(x, y, f[1])
+            ws.write(x, y, f[2])
             y += 1
         x = 1
         for prod in product_obj.browse(cr, uid, product_ids):
@@ -325,26 +330,28 @@ class customer_price(TransientModel):
                 for pr in suppinfo.pricelist_ids:
                     y = 1
                     for f in fields:
-                        if f[2] == 'many2one':
-                            value = getattr(pr, f[0]).name
-                        elif f[2] == 'float':
+                        if f[0] == 2:
+                            value = getattr(pr, f[1]).name
+                        elif f[0] == 3:
                             value = self.get_customer_price(cr, uid, pricelist,
                                                             prod, suppinfo,
-                                                            getattr(pr, f[0]))
+                                                            getattr(pr, f[1]))
                         else:
-                            value = getattr(pr, f[0])
+                            value = getattr(pr, f[1])
                         ws.write(x, y, value)
                         y += 1
                     x += 1
 
+    # TODO: check currency
     def get_customer_price(self, cr, uid, pricelist, prod, suppinfo, value):
         for rule in pricelist.pricelist_item_ids:
             if rule.categ_id and rule.categ_id.id != prod.categ_id.id:
                 continue
             if rule.product_id and rule.product_id.id != prod.id:
                 continue
-            if rule.supplier_id and rule.supplier_id.id != suppinfo.name:
+            if rule.supplier_id and rule.supplier_id.id != suppinfo.name.id:
                 continue
             value += (rule.margin_per_pax or 0.0)
             value = value * (1.0 + (rule.price_discount or 0.0))
-            return value
+            break
+        return value

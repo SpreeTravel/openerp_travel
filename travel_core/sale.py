@@ -37,10 +37,16 @@ class sale_order(Model):
 
     def _get_lead_name(self, cr, uid, ids, fields, args, context=None):
         result = {}
+        
         for obj in self.browse(cr, uid, ids, context):
             result[obj.id] = False
             if obj.pax_ids:
-                result[obj.id] = obj.pax_ids[0].name
+                min = obj.pax_ids[0]
+                for pax in obj.pax_ids:
+                    if pax.id < min.id:
+                        min = pax
+                result[obj.id] = min.name
+        
         return result
 
     def _lead_name_search(self, cr, uid, obj, field_name, args, context=None):
@@ -379,7 +385,7 @@ class sale_order_line(Model):
                 warn_msg = _("Cannot find a pricelist line matching this product and quantity.\n"
                         "You have to change either the product, the quantity or the pricelist.")
 
-                warning_msgs += _("No valid pricelist line found ! :") + warn_msg +"\n\n"
+                #warning_msgs += _("No valid pricelist line found ! :") + warn_msg +"\n\n"
             else:
                 result.update({'price_unit': price})
 

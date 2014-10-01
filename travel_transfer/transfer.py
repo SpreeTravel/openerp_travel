@@ -81,7 +81,7 @@ class product_rate(Model):
         'vehicle_type_id': fields.many2one('option.value', 'Type',
                             domain="[('option_type_id.code', '=', 'vt')]"),
         'guide_id': fields.many2one('option.value', 'Guide',
-                            domain="[('option_type_id.code', '=', 'tg')]"),
+                            domain="[('option_type_id.code', '=', 'guide')]"),
         'confort_id': fields.many2one('option.value', 'Confort',
                             domain="[('option_type_id.code', '=', 'vc')]")
     }
@@ -94,7 +94,7 @@ class sale_context(Model):
         'transfer_1_vehicle_type_id': fields.many2one('option.value', 'Type',
                             domain="[('option_type_id.code', '=', 'vt')]"),
         'transfer_2_guide_id': fields.many2one('option.value', 'Guide',
-                            domain="[('option_type_id.code', '=', 'tg')]"),
+                            domain="[('option_type_id.code', '=', 'guide')]"),
         'transfer_3_confort_id': fields.many2one('option.value', 'Confort',
                             domain="[('option_type_id.code', '=', 'vc')]")
     }

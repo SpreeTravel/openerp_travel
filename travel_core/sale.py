@@ -465,6 +465,14 @@ class sale_order_line(Model):
 
     def get_total_paxs(self, cr, uid, params, context=None):
         return params.get('adults', 0) + params.get('children', 0)
+    
+    def get_margin_days(self, cr, uid, params, context=None):
+        '''
+        The number of days of the service countable for apply a per day margin
+        '''
+        ini = dt.datetime.strptime(params['start_date'], DF)
+        end = dt.datetime.strptime(params['end_date'], DF)
+        return (end-ini).days + 1
 
     _defaults = {
         'start_date': lambda s, c, u, ctx: ctx.get('start', False),

@@ -221,9 +221,10 @@ class product_pricelist(Model):
 
                         params = context.get('params', {})
                         paxs = self.pool.get('sale.order.line').get_total_paxs(cr, uid, params, context)
+                        days = self.pool.get('sale.order.line').get_margin_days(cr, uid, params, context)
                         if price is not False:
                             price_limit = price
-                            price += paxs * (res['margin_per_pax'] or 0.0)
+                            price += days * paxs * (res['margin_per_pax'] or 0.0)
                             price = price * (1.0 + (res['price_discount'] or 0.0))
                             price += (res['price_surcharge'] or 0.0)
                             if res['price_min_margin']:

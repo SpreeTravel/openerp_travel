@@ -84,4 +84,11 @@ class sale_order_line(Model):
         if params.get('category', False) == 'hotel':
             occupation = params.get('hotel_1_rooming_ids', [])
             return self.pool.get('sale.rooming').get_total_paxs(cr, uid, occupation, context)
-        return params.get('adults', 0) + params.get('children', 0)
+        return params.get('adults', 0) + params.get('children', 0)  
+      
+    def get_margin_days(self, cr, uid, params, context=None):
+        '''
+        The number of days of the service countable for apply a per day margin.
+        Redefining the travel_core function
+        '''
+        return super(sale_order_line, self).get_margin_days(cr, uid, params, context) - 1

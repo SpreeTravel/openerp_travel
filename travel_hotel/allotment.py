@@ -153,9 +153,9 @@ class allotment_state(Model):
                                     vals['reserved'] += rooming.quantity
 
                         vals['available'] = allotment.allotment - vals['reserved']
-                        if vals['available'] < 0:
-                            raise osv.except_osv('Error!',
-                                                 "No room available in allotment.")
+#                        if vals['available'] < 0:
+#                            raise osv.except_osv('Error!',
+#                                                 "No room available in allotment.")
                         if allotment_id:
                             self.write(cr, uid, allotment_id[0],
                                        {'reserved': vals['reserved'],

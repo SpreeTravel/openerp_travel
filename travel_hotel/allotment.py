@@ -41,12 +41,12 @@ class product_rate_allotment(Model):
                 
     def create(self, cr, uid, values, context=None):
         res = super(product_rate_allotment, self).create(cr, uid, values, context)
-        self.pool.get('allotment.state').calculate_allotment(cr, uid, context)              
+        #self.pool.get('allotment.state').calculate_allotment(cr, uid, context)              
         return res
     
     def write(self, cr, uid, ids, values, context=None):
         res = super(product_rate_allotment, self).write(cr, uid, ids, values, context)
-        self.pool.get('allotment.state').calculate_allotment(cr, uid, context)              
+        #self.pool.get('allotment.state').calculate_allotment(cr, uid, context)              
         return res
      
     def unlink(self, cr, uid, ids, context=None):
@@ -81,7 +81,7 @@ class product_rate_allotment(Model):
 class allotment_state(Model):
     _name = 'allotment.state'
     
-    def _rl_availability(self, cr, uid, ids, field, value, args, context=None):
+    def _availability(self, cr, uid, ids, field, value, args, context=None):
         res = {}
         prod_allotment = self.pool.get('product.rate.allotment')
         suppinfo = self.pool.get('product.supplierinfo')
@@ -96,8 +96,39 @@ class allotment_state(Model):
             if difference <= release:
                 res[obj.id] = 0
             else: 
-                res[obj.id] = obj.available
+                res[obj.id] = max(0, obj.allotment - obj.reserved)
         return res
+
+    def _reservations(self, cr, uid, uids, field_name, arg, context=None):
+        res = {}
+        order_line_model = self.pool.get('sale.order.line')
+        
+        for allotment in self.browse(cr, uid, uids, context=context):
+            total_reserved = 0
+            order_line_ids = order_line_model.search(cr, uid, [('product_id', '=', allotment.hotel_id.product_id.id),
+                                                            ('start_date', '<=', allotment.day),
+                                                            ('end_date', '>', allotment.day)])
+            for line in order_line_model.browse(cr, uid, order_line_ids):
+                for rooming in line.hotel_1_rooming_ids:
+                    if rooming.room_type_id.id == allotment.room_id.id:
+                        total_reserved += rooming.quantity
+            res[allotment.id] = total_reserved
+        return res
+    
+    def _get_allotment_from_order(self, cr, uid, ids, context=None):
+        res = []
+        order_lines = self.pool.get('sale.order.line').browse(cr, uid, ids, context=context)
+        allotment_model = self.pool.get('allotment.state')
+        hotel_model = self.pool.get('product.hotel')
+        for ol in order_lines:
+            if ol.category_id.name == 'Hotel':
+                hotel_id = hotel_model.search(cr, uid, [('product_id', '=', ol.product_id.id)])[0]
+                allotment_ids = allotment_model.search(cr, uid, [('hotel_id', '=', hotel_id), 
+                                                      ('day', '>=', ol.start_date),
+                                                      ('day', '<', ol.end_date)])
+                res.extend(allotment_ids)
+                
+        return list(set(res))
 
     _columns = {
         'day': fields.date('Day'),
@@ -106,60 +137,11 @@ class allotment_state(Model):
                               domain="[('option_type_id.code', '=', 'rt')]"),
         'supplier_id': fields.many2one('res.partner', 'Supplier'),
         'allotment': fields.integer('Allotment'),
-        'reserved': fields.integer('Reserved'),
-        'available': fields.integer('Available'),
-        'rl_available': fields.function(_rl_availability, string='Available', type='integer'),
+        'reserved': fields.function(_reservations, methdo=True, string='Reserved', type='integer',
+                                    store = {'sale.order.line': (_get_allotment_from_order, [], 10)}),
+        'available': fields.function(_availability, 
+                                        string='Available', 
+                                        type='integer'),
     }
     
     _order = 'day asc'
-
-    # TODO: incluir el chequeo del release
-    def calculate_allotment(self, cr, uid, context=None):
-        hotel_obj = self.pool.get('product.hotel')
-        hotel_ids = hotel_obj.search(cr, uid, [], context=context)
-
-        line_obj = self.pool.get('sale.order.line')
-
-        for hotel in hotel_obj.browse(cr, uid, hotel_ids):
-            for supinfo in hotel.seller_ids:
-                for allotment in supinfo.allotment_ids:
-                    start_date = dt.datetime.strptime(allotment.start_date, DF)
-                    end_date = dt.datetime.strptime(allotment.end_date, DF)
-
-                    current_date = start_date
-                    while(current_date < end_date):
-                        vals = {}
-                        vals['day'] = current_date
-                        vals['hotel_id'] = hotel.id
-                        vals['room_id'] = allotment.room_type_id.id
-                        vals['supplier_id'] = supinfo.name.id
-                        vals['allotment'] = allotment.allotment
-
-                        to_search_allotment = [(k, '=', v) for k, v in vals.items()]
-                        allotment_id = self.search(cr, uid, to_search_allotment, context=context)
-
-                        vals['reserved'] = 0
-                        to_search_line = [
-                            ('product_id', '=', hotel.product_id.id),
-                            ('start_date', '<=', current_date),
-                            ('end_date', '>=', current_date),
-                            ('supplier_id', '=', supinfo.name.id),
-                            ('state', 'not in', ['draft', 'cancel'])
-                        ]
-                        line_ids = line_obj.search(cr, uid, to_search_line)
-                        for line in line_obj.browse(cr, uid, line_ids):
-                            for rooming in line.hotel_1_rooming_ids:
-                                if rooming.room_type_id.id == allotment.room_type_id.id:
-                                    vals['reserved'] += rooming.quantity
-
-                        vals['available'] = allotment.allotment - vals['reserved']
-#                        if vals['available'] < 0:
-#                            raise osv.except_osv('Error!',
-#                                                 "No room available in allotment.")
-                        if allotment_id:
-                            self.write(cr, uid, allotment_id[0],
-                                       {'reserved': vals['reserved'],
-                                        'available': vals['available']})
-                        else:
-                            self.create(cr, uid, vals)
-                        current_date = current_date + dt.timedelta(1)

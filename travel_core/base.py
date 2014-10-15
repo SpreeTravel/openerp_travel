@@ -69,7 +69,7 @@ class res_partner(Model):
 class option_type(Model):
     _name = 'option.type'
     _columns = {
-        'name': fields.char('Name', size=32, translate=True),
+        'name': fields.char('Name', size=64, translate=True),
         'code': fields.char('Code', size=32),
         'option_value_ids': fields.one2many('option.value', 'option_type_id',
                                             'Option Values')
@@ -79,7 +79,7 @@ class option_type(Model):
 class option_value(Model):
     _name = 'option.value'
     _columns = {
-        'name': fields.char('Name', size=32, translate=True),
+        'name': fields.char('Name', size=64, translate=True),
         'code': fields.char('Code', size=32),
         'option_type_id': fields.many2one('option.type', 'Option Type')
     }

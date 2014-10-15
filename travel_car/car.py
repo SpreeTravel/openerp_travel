@@ -36,6 +36,13 @@ class product_car(Model):
         'car_name': fields.related('product_id', 'name', type='char',
                                    string='Name', size=128, select=True,
                                    store=True),
+        'transmission_id': fields.many2one('option.value',
+                                            'Transmission',
+                               domain="[('option_type_id.code', '=', 'tm')]"),
+        'class_id': fields.many2one('option.value',
+                                            'Class',
+                               domain="[('option_type_id.code', '=', 'cl')]"),
+        'passengers': fields.integer('Passengers'),
     }
 
     def price_get_partner(self, cr, uid, cls, to_search, params, context=None):
@@ -47,11 +54,15 @@ class product_car(Model):
             dsdate = dt.datetime.strptime(params['start_date'], DF)
             dedate = dt.datetime.strptime(params['end_date'], DF)
             days = (dedate - dsdate).days
-            to_search += [('min_days', '<=', days), ('max_days', '>=', days)]
+            #to_search += [('min_days', '<=', days), ('max_days', '>=', days)]
             pp_ids = model.search(cr, uid, to_search, context=context)
-            if pp_ids:
-                pp = model.browse(cr, uid, pp_ids[0], context)
-                price = pp.price * days
+            for pp_id in pp_ids:
+                pp = model.browse(cr, uid, pp_id, context)
+                isdate = dt.datetime.strptime(pp.start_date, DF)
+                iedate = dt.datetime.strptime(pp.end_date, DF)
+                ini = max(isdate, dsdate)
+                end = min(iedate, dedate)
+                price += pp.price * ((end - ini).days + 1)
                 price += self.price_get_partner_supp(cr, uid, pp, params,
                                                      to_search_sup, context)
         return price
@@ -73,27 +84,27 @@ class product_car(Model):
 
     _order = 'car_name asc'
 
-
-class product_rate(Model):
-    _name = 'product.rate'
-    _inherit = 'product.rate'
-    _columns = {
-        'min_days': fields.integer('Min Days'),
-        'max_days': fields.integer('Max Days'),
-        'model_id': fields.many2one('option.value', 'Model',
-                               domain="[('option_type_id.code', '=', 'md')]"),
-        'transmission_id': fields.many2one('option.value', 'Transmission',
-                               domain="[('option_type_id.code', '=', 'tm')]")
-    }
-
-
-class sale_context(Model):
-    _name = 'sale.context'
-    _inherit = 'sale.context'
-    _columns = {
-        'car_1_model_id': fields.many2one('option.value', 'Model',
-                               domain="[('option_type_id.code', '=', 'md')]"),
-        'car_2_transmission_id': fields.many2one('option.value',
-                                                 'Transmission',
-                               domain="[('option_type_id.code', '=', 'tm')]")
-    }
+#
+#class product_rate(Model):
+#    _name = 'product.rate'
+#    _inherit = 'product.rate'
+#    _columns = {
+#        'min_days': fields.integer('Min Days'),
+#        'max_days': fields.integer('Max Days'),
+#        'model_id': fields.many2one('option.value', 'Model',
+#                               domain="[('option_type_id.code', '=', 'md')]"),
+#        'transmission_id': fields.many2one('option.value', 'Transmission',
+#                               domain="[('option_type_id.code', '=', 'tm')]")
+#    }
+#
+#
+#class sale_context(Model):
+#    _name = 'sale.context'
+#    _inherit = 'sale.context'
+#    _columns = {
+#        'car_1_model_id': fields.many2one('option.value', 'Model',
+#                               domain="[('option_type_id.code', '=', 'md')]"),
+#        'car_2_transmission_id': fields.many2one('option.value',
+#                                                 'Transmission',
+#                               domain="[('option_type_id.code', '=', 'tm')]")
+#    }

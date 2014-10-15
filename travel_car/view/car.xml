@@ -22,6 +22,9 @@
             <field name="arch" type="xml">
                 <tree string="Products">
                     <field name="car_name"/>
+                    <field name="class_id"/>
+                    <field name="transmission_id"/>
+                    <field name="passengers"/>
                     <field name="categ_id" invisible="1"/>
                     <field name="type" invisible="1"/>
                     <field name="lst_price" invisible="1"/>
@@ -53,7 +56,14 @@
                             </h2>
                         </div>
                         <group>
-                            <field name="active"/>
+	                        <group>
+	                            <field name="class_id"/>
+	                            <field name="transmission_id"/>
+	                            <field name="passengers"/>
+	                        </group>
+	                        <group>
+	                            <field name="active"/>
+	                        </group>
                         </group>
                         <notebook>
                             <page string="Information">
@@ -101,10 +111,6 @@
 		                                            <tree string="Pricelist" editable="bottom">
 		                                                <field name="start_date"/>
 		                                                <field name="end_date"/>
-														<field name="model_id"/>
-		                                                <field name="transmission_id"/>
-		                                                <field name="min_days"/>
-		                                                <field name="max_days"/>
 		                                                <field name="price"/>
 		                                                <field name="min_quantity" invisible="1"/>
 		                                            </tree>

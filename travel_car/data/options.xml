@@ -9,12 +9,12 @@
 		<record id="transmission_automatic" model="option.value">
 			<field name="option_type_id" ref="option_type_transmission"/>
 			<field name="code">automatic</field>
-			<field name="name">Automatic</field>
+			<field name="name">AUTOMATIC</field>
 		</record>
 		<record id="transmission_mechanic" model="option.value">
 			<field name="option_type_id" ref="option_type_transmission"/>
 			<field name="code">mechanic</field>
-			<field name="name">Mechanic</field>
+			<field name="name">MECHANIC</field>
 		</record>
 
 		<record id="option_type_class" model="option.type">
@@ -24,17 +24,17 @@
 		<record id="sedan" model="option.value">
 			<field name="option_type_id" ref="option_type_class"/>
 			<field name="code">sedan</field>
-			<field name="name">Sedan</field>
+			<field name="name">SEDAN</field>
 		</record>
 		<record id="compact" model="option.value">
 			<field name="option_type_id" ref="option_type_class"/>
 			<field name="code">compact</field>
-			<field name="name">Compact</field>
+			<field name="name">COMPACT</field>
 		</record>
 		<record id="van" model="option.value">
 			<field name="option_type_id" ref="option_type_class"/>
 			<field name="code">van</field>
-			<field name="name">Van</field>
+			<field name="name">VAN</field>
 		</record>
 	</data>
 </openerp>

@@ -10,22 +10,22 @@
 		<record id="vehicle_type_taxi" model="option.value">
 			<field name="option_type_id" ref="option_type_vehicle_type"/>
 			<field name="code">taxi</field>
-			<field name="name">Taxi</field>
+			<field name="name">TAXI</field>
 		</record>
 		<record id="vehicle_type_micro" model="option.value">
 			<field name="option_type_id" ref="option_type_vehicle_type"/>
 			<field name="code">micro</field>
-			<field name="name">Microbus</field>
+			<field name="name">MICROBUS</field>
 		</record>
 		<record id="vehicle_type_mini" model="option.value">
 			<field name="option_type_id" ref="option_type_vehicle_type"/>
 			<field name="code">mini</field>
-			<field name="name">Minibus</field>
+			<field name="name">MINIBUS</field>
 		</record>
 		<record id="vehicle_type_omni" model="option.value">
 			<field name="option_type_id" ref="option_type_vehicle_type"/>
 			<field name="code">omni</field>
-			<field name="name">Omnibus</field>
+			<field name="name">OMNIBUS</field>
 		</record>
 
 		<record id="option_type_vehicle_confort" model="option.type">
@@ -35,12 +35,12 @@
 		<record id="vehicle_confort_standard" model="option.value">
 			<field name="option_type_id" ref="option_type_vehicle_confort"/>
 			<field name="code">vcs</field>
-			<field name="name">Standard</field>
+			<field name="name">STANDARD</field>
 		</record>
 		<record id="vehicle_confort_luxury" model="option.value">
 			<field name="option_type_id" ref="option_type_vehicle_confort"/>
 			<field name="code">vcl</field>
-			<field name="name">Luxury</field>
+			<field name="name">LUXURY</field>
 		</record>
 		
 		<record id="option_type_vehicle_guide" model="option.type">
@@ -50,12 +50,12 @@
 		<record id="vehicle_guide" model="option.value">
 			<field name="option_type_id" ref="option_type_vehicle_guide"/>
 			<field name="code">guide</field>
-			<field name="name">Guide</field>
+			<field name="name">GUIDE</field>
 		</record>
 		<record id="vehicle_no_guide" model="option.value">
 			<field name="option_type_id" ref="option_type_vehicle_guide"/>
 			<field name="code">no_guide</field>
-			<field name="name">No Guide</field>
+			<field name="name">NO GUIDE</field>
 		</record>
 
 	</data>

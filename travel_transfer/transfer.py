@@ -44,24 +44,24 @@ class product_transfer(Model):
         
         ov = self.pool.get('option.value')
         taxi = False
-        if 'transfer_1_vehicle_type_id' in params.keys() and params['transfer_1_vehicle_type_id']:
+        if 'transfer_1_vehicle_type_id' in params.keys() and params['transfer_1_vehicle_type_id'] is not False:
             vehicle_type = ov.browse(cr, uid, params['transfer_1_vehicle_type_id'], context=context)
             if vehicle_type.code == 'taxi':
                 taxi = True
 
-        adults = params.get('adults', 0)
-        children = params.get('children', 0)
-        paxs = adults + children
-        to_search += [('min_paxs', '<=', paxs), ('max_paxs', '>=', paxs)]
-        pp_ids = model.search(cr, uid, to_search, context=context)
-        if pp_ids:
-            pp = model.browse(cr, uid, pp_ids[0], context)
-            if taxi:
-                price = pp.price
-            else:
-                price = pp.price * adults + pp.price * children
-            price += self.price_get_partner_supp(cr, uid, pp, params,
-                                                 to_search_sup, context)
+            adults = params.get('adults', 0)
+            children = params.get('children', 0)
+            paxs = adults + children
+            to_search += [('min_paxs', '<=', paxs), ('max_paxs', '>=', paxs)]
+            pp_ids = model.search(cr, uid, to_search, context=context)
+            if len(pp_ids) == 1:
+                pp = model.browse(cr, uid, pp_ids[0], context)
+                if taxi:
+                    price = pp.price
+                else:
+                    price = pp.price * adults + pp.price * children
+                price += self.price_get_partner_supp(cr, uid, pp, params,
+                                                     to_search_sup, context)
         return price
 
     def price_get_partner_supp(self, cr, uid, pp, params, to_search_sup,

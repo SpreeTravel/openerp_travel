@@ -70,8 +70,8 @@
                             <field name="client_order_ref" string="Reference"/>
 							<label for="date_order" string="Date"/>
                             <div>
-                                <field name="date_order" class="oe_inline" nolabel="1"/>-
-                                <field name="end_date" class="oe_inline" nolabel="1"/>
+                                <field name="date_order" class="oe_inline" nolabel="1" on_change="onchange_start_date(date_order, end_date)"/>-
+                                <field name="end_date" class="oe_inline" nolabel="1" on_change="onchange_end_date(date_order, end_date)"/>
                             </div>
 							<label for="flight_in" string="Flight"/>
                             <div>

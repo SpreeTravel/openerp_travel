@@ -111,6 +111,30 @@ class sale_order(Model):
 
     def to_cancel(self, cr, uid, ids, context=None):
         return self.write(cr, uid, ids, {'state': 'cancel'}, context)
+    
+    def onchange_start_date(self, cr, uid, ids, start_date, end_date, context=None):   
+        return self.check_dates(cr, uid, ids, start_date, end_date, 'start_date')
+     
+    def onchange_end_date(self, cr, uid, ids, start_date, end_date, context=None):        
+        return self.check_dates(cr, uid, ids, start_date, end_date, 'end_date')
+    
+    def check_dates(self, cr, uid, ids, start_date, end_date, fix_date, context=None):
+        res = {}
+        warning = False
+        if start_date:
+            for so in self.browse(cr, uid, ids, context):
+                if start_date > end_date:
+                    res['end_date'] = start_date
+                    if fix_date == 'end_date':
+                        warning = True
+
+        if warning:
+            return {'value': res, 'warning': {'title':'Dates Warning', 
+                                              'message':'End Date should be after Start Date\n'}}                    
+        return {'value': res}
+        
+                
+
 
 
 class sale_context(Model):

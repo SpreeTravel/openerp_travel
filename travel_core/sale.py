@@ -131,10 +131,6 @@ class sale_order(Model):
                                               'message':'End Date should be after Start Date\n'}}                    
         return {'value': res}
         
-                
-
-
-
 class sale_context(Model):
     _name = 'sale.context'
 

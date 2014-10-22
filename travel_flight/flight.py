@@ -45,11 +45,11 @@ class product_flight(Model):
         model = self.pool.get(cls)
         to_search_sup = [x for x in to_search]
         pp_ids = model.search(cr, uid, to_search, context=context)
-        if pp_ids:
+        if pp_ids and len(pp_ids) == 1:
             adults = params.get('adults', 0)
             children = params.get('children', 0)
             pp = model.browse(cr, uid, pp_ids[0], context)
-            price = pp.price * adults + pp.price + children
+            price = pp.price * adults + pp.price * children
             price += self.price_get_partner_supp(cr, uid, pp, params,
                                                  to_search_sup, context)
         return price

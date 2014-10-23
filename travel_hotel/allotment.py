@@ -122,11 +122,12 @@ class allotment_state(Model):
         hotel_model = self.pool.get('product.hotel')
         for ol in order_lines:
             if ol.category_id.name == 'Hotel':
-                hotel_id = hotel_model.search(cr, uid, [('product_id', '=', ol.product_id.id)])[0]
-                allotment_ids = allotment_model.search(cr, uid, [('hotel_id', '=', hotel_id), 
+                hotel_ids = hotel_model.search(cr, uid, [('product_id', '=', ol.product_id.id)])
+                if len(hotel_ids) > 0:
+                    allotment_ids = allotment_model.search(cr, uid, [('hotel_id', '=', hotel_ids[0]), 
                                                       ('day', '>=', ol.start_date),
                                                       ('day', '<', ol.end_date)])
-                res.extend(allotment_ids)
+                    res.extend(allotment_ids)
                 
         return list(set(res))
 

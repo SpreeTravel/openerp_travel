@@ -26,7 +26,7 @@ from openerp.osv.orm import Model
 class sale_rooming(Model):
     _name = 'sale.rooming'
     _columns = {
-        'room': fields.selection([('simple', 'Simple'),
+        'room': fields.selection([('simple', 'Single'),
                                   ('double', 'Double'),
                                   ('triple', 'Triple')], 'Room'),
         'adults': fields.integer('Adults'),

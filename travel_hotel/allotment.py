@@ -40,13 +40,13 @@ class product_rate_allotment(Model):
     _name = 'product.rate.allotment'
                 
     def create(self, cr, uid, values, context=None):
-        res = super(product_rate_allotment, self).create(cr, uid, values, context)
-        #self.pool.get('allotment.state').calculate_allotment(cr, uid, context)              
+        res = super(product_rate_allotment, self).create(cr, uid, values, context)   
+        self.update_daily_allotment(cr, uid, [res])           
         return res
     
     def write(self, cr, uid, ids, values, context=None):
         res = super(product_rate_allotment, self).write(cr, uid, ids, values, context)
-        #self.pool.get('allotment.state').calculate_allotment(cr, uid, context)              
+        self.update_daily_allotment(cr, uid, ids)        
         return res
      
     def unlink(self, cr, uid, ids, context=None):
@@ -65,6 +65,39 @@ class product_rate_allotment(Model):
             
         res = super(product_rate_allotment, self).unlink(cr, uid, ids, context)       
         return res   
+    
+    def update_daily_allotment(self, cr, uid, allotment_ids):
+        daily_allotment_obj = self.pool.get('allotment.state')
+        hotel_obj           = self.pool.get('product.hotel')
+        order_line_obj      = self.pool.get('sale.order.line')
+        
+        for allotment in self.browse(cr, uid, allotment_ids):
+            vals = {
+                'hotel_id':     hotel_obj.search(cr, uid, [('product_id', '=', allotment.suppinfo_id.product_id.id)])[0],
+                'room_id':      allotment.room_type_id.id,
+                'supplier_id':  allotment.suppinfo_id.name.id,
+                'allotment':    allotment.allotment
+                    }
+            d        = dt.datetime.strptime(allotment.start_date, '%Y-%m-%d').date()
+            end_date = dt.datetime.strptime(allotment.end_date, '%Y-%m-%d').date()
+            delta = dt.timedelta(days=1)
+            while d <= end_date:
+                vals.update({'day': d})
+                daily_allotment_ids = daily_allotment_obj.search(cr, uid, [('day',          '=', vals['day']),
+                                                                           ('hotel_id',     '=', vals['hotel_id']),
+                                                                           ('room_id',      '=', vals['room_id']),
+                                                                           ('supplier_id',  '=', vals['supplier_id'])])
+                if len(daily_allotment_ids) == 0: 
+                    daily_allotment_obj.create(cr, uid, vals)
+                else:
+                    daily_allotment_obj.write(cr, uid, daily_allotment_ids, vals)
+                d += delta
+                
+            order_line_ids = order_line_obj.search(cr, uid, [('product_id', '=', allotment.suppinfo_id.product_id.id)])
+            order_line_obj.write(cr, uid, order_line_ids, {})
+        
+        return True
+        
     
     _columns = {
         'start_date': fields.date('Start date'),
@@ -130,7 +163,7 @@ class allotment_state(Model):
                     res.extend(allotment_ids)
                 
         return list(set(res))
-
+        
     _columns = {
         'day': fields.date('Day'),
         'hotel_id': fields.many2one('product.hotel', 'Hotel'),

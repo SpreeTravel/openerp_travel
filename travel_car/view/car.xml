@@ -73,7 +73,6 @@
                                         <field name="list_price"/>
                                     </group>
                                     <group>
-                                        <field name="price_margin" groups="product.group_product_variant"/>
                                         <field name="price_extra" groups="product.group_product_variant"/>
                                     </group>
                                 </group>
@@ -82,7 +81,6 @@
                             <page string="Procurements" groups="base.group_user">
                                 <group name="procurement">
                                     <group name="general">
-                                        <field name="cost_method" groups="product.group_costing_method"/>
                                         <field name="standard_price" attrs="{'readonly':[('cost_method','=','average')]}"/>
                                     </group>
                                     <group name="procurement_uom" groups="product.group_uom" string="Purchase">

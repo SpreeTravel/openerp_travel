@@ -80,9 +80,6 @@
                             </page>
                             <page string="Procurements" groups="base.group_user">
                                 <group name="procurement">
-                                    <group name="general">
-                                        <field name="standard_price" attrs="{'readonly':[('cost_method','=','average')]}"/>
-                                    </group>
                                     <group name="procurement_uom" groups="product.group_uom" string="Purchase">
                                         <field name="uom_po_id"/>
                                     </group>

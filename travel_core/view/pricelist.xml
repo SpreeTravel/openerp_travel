@@ -28,6 +28,17 @@
 		</field>
 	</record>
 	
+		<record id="product_supplierinfo_form_view2" model="ir.ui.view">
+            <field name="name">product.supplierinfo.form.view2</field>
+            <field name="model">product.supplierinfo</field>
+            <field name="inherit_id" ref="product.product_supplierinfo_form_view"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='pricelist_ids']" position="attributes">
+                    <attribute name="groups"></attribute>
+                </xpath>
+            </field>
+        </record>
+	
 	
 
 	<!-- Export customer prices -->

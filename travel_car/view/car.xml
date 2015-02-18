@@ -40,7 +40,7 @@
             <field name="model">product.car</field>
             <field eval="7" name="priority"/>
             <field name="arch" type="xml">
-                <form string="Product" version="7.0">
+                <form string="Product">
                     <sheet>
                         <field name="image_medium" widget="image" class="oe_avatar oe_left"/>
                         <div class="oe_title">
@@ -81,7 +81,7 @@
                             <page string="Procurements" groups="base.group_user">
                                 <group name="procurement">
                                     <group name="general">
-                                        <field name="standard_price" attrs="{'readonly':[('cost_method','=','average')]}"/>
+                                        <field name="standard_price"/>
                                     </group>
                                     <group name="procurement_uom" groups="product.group_uom" string="Purchase">
                                         <field name="uom_po_id"/>

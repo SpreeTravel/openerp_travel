@@ -1,6 +1,41 @@
 <?xml version="1.0" ?>
 <openerp>
 	<data>
+	
+		<record id="8transmission" model="product.attribute">
+			<field name="name">Transmission</field>
+			<field name="type">distinct</field>
+		</record>
+		<record id="8transmission_automatic" model="product.attribute.value">
+			<field name="attribute_id" ref="8transmission"/>
+			<field name="name">Automatic</field>
+		</record>
+		<record id="8transmission_mechanic" model="product.attribute.value">
+			<field name="attribute_id" ref="8transmission"/>
+			<field name="name">Mechanic</field>
+		</record>		
+		<record id="8class" model="product.attribute">
+			<field name="name">Class</field>
+			<field name="type">distinct</field>
+		</record>
+		<record id="8class_sedan" model="product.attribute.value">
+			<field name="attribute_id" ref="8class"/>
+			<field name="name">Sedan</field>
+		</record>
+		<record id="8class_compact" model="product.attribute.value">
+			<field name="attribute_id" ref="8class"/>
+			<field name="name">Compact</field>
+		</record>
+		<record id="8class_van" model="product.attribute.value">
+			<field name="attribute_id" ref="8class"/>
+			<field name="name">Van</field>
+		</record>		
+		<record id="8passengers" model="product.attribute">
+			<field name="name">Passengers</field>
+			<field name="type">float</field>
+		</record>
+		
+		<!-- Old data -->
 
 		<record id="option_type_transmission" model="option.type">
 			<field name="code">tm</field>

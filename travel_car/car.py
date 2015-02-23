@@ -50,7 +50,7 @@ class product_car(Model):
         model = self.pool.get(cls)
         to_search_sup = [x for x in to_search]
 
-        if params['start_date'] and params['end_date']:
+        if params.get('start_date', False) and params.get('end_date', False):
             dsdate = dt.datetime.strptime(params['start_date'], DF)
             dedate = dt.datetime.strptime(params['end_date'], DF)
             days = (dedate - dsdate).days

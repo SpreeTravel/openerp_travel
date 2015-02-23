@@ -54,7 +54,7 @@ class product_hotel(Model):
         model = self.pool.get(cls)
         to_search_sup = [x for x in to_search]
 
-        if params['start_date'] and params['end_date']:
+        if params.get('start_date', False) and params.get('end_date', False):
             occupation = sr.extract_values(cr, uid, rooming, context)
             pp = False
             for occ in occupation:

@@ -44,7 +44,7 @@ class product_transfer(Model):
         
         ov = self.pool.get('option.value')
         taxi = False
-        if 'transfer_1_vehicle_type_id' in params.keys() and params['transfer_1_vehicle_type_id'] is not False:
+        if params.get('transfer_1_vehicle_type_id', False):
             vehicle_type = ov.browse(cr, uid, params['transfer_1_vehicle_type_id'], context=context)
             if vehicle_type.code == 'taxi':
                 taxi = True

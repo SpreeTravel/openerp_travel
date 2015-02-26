@@ -207,7 +207,11 @@ class product_pricelist(Model):
                             price_type.field, context=context)[product.id], round=False, context=context)
 
                 if price is not False:
+                    params = context.get('params', {})
+                    paxs = self.pool.get('sale.order.line').get_total_paxs(cr, uid, params, context)
+                    days = self.pool.get('sale.order.line').get_margin_days(cr, uid, params, context)
                     price_limit = price
+                    price += days * paxs * (rule.margin_per_pax or 0.0)
                     price = price * (1.0+(rule.price_discount or 0.0))
                     if rule.price_round:
                         price = tools.float_round(price, precision_rounding=rule.price_round)

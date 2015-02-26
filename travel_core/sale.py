@@ -493,9 +493,12 @@ class sale_order_line(Model):
         '''
         The number of days of the service countable for apply a per day margin
         '''
-        ini = dt.datetime.strptime(params['start_date'], DF)
-        end = dt.datetime.strptime(params['end_date'], DF)
-        return (end-ini).days + 1
+        days = 0
+        if params.get('supplement_ids', False):
+            ini  = dt.datetime.strptime(params['start_date'], DF)
+            end  = dt.datetime.strptime(params['end_date'], DF)
+            days = (end-ini).days + 1
+        return days
 
     _defaults = {
         'start_date': lambda s, c, u, ctx: ctx.get('start', False),

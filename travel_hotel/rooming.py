@@ -124,3 +124,48 @@ class sale_rooming(Model):
         'adults': 2,
         'quantity': 1
     }
+    
+class option_value(Model):
+    _name = 'option.value'
+    _inherit = 'option.value'
+    
+    def _name_search(self, cr, user, name='', args=None, operator='ilike', context=None, limit=100, name_get_uid=None):
+        if context.get('name_search_product_id', False):
+            product_model   = self.pool.get('product.product')
+            product_tmpl_id = product_model.browse(cr, user, context['name_search_product_id'], context).product_tmpl_id.id
+            suppinfo_model  = self.pool.get('product.supplierinfo')
+            domain = [('product_tmpl_id', '=', product_tmpl_id)]
+            if context.get('name_search_supplier_id', False):
+                domain += [('name', '=', context['name_search_supplier_id'])]
+            suppinfo_ids    = suppinfo_model.search(cr, user, domain, context=context)
+            room_type_ids = []
+            for suppinfo_id in suppinfo_ids:
+                pricelist_model  = self.pool.get('pricelist.partnerinfo')
+                pricelist_ids = pricelist_model.search(cr, user, [('suppinfo_id', '=', suppinfo_id)], context=context)
+                room_type_ids = list(set([p.room_type_id.id for p in pricelist_model.browse(cr, user, pricelist_ids, context=context)]))
+            args += [('id', 'in', room_type_ids)]                
+        return super(option_value, self)._name_search(cr, user, name, args, operator, context, limit, name_get_uid)
+    
+    
+    
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+    
+    
+    
+    
+    
+        

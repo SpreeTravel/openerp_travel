@@ -423,8 +423,14 @@ class sale_order_line(Model):
                        'title': _('Configuration Error!'),
                        'message': warning_msgs
                     }
-        if not context.get('supplier_id', False):
-            result.update({'supplier_id': product_obj.seller_id.id})
+        
+        # This is for loading only available option values
+        if context.get('params', False) and context['params'].get('category', False):    
+            product_model   = self.pool.get('product.'+context['params']['category'])
+            options = product_model.get_available_options(cr, uid, product_obj.id, context)
+            domain.update(options['domain'])
+            result.update(options['value'])
+               
         return {'value': result, 'domain': domain, 'warning': warning}
 
     def show_cost_price(self, cr, uid, result, product, qty, partner_id, uom,

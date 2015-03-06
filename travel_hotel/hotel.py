@@ -115,39 +115,12 @@ class product_hotel(Model):
         else:
             return adult_price * val
         
-    def get_available_options(self, cr, uid, product_id, context):
+    def get_option_type_fields(self, cr, uid, product_id, context):
         '''
-        Load only available values for the hotel sale order form
+        Dict of the model option_type values to load on sale_order view
         '''
+        return [{'meal_plan_id': 'hotel_2_meal_plan_id'}, []]
         
-        params = context.get('params')
-        
-        result = {}
-        domain = {}
-        
-        product_model   = self.pool.get('product.product')
-        product_tmpl_id = product_model.browse(cr, uid, product_id, context).product_tmpl_id.id
-        suppinfo_model  = self.pool.get('product.supplierinfo')
-        supp_domain = [('product_tmpl_id', '=', product_tmpl_id)]
-        if context.get('supplier_id', False):
-            supp_domain += [('name', '=', context['supplier_id'])]
-        suppinfo_ids = suppinfo_model.search(cr, uid, supp_domain, context=context)
-        suppinfos    = suppinfo_model.browse(cr, uid, suppinfo_ids)
-        if len(suppinfos) == 1:
-            result.update({'supplier_id': suppinfos[0].name.id})
-        domain.update({'supplier_id': [('id', 'in', [s.name.id for s in suppinfos])]})    
-        meal_plan_ids = []
-        for suppinfo_id in suppinfo_ids:
-            pricelist_model  = self.pool.get('pricelist.partnerinfo')
-            pricelist_ids = pricelist_model.search(cr, uid, [('suppinfo_id', '=', suppinfo_id)], context=context)
-            meal_plan_ids = list(set([p.meal_plan_id.id for p in pricelist_model.browse(cr, uid, pricelist_ids, context=context)]))
-            
-            if len(meal_plan_ids) == 1:
-                result.update({'hotel_2_meal_plan_id': meal_plan_ids[0]})
-            domain.update({'hotel_2_meal_plan_id': [('id', 'in', meal_plan_ids)]})
-                
-        return {'value': result, 'domain': domain}
-
     _order = 'hotel_name asc'
 
 

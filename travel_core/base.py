@@ -90,8 +90,7 @@ class option_value(Model):
     def get_id_by_code(self, cr, uid, code, context=None):
         res = self.search(cr, uid, [('code', '=', code)], context=context)
         return res and res[0] or False
-
-
+    
 class destination(Model):
     _name = 'destination'
     _columns = {

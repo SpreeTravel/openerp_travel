@@ -77,7 +77,22 @@ class product_transfer(Model):
                     rate_ids = [r.id for r in supp.rate_ids]
                     if not rate_ids or pp.product_rate_id.id in rate_ids:
                         price += supp.price
-        return price
+        return price  
+          
+    def get_option_type_fields(self, cr, uid, product_id, context):
+        '''
+        Dict of the model option_type values to load on sale_order view
+        '''
+        params  = context['params']
+        fields = {'vehicle_type_id': 'transfer_1_vehicle_type_id', 
+                  'guide_id': 'transfer_2_guide_id', 
+                  'confort_id': 'transfer_3_confort_id'}
+        adults = params.get('adults', 0)
+        children = params.get('children', 0)
+        paxs = adults + children
+        filter = [('min_paxs', '<=', paxs), ('max_paxs', '>=', paxs)]
+                
+        return [fields, filter]
 
     _order = 'transfer_name asc'
 

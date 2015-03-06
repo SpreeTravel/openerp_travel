@@ -240,7 +240,9 @@ class sale_context(Model):
                 n.set('name', f)
                 modifiers = self._build_attr(cr, uid, f)
                 n.set('modifiers', simplejson.dumps(modifiers))
-                n.set('context', ctx)
+                trigger = ", 'trigger': "+f+"}"
+                ctx_trigger = ctx[::-1].replace('}', trigger[::-1], 1)[::-1]
+                n.set('context', ctx_trigger)
                 n.set('on_change', ocg)
                 parent_node.append(n)
             res['arch'] = etree.tostring(doc)
@@ -425,13 +427,56 @@ class sale_order_line(Model):
                     }
         
         # This is for loading only available option values
-        if context.get('params', False) and context['params'].get('category', False):    
-            product_model   = self.pool.get('product.'+context['params']['category'])
-            options = product_model.get_available_options(cr, uid, product_obj.id, context)
-            domain.update(options['domain'])
-            result.update(options['value'])
+        if context.get('params', False) and context['params'].get('category', False):
+            options = self.get_available_options(cr, uid, product_obj.id, context)
+            domain.update(options.get('domain', {}))
+            result.update(options.get('value', {}))
                
         return {'value': result, 'domain': domain, 'warning': warning}
+    
+    def get_available_options(self, cr, uid, product_id, context):
+        '''
+        Load only available values for the sale order form
+        '''
+            
+        result = {}
+        domain = {}
+        
+        # Automatically load supplier field values
+        product_model   = self.pool.get('product.product')
+        product_tmpl_id = product_model.browse(cr, uid, product_id, context).product_tmpl_id.id
+        suppinfo_model  = self.pool.get('product.supplierinfo')
+        supp_domain = [('product_tmpl_id', '=', product_tmpl_id)]
+        if context.get('supplier_id', False):
+            supp_domain += [('name', '=', context['supplier_id'])]
+        suppinfo_ids = suppinfo_model.search(cr, uid, supp_domain, context=context)
+        suppinfos    = suppinfo_model.browse(cr, uid, suppinfo_ids)
+        if len(suppinfos) == 1:
+            result.update({'supplier_id': suppinfos[0].name.id})
+        domain.update({'supplier_id': [('id', 'in', [s.name.id for s in suppinfos])]})    
+        
+        # Automatically upload option_type values        
+        params        = context.get('params')
+        product_model = self.pool.get('product.'+params['category'])
+        [free_fields, filter] = product_model.get_option_type_fields(cr, uid, product_id, context)
+        for field_name, form_name in free_fields.iteritems():
+            for suppinfo_id in suppinfo_ids:
+                pricelist_model  = self.pool.get('pricelist.partnerinfo')
+                pricelist_ids = pricelist_model.search(cr, uid, filter + [('suppinfo_id', '=', suppinfo_id)], context=context)
+                field_ids = list(set([getattr(p, field_name).id for p in pricelist_model.browse(cr, uid, pricelist_ids, context=context)]))
+            
+                if len(field_ids) > 0:
+                    if params.get(form_name, False):
+                        if params[form_name] not in field_ids:
+                            result.update({form_name: ''})
+                    elif len(pricelist_ids) == 1:
+                        result.update({form_name: field_ids[0]})
+                    
+                domain.update({form_name: [('id', 'in', field_ids)]})
+                
+        return {'value': result, 'domain': domain}
+        
+    
 
     def show_cost_price(self, cr, uid, result, product, qty, partner_id, uom,
                         date_order, supplier_id, params, pricelist,

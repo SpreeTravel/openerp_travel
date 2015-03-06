@@ -46,7 +46,14 @@ class product_misc(Model):
         if pp_ids:
             pp = model.browse(cr, uid, pp_ids[0], context)
             price = pp.price * adults + pp.price + children
-        return price
+        return price   
+         
+    def get_option_type_fields(self, cr, uid, product_id, context):
+        '''
+        Dict of the model option_type values to load on sale_order view
+        '''
+        
+        return [{}, []]
 
 
 class product_category_change(TransientModel):

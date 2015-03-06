@@ -63,6 +63,13 @@ class product_activity(Model):
                     rate_ids = [r.id for r in supp.rate_ids]
                     if not rate_ids or pp.product_rate_id.id in rate_ids:
                         price += supp.price
-        return price
+        return price   
+         
+    def get_option_type_fields(self, cr, uid, product_id, context):
+        '''
+        Dict of the model option_type values to load on sale_order view
+        '''
+        
+        return [{}, []]
 
     _order = 'activity_name asc'

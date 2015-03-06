@@ -432,8 +432,9 @@ class customer_price(TransientModel):
         for categ in category_obj.browse(cr, uid, category_ids):
             name = categ.name
             fields = self.get_category_price_fields(name.lower())
-            ws = wb.add_sheet(name)
-            self.write_prices(cr, uid, ws, fields, categ, pricelist, context)
+            if fields:
+                ws = wb.add_sheet(name, cell_overwrite_ok=True)
+                self.write_prices(cr, uid, ws, fields, categ, pricelist, context)
         wb.save('/tmp/prices.xls')
         f = open('/tmp/prices.xls', 'r')
         obj = self.browse(cr, uid, ids[0], context)
@@ -453,12 +454,15 @@ class customer_price(TransientModel):
     # TODO: sort fields just for first index
     def get_category_price_fields(self, category):
         import importlib
-        categ = importlib.import_module('openerp.addons.travel_' + category + '.' + category)
-        category_fields = [x for x in CORE_FIELDS]
-        if hasattr(categ, 'product_rate'):
-            category_fields += [(FIELD_TYPES[v._type], k, v.string) for k, v in categ.product_rate._columns.items()]
-            category_fields.sort()
-        return category_fields
+        try:
+            categ = importlib.import_module('openerp.addons.travel_' + category + '.' + category)
+            category_fields = [x for x in CORE_FIELDS]
+            if hasattr(categ, 'product_rate'):
+                category_fields += [(FIELD_TYPES[v._type], k, v.string) for k, v in categ.product_rate._columns.items()]
+                category_fields.sort()
+            return category_fields
+        except:
+            return []
 
     def write_prices(self, cr, uid, ws, fields, categ, pricelist, context=None):
         product_obj = self.pool.get('product.product')

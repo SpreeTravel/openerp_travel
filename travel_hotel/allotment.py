@@ -118,7 +118,7 @@ class allotment_state(Model):
         res = {}
         prod_allotment = self.pool.get('product.rate.allotment')
         suppinfo = self.pool.get('product.supplierinfo')
-        for obj in self.browse(cr, uid, ids, context):        
+        for obj in self.browse(cr, uid, ids, context):       
             suppinfo_ids = suppinfo.search(cr, uid, [('name', '=', obj.supplier_id.id), 
                                                      ('product_id', '=', obj.hotel_id.product_id.id)], context)
             allotment_ids = prod_allotment.search(cr, uid, [('suppinfo_id', 'in', suppinfo_ids),

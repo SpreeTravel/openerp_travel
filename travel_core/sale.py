@@ -415,11 +415,6 @@ class sale_order_line(Model):
                                               context)
             result.update({'price_unit_cost': cost_price})
             
-#        if params['category'] == 'transfer':
-#            result.update({'end_date': params['start_date']})  
-#        elif params['start_date'] > params['end_date']:
-#            result.update({'end_date': params['start_date']})
-
         if warning_msgs:
             warning = {
                        'title': _('Configuration Error!'),

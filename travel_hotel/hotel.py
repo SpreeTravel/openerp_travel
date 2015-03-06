@@ -59,8 +59,7 @@ class product_hotel(Model):
             pp = False
             for occ in occupation:
                 if occ['room_type_id']:
-                    to_search.append(('room_type_id', '=', occ['room_type_id']))
-                    pp_ids = model.search(cr, uid, to_search, context=context)
+                    pp_ids = model.search(cr, uid, to_search + [('room_type_id', '=', occ['room_type_id'])], context=context)
                     for pp_id in pp_ids:
                         pp = model.browse(cr, uid, pp_id, context)
                         r_price = 0.0

@@ -177,23 +177,33 @@ class product_pricelist(Model):
                                 ptype_src, pricelist.currency_id.id,
                                 price_tmp, round=False,
                                 context=context)
-                elif rule.base == -2:
-                    for seller in product.seller_ids:
-                        # I dont get this condition, what they meant
-                        #if (not partner) or (seller.name.id != partner):
-                        #    continue
-                        qty_in_seller_uom = qty
-                        from_uom = context.get('uom') or product.uom_id.id
-                        seller_uom = seller.product_uom and seller.product_uom.id or False
-                        if seller_uom and from_uom and from_uom != seller_uom:
-                            qty_in_seller_uom = product_uom_obj._compute_qty(cr, uid, from_uom, qty, to_uom_id=seller_uom)
-                        else:
-                            uom_price_already_computed = True
-                        params = context.get('params', {})
-                        for line in seller.pricelist_ids:
-                            if line.min_quantity <= qty_in_seller_uom:
-                                #price = line.price
-                                price = product.price_get_partner(product.id, seller.id, params)
+                elif rule.base == -2:                            
+                    sup_id = context.get('supplier_id', False)
+                    supplierinfo_obj = self.pool.get('product.supplierinfo')
+                    where = []
+                    if partner:
+                        where = [('name', '=', sup_id)]
+                    sinfo = supplierinfo_obj.search(cr, uid, [('product_tmpl_id', '=', product.product_tmpl_id.id)] + where)
+                    price = 0.0
+                    
+                    if len(sinfo) > 0:                
+                        for seller in product.seller_ids:
+                            # I dont get this condition, what they meant
+                            #if (not partner) or (seller.name.id != partner):
+                            #    continue
+                            if seller.id == sinfo[0]:
+                                qty_in_seller_uom = qty
+                                from_uom = context.get('uom') or product.uom_id.id
+                                seller_uom = seller.product_uom and seller.product_uom.id or False
+                                if seller_uom and from_uom and from_uom != seller_uom:
+                                    qty_in_seller_uom = product_uom_obj._compute_qty(cr, uid, from_uom, qty, to_uom_id=seller_uom)
+                                else:
+                                    uom_price_already_computed = True
+                                params = context.get('params', {})
+                                for line in seller.pricelist_ids:
+                                    if line.min_quantity <= qty_in_seller_uom:
+                                        #price = line.price
+                                        price = product.price_get_partner(product.id, seller.id, params)
 
                 else:
                     if rule.base not in price_types:

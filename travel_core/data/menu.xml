@@ -12,9 +12,11 @@
 			<field name="parent_id" ref="travel_menu" />
 		</record>
 		
+		<!--
 		<record id="product.menu_products" model="ir.ui.menu">			
 			<field name="parent_id" ref="travel_menu" />
 		</record>
+		-->
 		
 		<record id="product.prod_config_main" model="ir.ui.menu">
 			<field name="parent_id" ref="travel_menu" />

@@ -166,6 +166,8 @@ class sale_context(Model):
         'supplier_id': fields.many2one('res.partner', 'Supplier',
                                        domain="[('supplier', '=', True)]"),
         'reservation_number': fields.char('Reservation', size=64),
+        'draft_state': fields.selection([('negotiation', 'Negotiation'), ('request', 'Request'), ('requested', 'Requested')], 
+                                     'State'),
         'paxs': fields.function(_get_paxs, type='integer', method=True,
                                 string='Paxs', store=True)
     }
@@ -552,5 +554,6 @@ class sale_order_line(Model):
         'state': 'draft',
         'adults': 1,
         'children': 0,
-        'currency_cost_id': default_currency_cost
+        'currency_cost_id': default_currency_cost,
+        'draft_state': lambda *s : 'negotiation'
     }

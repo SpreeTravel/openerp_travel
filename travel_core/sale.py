@@ -166,8 +166,6 @@ class sale_context(Model):
         'supplier_id': fields.many2one('res.partner', 'Supplier',
                                        domain="[('supplier', '=', True)]"),
         'reservation_number': fields.char('Reservation', size=64),
-        'draft_state': fields.selection([('negotiation', 'Negotiation'), ('request', 'Request'), ('requested', 'Requested')], 
-                                     'State'),
         'paxs': fields.function(_get_paxs, type='integer', method=True,
                                 string='Paxs', store=True)
     }
@@ -292,6 +290,25 @@ class sale_order_line(Model):
         'order_end_date': fields.related('order_id', 'end_date', type='date',
                                          string='Out', store=True)
     }
+    
+    def __init__(self, pool, cr):
+        states = super(sale_order_line, self)._columns['state'].selection
+        try:
+            states.remove(('request', 'Request!'))    
+            states.remove(('requested', 'Requested'))
+        except:
+            pass          
+        draft_idx = states.index(('draft', 'Draft'))        
+        states.insert(draft_idx+1, ('request', 'Request!'))
+        states.insert(draft_idx+2, ('requested', 'Requested'))
+        super(sale_order_line, self)._columns['state'].selection = states
+        return super(sale_order_line, self).__init__(pool, cr)
+    
+    def to_request(self, cr, uid, ids, context=None):
+        return self.write(cr, uid, ids, {'state': 'request'}, context)
+    
+    def to_requested(self, cr, uid, ids, context=None):
+        return self.write(cr, uid, ids, {'state': 'requested'}, context)
 
     def to_confirm(self, cr, uid, ids, context=None):
         return self.write(cr, uid, ids, {'state': 'confirmed'}, context)
@@ -554,6 +571,5 @@ class sale_order_line(Model):
         'state': 'draft',
         'adults': 1,
         'children': 0,
-        'currency_cost_id': default_currency_cost,
-        'draft_state': lambda *s : 'negotiation'
+        'currency_cost_id': default_currency_cost
     }

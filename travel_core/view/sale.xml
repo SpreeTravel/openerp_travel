@@ -154,10 +154,12 @@
                 <!-- Form -->
                 <form string="Sales Order Lines" version="7.0">
                     <header groups="base.group_user">
-                        <button name="to_confirm" type="object" string="Confirm" states="draft,cancel"/>
-                        <button name="to_cancel" type="object" string="Cancel" states="confirmed"/>
-                        <button name="to_send" type="object" string="Send Email" states="draft"/>
-                        <field name="state" widget="statusbar" statusbar_visible="draft,confirmed,done" statusbar_colors='{"exception":"red","cancel":"red"}'/>
+                        <button name="to_request" type="object" string="Request!" states="draft, cancel"/>
+                        <button name="to_requested" type="object" string="Requested" states="request"/>
+                        <button name="to_confirm" type="object" string="Confirm" states="requested"/>
+                        <button name="to_cancel" type="object" string="Cancel" states="confirmed,request,requested"/>
+                        <button name="to_send" type="object" string="Send Email" states="draft,request,requested"/>
+                        <field name="state" widget="statusbar" statusbar_visible="draft,request,requested,confirmed,done" statusbar_colors='{"exception":"red","cancel":"red"}'/>
                     </header>
                     <group>
                         <group name="standard">
@@ -211,7 +213,6 @@
                              groups="base.group_user"
                              on_change="product_id_change(parent.pricelist_id, product_id, product_uom_qty, product_uom, product_uos_qty, product_uos, name, parent.partner_id, False, True, parent.date_order, False, parent.fiscal_position, False, context)"
                             />
-                            <field name="draft_state"/>
                             <field name="reservation_number"/>
                         </group>
                         <group name="extended">
@@ -300,7 +301,7 @@
             <field name="model">sale.order.line</field>
             <field eval="7" name="priority"/>
             <field name="arch" type="xml">
-                <tree string="Products" create="false" delete="false" colors="red:draft_state=='request'">
+                <tree string="Products" create="false" delete="false" colors="red:state=='request'">
                 	<field name="order_id" invisible="1" />
                     <field name="category_id"/>
 					<field name="product_id" invisible="1" />
@@ -313,7 +314,6 @@
 					<field name="price_unit" string="Price"/>
 					<field name="supplier_id"/>
 					<field name="state" />
-					<field name="draft_state"/>
 					<button name="to_confirm" type="object" string="Confirm" states="draft,cancel" icon="gtk-apply"/>
                     <button name="to_cancel" type="object" string="Cancel" states="confirmed" icon="gtk-cancel"/>
 					<button name="print_voucher" type="object" string="Voucher" states="confirmed" icon="gtk-file"/>

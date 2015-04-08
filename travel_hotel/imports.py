@@ -115,7 +115,7 @@ class import_hotel(TransientModel):
                     msg += 'Ambiguous name for hotel: '+ hotel_name + '\n'
                     product_hotel = False
                 else:
-                    product_hotel = product_hotel[0]
+                    product_hotel = hotel.browse(cr, uid, product_hotel[0])
                 
             if cell('SUPPLIER'):
                 if product_hotel:
@@ -145,11 +145,11 @@ class import_hotel(TransientModel):
                                                               
             if cell('MEAL PLAN'):
                 meal_plan_id = cell('MEAL PLAN').strip()
-                mp = option_value.get_id_by_code(cr, uid, 'mp', context)
+                mp = self.get_option_value(cr, uid, meal_plan_id, 'mp', context)
                 
             if cell('ROOM CATEGORY'):
                 room_type_str = cell('ROOM CATEGORY').strip()
-                room_type_id = option_value.get_id_by_code(cr, uid, 'rt', context)
+                room_type_id = self.get_option_value(cr, uid, room_type_str, 'rt', context)
                 
             if cell('DATEBAND FROM'):
                 date_from = self.get_date(cell('DATEBAND FROM'))
@@ -215,8 +215,7 @@ class import_hotel(TransientModel):
                                                  context=context)                     
                  else:
                      pricelist_partnerinfo.create(cr, uid, pvals, context)
-                     
-           
+                               
         # insert additional information (room and hotel comments) of previous hotel
         # last hotel in sheet case
         if suppinfo_id:
@@ -224,7 +223,20 @@ class import_hotel(TransientModel):
             hotel_info = ''       
                 
         return msg
-            
+  
+    def get_option_value(self, cr, uid, name, code, context=None):
+        ot = self.pool.get('option.type')
+        ov = self.pool.get('option.value')
+
+        ot_id = ot.search(cr, uid, [('code', '=', code)], context=context)[0]
+        to_search = [('name', '=', name), ('option_type_id', '=', ot_id)]
+        ov_ids = ov.search(cr, uid, to_search, context=context)
+        if ov_ids:
+            return ov_ids[0]
+        else:
+            to_create = {x[0]: x[2] for x in to_search}
+            return ov.create(cr, uid, to_create, context)     
+             
     def get_date(self, value):
         try:
             d = BASE_DATE + int(value)

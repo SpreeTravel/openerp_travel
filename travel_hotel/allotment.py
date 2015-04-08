@@ -73,7 +73,7 @@ class product_rate_allotment(Model):
         
         for allotment in self.browse(cr, uid, allotment_ids):
             vals = {
-                'hotel_id':     hotel_obj.search(cr, uid, [('product_id', '=', allotment.suppinfo_id.product_id.id)])[0],
+                'hotel_id':     hotel_obj.search(cr, uid, [('product_id', '=', allotment.suppinfo_id.product_tmpl_id.id)])[0],
                 'room_id':      allotment.room_type_id.id,
                 'supplier_id':  allotment.suppinfo_id.name.id,
                 'allotment':    allotment.allotment
@@ -93,7 +93,7 @@ class product_rate_allotment(Model):
                     daily_allotment_obj.write(cr, uid, daily_allotment_ids, vals)
                 d += delta
                 
-            order_line_ids = order_line_obj.search(cr, uid, [('product_id', '=', allotment.suppinfo_id.product_id.id)])
+            order_line_ids = order_line_obj.search(cr, uid, [('product_id', '=', allotment.suppinfo_id.product_tmpl_id.id)])
             order_line_obj.write(cr, uid, order_line_ids, {})
         
         return True
@@ -120,7 +120,7 @@ class allotment_state(Model):
         suppinfo = self.pool.get('product.supplierinfo')
         for obj in self.browse(cr, uid, ids, context):       
             suppinfo_ids = suppinfo.search(cr, uid, [('name', '=', obj.supplier_id.id), 
-                                                     ('product_id', '=', obj.hotel_id.product_id.id)], context)
+                                                     ('product_tmpl_id', '=', obj.hotel_id.product_id.id)], context)
             allotment_ids = prod_allotment.search(cr, uid, [('suppinfo_id', 'in', suppinfo_ids),
                                                             ('start_date', '<=', obj.day),
                                                             ('end_date', '>=', obj.day)], context)

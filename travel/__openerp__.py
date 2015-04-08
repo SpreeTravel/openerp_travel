@@ -32,7 +32,8 @@
         'travel_car',
         'travel_transfer',
         'travel_flight',
-        'travel_misc'
+        'travel_misc',
+        'travel_package'
      ],
     "init_xml": [],
     "update_xml": [],

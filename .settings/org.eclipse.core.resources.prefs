@@ -17,6 +17,7 @@ encoding//travel_hotel/__init__.py=utf-8
 encoding//travel_hotel/__openerp__.py=utf-8
 encoding//travel_hotel/allotment.py=utf-8
 encoding//travel_hotel/hotel.py=utf-8
+encoding//travel_hotel/imports.py=utf-8
 encoding//travel_hotel/rooming.py=utf-8
 encoding//travel_hotel/sale.py=utf-8
 encoding//travel_misc/misc.py=utf-8

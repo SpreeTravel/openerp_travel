@@ -195,7 +195,37 @@
         </record>
         
         <menuitem action="travel_product_hotel_action" id="travel_product_hotel_menu" parent="base.menu_product" sequence="2"/>
+   
+     	<record id="import_hotel_form" model="ir.ui.view">
+            <field name="name">import.hotel.form</field>
+            <field name="model">import.hotel</field>
+            <field name="arch" type="xml">
+                <form string="Import" version="7.0"> 
+				     <group>
+						<field name="file" />
+				     </group>
+					 <group>
+					 	<field name="result" colspan="4"/>
+					 </group>
+					 <footer>
+                        <button name="import_file" string="Import" type="object" class="oe_highlight"/>
+                        or
+                        <button string="Cancel" class="oe_link" special="cancel"/>
+                     </footer>
+                </form>
+            </field>
+        </record>
         
-        
+        <record id="import_hotel_action" model="ir.actions.act_window">
+            <field name="name">Import Hotels Prices</field>
+            <field name="res_model">import.hotel</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>            
+            <field name="view_id" ref="import_hotel_form"/>
+            <field name="target">new</field> 
+        </record>
+		
+        <menuitem id="import_hotel_menu" sequence="100" parent="travel_core.travel_imports_menu" action="import_hotel_action" />
+       
     </data>
 </openerp>

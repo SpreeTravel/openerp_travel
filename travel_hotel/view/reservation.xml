@@ -117,7 +117,7 @@
 			<field name="search_view_id" ref="travel_allotment_state_search_view"/>
         </record>
         
-        <menuitem action="travel_allotment_state_action" id="travel_allotment_state_menu" parent="travel_core.travel_reservations_menu" sequence="3" />
+        <menuitem action="travel_allotment_state_action" id="travel_allotment_state_menu" parent="travel_core.travel_reservations_menu" sequence="5" />
         
         
     </data>

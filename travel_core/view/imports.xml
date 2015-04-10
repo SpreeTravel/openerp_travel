@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+ 
+    	<record id="import_allotment_form" model="ir.ui.view">
+            <field name="name">import.allotment.form</field>
+            <field name="model">import.allotment</field>
+            <field name="arch" type="xml">
+                <form string="Import" version="7.0"> 
+				     <group>
+						<field name="file" />
+				     </group>
+					 <group>
+					 	<field name="result" colspan="4"/>
+					 </group>
+					 <footer>
+                        <button name="import_file" string="Import" type="object" class="oe_highlight"/>
+                        or
+                        <button string="Cancel" class="oe_link" special="cancel"/>
+                     </footer>
+                </form>
+            </field>
+        </record>
+        
+        <record id="import_allotment_action" model="ir.actions.act_window">
+            <field name="name">Import Allotments</field>
+            <field name="res_model">import.allotment</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>            
+            <field name="view_id" ref="import_allotment_form"/>
+            <field name="target">new</field> 
+        </record>
+		
+        <menuitem id="import_allotment_menu" sequence="101" parent="travel_core.travel_imports_menu" action="import_allotment_action" />
+    
+    </data>
+</openerp>

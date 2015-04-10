@@ -26,4 +26,7 @@ encoding//travel_misc/misc.py=utf-8
 encoding//travel_package/__init__.py=utf-8
 encoding//travel_package/__openerp__.py=utf-8
 encoding//travel_package/package.py=utf-8
+encoding//travel_transfer/__init__.py=utf-8
+encoding//travel_transfer/__openerp__.py=utf-8
+encoding//travel_transfer/imports.py=utf-8
 encoding//travel_transfer/transfer.py=utf-8

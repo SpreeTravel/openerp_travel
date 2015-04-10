@@ -210,7 +210,7 @@
             <field name="target">new</field> 
         </record>
 		
-        <menuitem id="import_transfer_menu" sequence="100" parent="travel_core.travel_imports_menu" action="import_transfer_action" />
+        <menuitem id="import_transfer_menu" sequence="102" parent="travel_core.travel_imports_menu" action="import_transfer_action" />
         
         
     </data>

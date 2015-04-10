@@ -204,7 +204,7 @@
             <field name="target">new</field> 
         </record>
 		
-        <menuitem id="import_car_menu" sequence="101" parent="travel_core.travel_imports_menu" action="import_car_action" />
+        <menuitem id="import_car_menu" sequence="103" parent="travel_core.travel_imports_menu" action="import_car_action" />
            
         
     </data>

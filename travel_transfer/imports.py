@@ -27,7 +27,6 @@ import xlrd
 
 BASE_DATE = 693594
 
-
 class import_transfer(TransientModel):
     _name = 'import.transfer'
     _columns = {

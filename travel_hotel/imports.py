@@ -24,6 +24,8 @@ import xlrd, datetime, base64, json
 from openerp.osv import fields, osv
 from openerp.osv.orm import TransientModel
 
+BASE_DATE = 693594
+
 class import_hotel(TransientModel):
     _name = 'import.hotel'
     _columns = {

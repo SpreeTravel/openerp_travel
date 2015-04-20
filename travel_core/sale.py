@@ -565,6 +565,34 @@ class sale_order_line(Model):
             days = (end-ini).days + 1
         return days
 
+    def print_voucher(self, cr, uid, ids, context=None):
+        
+        datas = {
+                 'model': 'sale.order.line',
+                 'ids': ids,
+                 'form': self.read(cr, uid, ids, context=context),
+        }
+        
+        categories = set()
+        
+        for id in ids:
+            categories.add(self.browse(cr, uid, id).category_id.id)
+        
+        if len(categories) != 1:
+            raise osv.except_osv(_('Warning!'), _("You should select lines with the same category!"))
+        
+        category        = categories.pop()
+        result          = self.pool.get('product.category').read(cr, uid, category, ['voucher_name'])
+        voucher_name    = result['voucher_name']
+        print voucher_name
+        
+        return {
+            'type': 'ir.actions.report.xml',
+            'report_name': voucher_name,
+            'datas': datas,
+            'nodestroy': True
+        }
+        
     _defaults = {
         'start_date': lambda s, c, u, ctx: ctx.get('start', False),
         'end_date': lambda s, c, u, ctx: ctx.get('end', False),

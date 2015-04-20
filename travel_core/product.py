@@ -43,6 +43,11 @@ class product_category(Model):
     _columns = {
         'complete_name': fields.function(_name_get_fnc, type="char",
                                          string='Name'),
+        'voucher_name': fields.char('Voucher name', size=64)
+    }    
+    
+    _defaults = {
+        'voucher_name': 'default_travel_voucher_report'
     }
 
 

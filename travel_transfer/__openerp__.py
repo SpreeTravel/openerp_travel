@@ -35,7 +35,8 @@
         'view/transfer.xml',
         'view/sale.xml',
         'view/reservation.xml',
-        'security/ir.model.access.csv'
+        'security/ir.model.access.csv',
+        'report/transfer_voucher.xml'
     ],
     "demo_xml": [],
     "application": False,

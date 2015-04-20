@@ -36,7 +36,8 @@
         'view/sale.xml',
         'view/rooming.xml',
         'view/reservation.xml',
-        'security/ir.model.access.csv'
+        'security/ir.model.access.csv',
+        'report/hotel_voucher.xml'
     ],
     "demo_xml": [],
     "application": False,

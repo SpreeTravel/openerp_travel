@@ -34,7 +34,8 @@
     "update_xml": [
         'view/car.xml',
         'view/sale.xml',
-        'security/ir.model.access.csv'
+        'security/ir.model.access.csv',
+        'report/car_voucher.xml'
     ],
     "demo_xml": [],
     "application": False,

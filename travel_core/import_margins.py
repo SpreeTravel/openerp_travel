@@ -129,17 +129,7 @@ class import_margins(TransientModel):
                                                       'product_id': product_ids[0],
                                                       'base': -2,
                                                       'margin_per_pax': margin})   
-                
-                rule_ids = rule.search(cr, uid, [('name', '=', 'Default'),
-                                                 ('base', '=', -1), 
-                                                ('price_version_id', '=', version_id),
-                                                ('base_pricelist_id', '=', pub_pricelist_id)])
-                if rule_ids == []:
-                     rule.create(cr, uid, {'name': 'Default',
-                                           'price_version_id': version_id,
-                                           'base': -1,
-                                            'base_pricelist_id': pub_pricelist_id})       
-                
+                                
             
             if msg == '':
                 msg += '\n ================== \nMargins successfully uploaded. \n'

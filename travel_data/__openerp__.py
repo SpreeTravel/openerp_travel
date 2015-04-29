@@ -28,7 +28,7 @@
     'category': '?',
     'depends': ['travel'],
     "description": """ List of cuban hotels and other tourist actors.""",
-    'init_xml': ['data/destination.csv', 'data/res.partner.csv'],
+    'init_xml': ['data/destination.csv', 'data/res.partner.csv', 'product.hotel.csv'],
     'update_xml': [],
     'demo_xml': [],
     'test': [],

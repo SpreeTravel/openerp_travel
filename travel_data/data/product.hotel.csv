@@ -1,4 +1,4 @@
-name,destination,chain_id,res_partner_id,categ_id
+"name","destination","chain_id","res_partner_id","categ_id"
 "ACUARIO","HAVANA","CUBANACAN HOTELES","ACUARIO","Hotel"
 "ACUAZUL","VARADERO","ISLAZUL","ACUAZUL","Hotel"
 "ALLEGRO CLUB CAYO GUILLERMO","CAYO GUILLERMO","OCCIDENTAL HOTELS & RESORTS","ALLEGRO CLUB CAYO GUILLERMO","Hotel"

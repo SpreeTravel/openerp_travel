@@ -131,6 +131,7 @@ class import_transfer(TransientModel):
         product_supplierinfo = self.pool.get('product.supplierinfo')
         pricelist_partnerinfo = self.pool.get('pricelist.partnerinfo')
         partner = self.pool.get('res.partner')
+        transfer_categ_id = self.pool.get('product.category').search(cr, uid, [('name', '=', 'Transfer')])[0]
         
         msg = ''
         sheet = data[-1]
@@ -158,10 +159,10 @@ class import_transfer(TransientModel):
             
             if cell('Name'):                                
                 transfer_name = cell('Name').strip()
-                category_id = self.get_categ_id(cr, uid, 'Transfer', context)
                 transfer_ids = product_transfer.search(cr, uid, [('name', '=', transfer_name)])
                 if len(transfer_ids) == 0:
-                    transfer_id = product_transfer.create(cr, uid, {'name': transfer_name}, context)
+                    transfer_id = product_transfer.create(cr, uid, {'name': transfer_name, 'categ_id': transfer_categ_id}, context)
+                    transfer_obj = product_transfer.browse(cr, uid, transfer_id)
                 elif len(transfer_ids) > 1: 
                     msg += 'Ambiguous name for transfer: '+ transfer_name + '\n'
                     continue

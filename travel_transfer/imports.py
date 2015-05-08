@@ -35,13 +35,7 @@ class import_transfer(TransientModel):
         'sheet':
             fields.integer('Sheet'),
         'result':
-            fields.text('Result'),
-        'supplier_id':
-            fields.many2one('res.partner', 'Supplier'),
-        'start_date':
-            fields.date('Start date'),
-        'end_date':
-            fields.date('End date')
+            fields.text('Result')
     }
     
     _defaults = {'sheet': 0}

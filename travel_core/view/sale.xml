@@ -105,9 +105,9 @@
                                 <field name="name" string="Name"/>
                                 <field name="start_date"/>
                                 <field name="end_date"/>
-                                <field name="adults"/>
-                                <field name="children"/>
-                                <field name="product_uom_qty"
+                                <field name="adults" string="Ads"/>
+                                <field name="children" string="Chs"/>
+                                <field name="product_uom_qty" string="Qty"
                                  context="{'partner_id':parent.partner_id, 'quantity':product_uom_qty, 'pricelist':parent.pricelist_id, 'uom':product_uom}"
                                  on_change="product_id_change(parent.pricelist_id, product_id, product_uom_qty, product_uom, product_uos_qty, product_uos, name, parent.partner_id, False, False, parent.date_order, False, parent.fiscal_position, True, context)"/>
                                 <field name="product_uom" invisible="1"

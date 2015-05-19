@@ -59,6 +59,9 @@ class sale_rooming(Model):
         for o in occupation:
             adults = 0
             children = 0
+            room = None
+            room_type_id = False
+            quantity = 0
             if o[0] == 0:
                 adults = int(o[2].get('adults', 0))
                 children = int(o[2].get('children', 0))

@@ -97,7 +97,7 @@
                                 <field name="sequence" widget="handle"/>
                                 <field name="state" invisible="1"/>
                                 <field name="th_weight" invisible="1"/>
-                                <field name="category_id"/>
+                                <field name="category_id" string="Category"/>
                                 <field name="product_id" invisible="1"
                                  context="{'partner_id':parent.partner_id, 'quantity':product_uom_qty, 'pricelist':parent.pricelist_id, 'uom':product_uom}"
                                  groups="base.group_user"
@@ -118,7 +118,7 @@
                                 <field name="price_unit" string="Price"/>
                                 <field name="discount" groups="sale.group_discount_per_so_line"/>
                                 <field name="price_subtotal"/>
-                                <field name="supplier_id"/>
+                                <field name="supplier_id" string="Supplier"/>
                                 <button name="to_confirm" type="object" string="Confirm" states="draft,cancel" icon="gtk-apply"/>
                                 <button name="to_cancel" type="object" string="Cancel" states="confirmed" icon="gtk-cancel"/>
 								<button name="print_voucher" type="object" string="Voucher" states="confirmed" icon="gtk-file"/>

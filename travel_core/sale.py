@@ -531,7 +531,10 @@ class sale_order_line(Model):
         res = {}
         if category_id:
             category = self.pool.get('product.category')
-            name = category.browse(cr, uid, category_id).name.lower()
+            category_obj = category.browse(cr, uid, category_id)
+            name = category_obj.model_name
+            if not name or name == '':
+                name = category_obj.name.lower()
             res['value'] = {'category': name}
         return res
 

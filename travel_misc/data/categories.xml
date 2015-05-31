@@ -4,6 +4,7 @@
 	<data>
 		<record id="misc" model="product.category">
 			<field name="name">Miscellaneous</field>
+			<field name="model_name">misc</field>
 			<field name="parent_id" ref="product.product_category_all"/>
 			<field name="type">normal</field>
 		</record>

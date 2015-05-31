@@ -458,7 +458,8 @@ class sale_order_line(Model):
         
         # Automatically load supplier field values
         product_model   = self.pool.get('product.product')
-        product_tmpl_id = product_model.browse(cr, uid, product_id, context).product_tmpl_id.id
+        product_obj = product_model.browse(cr, uid, product_id, context)
+        product_tmpl_id = product_obj.product_tmpl_id.id
         suppinfo_model  = self.pool.get('product.supplierinfo')
         supp_domain = [('product_tmpl_id', '=', product_tmpl_id)]
         if context.get('supplier_id', False):
@@ -471,8 +472,15 @@ class sale_order_line(Model):
         
         # Automatically upload option_type values        
         params        = context.get('params')
-        product_model = self.pool.get('product.'+params['category'])
-        [free_fields, filter] = product_model.get_option_type_fields(cr, uid, product_id, context)
+        
+        category_model = self.pool.get('product.category')
+        category_obj = category_model.browse(cr, uid, product_obj.categ_id.id)
+        model_name = category_obj.model_name
+        if not model_name or model_name == '':
+            model_name = category_obj.name.lower()
+        
+        product_specific_model = self.pool.get('product.'+model_name)
+        [free_fields, filter] = product_specific_model.get_option_type_fields(cr, uid, product_id, context)
         for field_name, form_name in free_fields.iteritems():
             for suppinfo_id in suppinfo_ids:
                 pricelist_model  = self.pool.get('pricelist.partnerinfo')
@@ -489,8 +497,7 @@ class sale_order_line(Model):
                 domain.update({form_name: [('id', 'in', field_ids)]})
                 
         return {'value': result, 'domain': domain}
-        
-    
+
 
     def show_cost_price(self, cr, uid, result, product, qty, partner_id, uom,
                         date_order, supplier_id, params, pricelist,

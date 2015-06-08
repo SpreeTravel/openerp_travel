@@ -167,7 +167,7 @@ class sale_context(Model):
                                        domain="[('supplier', '=', True)]"),
         'reservation_number': fields.char('Reservation', size=64),
         'paxs': fields.function(_get_paxs, type='integer', method=True,
-                                string='Paxs')
+                                string='Paxs', store=True)
     }
 
     def get_supplier(self, obj):

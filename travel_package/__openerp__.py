@@ -31,7 +31,8 @@
         'data/categories.xml'
     ],
     "update_xml": [
-        'view/package.xml'
+        'view/package.xml',
+        'security/ir.model.access.csv',
     ],
     "demo_xml": [],
     "application": False,

@@ -19,6 +19,7 @@ encoding//travel_core/report/sale_report.py=utf-8
 encoding//travel_core/sale.py=utf-8
 encoding//travel_data/__init__.py=utf-8
 encoding//travel_data/__openerp__.py=utf-8
+encoding//travel_flight/__init__.py=utf-8
 encoding//travel_flight/__openerp__.py=utf-8
 encoding//travel_flight/flight.py=utf-8
 encoding//travel_hotel/__init__.py=utf-8

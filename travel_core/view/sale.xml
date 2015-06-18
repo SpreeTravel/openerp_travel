@@ -39,7 +39,7 @@
                 <tree string="Sale" colors="gray:state == 'cancel'; red:date_order &gt;= current_date and state == 'draft'; blue:date_order &gt;= current_date and state == 'confirmed'">
                     <field name="name"/>
                     <field name="partner_id"/>
-					<field name="client_order_ref"/>
+					<field name="client_order_ref" string="Reference"/>
 					<field name="lead_name"/>
                     <field name="date_order"/>
                     <field name="end_date"/>

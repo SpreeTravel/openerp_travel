@@ -58,7 +58,15 @@ class sale_order(Model):
                 values.append(obj.id)
         result = [('id', 'in', values)]
         return result
-
+    
+    def _get_total_paxs(self, cr, uid, ids, fields, args, context=None):
+        result = {}        
+        for obj in self.browse(cr, uid, ids, context):
+            result[obj.id] = False
+            result[obj.id] = len(obj.pax_ids)
+        
+        return result
+        
     _columns = {
         'date_order':
             fields.date('Start Date', required=True, readonly=True,
@@ -84,6 +92,9 @@ class sale_order(Model):
             fields.many2many('res.partner', 'sale_order_res_partner_pax_rel',
                              'order_id', 'pax_id', 'Paxs',
                              domain="[('pax', '=', True)]"),
+        'total_paxs':
+            fields.function(_get_total_paxs, method=True, type='integer',
+                            string='Total paxs', store=True),        
         'lead_name':
             fields.function(_get_lead_name, method=True, type='char',
                             string='Lead Name', size=128, fnct_search=_lead_name_search)

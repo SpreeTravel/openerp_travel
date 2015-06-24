@@ -107,7 +107,9 @@ class product_rate(Model):
     _columns = {
         'min_paxs': fields.integer('Min Paxs'),
         'max_paxs': fields.integer('Max Paxs'),
-        'room': fields.selection([('single', 'Single'), ('double', 'Double')], 'Room')
+        'room': fields.selection([('single', 'Single'),
+                                  ('double', 'Double'),
+                                  ('triple', 'Triple')], 'Room')
     }
 
 
@@ -117,4 +119,5 @@ class sale_context(Model):
     _columns = {
         'package_1_single': fields.integer('Single'),
         'package_2_double': fields.integer('Double'),
+        'package_3_triple': fields.integer('Triple'),
     }

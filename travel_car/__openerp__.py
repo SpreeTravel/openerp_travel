@@ -35,7 +35,7 @@
         'view/car.xml',
         'view/sale.xml',
         'security/ir.model.access.csv',
-        'report/car_voucher.xml'
+        #'report/car_voucher.xml'
     ],
     "demo_xml": [],
     "application": False,

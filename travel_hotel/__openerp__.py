@@ -37,7 +37,7 @@
         'view/rooming.xml',
         'view/reservation.xml',
         'security/ir.model.access.csv',
-        'report/hotel_voucher.xml'
+        #'report/hotel_voucher.xml'
     ],
     "demo_xml": [],
     "application": False,

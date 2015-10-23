@@ -123,6 +123,11 @@
         </record>
         
         <menuitem id="travel_destination_menu" parent="base.menu_base_config" action="travel_destination_action" sequence="4"/>
+
+        <menuitem id="product.menu_product_template_action"
+                  action="product.product_template_action"
+                  parent="base.menu_product" sequence="1"
+                  groups="base.group_system" />
         
     </data>
 </openerp>

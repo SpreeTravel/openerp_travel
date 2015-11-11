@@ -43,7 +43,7 @@ Base module for managing sales, prices and accounting in a Travel Agency
         'view/sale.xml',
         #'view/imports.xml',
         'report/sale_report_view.xml',
-        #'report/default_voucher.xml',
+        'report/default_voucher.xml',
         'security/ir.model.access.csv'
     ],
     "demo_xml": [],

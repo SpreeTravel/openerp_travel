@@ -34,7 +34,7 @@
         'view/flight.xml',
         'view/sale.xml',
         'security/ir.model.access.csv',
-        #'report/flight_voucher.xml'
+        'report/flight_voucher.xml'
     ],
     "demo_xml": [],
     "application": False,

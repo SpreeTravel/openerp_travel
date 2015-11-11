@@ -1,0 +1,51 @@
+<?xml version="1.0"?>
+<openerp>
+    <data>
+        
+        <record id="portal_sale.action_quotations_portal" model="ir.actions.act_window">
+            <field name="context">{"search_default_draft":1, "portal":True}</field>
+        </record>
+        
+        <record id="portal_sale.action_orders_portal" model="ir.actions.act_window">
+            <field name="context">{"search_default_sales":1, "portal":True}</field>
+        </record>
+        
+        <record id="portal_sale.portal_sale_order_user_rule" model="ir.rule">
+            <field name="name">Portal Personal Quotations/Sales Orders</field>
+            <field name="model_id" ref="sale.model_sale_order"/>
+            <field name="domain_force">[('message_follower_ids','child_of',[user.commercial_partner_id.id])]</field>
+            <field name="groups" eval="[(4, ref('base.group_portal'))]"/>
+            <field eval="1" name="perm_unlink"/>
+            <field eval="0" name="perm_write"/>
+            <field eval="1" name="perm_read"/>
+            <field eval="0" name="perm_create"/>
+        </record>
+        
+        <record id="sale_order_access_portal" model="ir.ui.view" >
+            <field name="name">sale.order.access.portal</field>
+            <field name="model">sale.order</field>
+            <field name="inherit_id" ref="sale_stock.view_order_form_inherit"/>
+            <field name="arch" type="xml">
+                <button name="action_button_confirm" states="draft" position="attributes" >
+                    <attribute name="groups">base.group_user,base.group_portal</attribute>
+                </button>
+                <button name="action_cancel" states="manual,progress" position="attributes" >
+                    <attribute name="groups">base.group_user,base.group_portal</attribute>
+                </button>
+                <field name="partner_id" position="attributes">
+                    <attribute name="readonly">context.get('portal', False)</attribute>
+                </field>
+                <xpath expr="//field[@name='order_line']/tree/field[@name='product_id']" position="attributes" >
+                    <attribute name="groups">base.group_user,base.group_portal</attribute>
+                </xpath>
+                <xpath expr="//field[@name='order_line']" position="attributes" >
+                    <attribute name="context">{'portal': context.get('portal', False)}</attribute>
+                </xpath>
+                <xpath expr="//field[@name='order_line']/tree/field[@name='price_unit']" position="attributes" >
+                    <attribute name="readonly">context.get('portal', False)</attribute>
+                </xpath>
+            </field>
+        </record>
+
+    </data>
+</openerp>

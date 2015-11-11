@@ -101,7 +101,8 @@ class sale_order(Model):
     }
 
     _defaults = {
-        'shop_id': 1
+        'shop_id': 1,
+        'date_order': dt.date.today()
     }
 
     _order = 'create_date desc'

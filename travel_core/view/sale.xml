@@ -202,7 +202,7 @@
 							<label for="price_unit" />
 							<div>
 								<field name="price_unit" class="oe_inline"/> - <field name="price_unit_cost" class="oe_inline"/>
-								<field name="currency_cost_id" widget="selection" class="oe_inline"/>
+								<field name="currency_cost_id" widget="selection" class="oe_inline" invisible="1"/>
 							</div>
 							
                             <label for="discount" groups="sale.group_discount_per_so_line"/>

@@ -303,7 +303,8 @@ class sale_order_line(Model):
     }
     
     def __init__(self, pool, cr):
-        states = super(sale_order_line, self)._columns['state'].selection
+        from openerp.addons.sale.sale import sale_order_line
+        states = sale_order_line._columns['state'].selection
         try:
             states.remove(('request', 'Request!'))    
             states.remove(('requested', 'Requested'))
@@ -312,7 +313,7 @@ class sale_order_line(Model):
         draft_idx = states.index(('draft', 'Draft'))        
         states.insert(draft_idx+1, ('request', 'Request!'))
         states.insert(draft_idx+2, ('requested', 'Requested'))
-        super(sale_order_line, self)._columns['state'].selection = states
+        sale_order_line._columns['state'].selection = states
         return super(sale_order_line, self).__init__(pool, cr)
     
     def to_request(self, cr, uid, ids, context=None):

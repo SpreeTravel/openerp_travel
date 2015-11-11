@@ -202,7 +202,7 @@
 							<label for="price_unit" />
 							<div>
 								<field name="price_unit" class="oe_inline"/> - <field name="price_unit_cost" class="oe_inline"/>
-								<field name="currency_cost_id" widget="selection" class="oe_inline"/>
+								<field name="currency_cost_id" widget="selection" class="oe_inline" invisible="1"/>
 							</div>
 							
                             <label for="discount" groups="sale.group_discount_per_so_line"/>
@@ -336,7 +336,7 @@
         <menuitem id="travel_reservations_menu" name="Reservations" parent="base.menu_base_partner" sequence="2"/>
 		<menuitem id="travel_sale_order_line_menu" action="travel_sale_order_line_action" parent="travel_reservations_menu" sequence="1"/>
         
-        <menuitem id="travel_imports_menu" name="Imports" parent="base.menu_base_partner" sequence="10"/>	
+        <!--<menuitem id="travel_imports_menu" name="Imports" parent="base.menu_base_partner" sequence="10"/>-->
  
     </data>
 </openerp>

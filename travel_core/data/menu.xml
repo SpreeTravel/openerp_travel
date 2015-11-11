@@ -12,12 +12,6 @@
 			<field name="parent_id" ref="travel_menu" />
 		</record>
 		
-		<!--
-		<record id="product.menu_products" model="ir.ui.menu">			
-			<field name="parent_id" ref="travel_menu" />
-		</record>
-		-->
-		
 		<record id="product.prod_config_main" model="ir.ui.menu">
 			<field name="parent_id" ref="travel_menu" />
 		</record>
@@ -62,6 +56,16 @@
 			<field name="parent_id" ref="base.menu_base_config" />
 			<field name="sequence">3</field>
 		</record>
+
+		<!-- Hide menu products -->
+		<record id="product.menu_products" model="ir.ui.menu">
+			<field name="parent_id" ref="travel_menu" />
+		</record>
+
+        <record id="product.menu_product_template_action" model="ir.ui.menu">
+			<field name="parent_id" ref="travel_menu" />
+		</record>
+
 		
 	</data>
 </openerp>

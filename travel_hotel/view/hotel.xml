@@ -225,7 +225,7 @@
             <field name="target">new</field> 
         </record>
 		
-        <menuitem id="import_hotel_menu" sequence="100" parent="travel_core.travel_imports_menu" action="import_hotel_action" />
+        <!--<menuitem id="import_hotel_menu" sequence="100" parent="travel_core.travel_imports_menu" action="import_hotel_action" />-->
        
     </data>
 </openerp>

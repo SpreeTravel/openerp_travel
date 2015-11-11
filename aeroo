@@ -1,0 +1,37 @@
+>>> Installing and running
+Installing aeroo-docs
+Install Aeroo Docs
+
+sudo apt-get install python3-pip
+
+sudo pip3 install jsonrpc2 daemonize
+
+mkdir /opt/aeroo
+
+cd /opt/aeroo
+
+git clone https://github.com/aeroo/aeroo_docs.git
+
+Installing python3-uno
+
+sudo apt-get install python3-uno
+
+Set up default config
+
+sudo python3 /opt/aeroo/aeroo_docs/aeroo-docs start -c /etc/aeroo-docs.conf
+
+Set up Aeroo Docs service
+
+sudo ln -s /opt/aeroo/aeroo_docs/aeroo-docs /etc/init.d/aeroo-docs
+
+sudo update-rc.d aeroo-docs defaults
+
+Test service
+
+sudo service aeroo-docs start
+
+soffice -headless -accept="socket,host=127.0.0.1,port=8100;urp;" -nofirststartwizard
+
+Download addons
+
+<<<

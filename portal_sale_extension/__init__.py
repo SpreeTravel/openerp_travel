@@ -2,7 +2,7 @@
 ##############################################################################
 #
 #    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2010, 2014 Tiny SPRL (<http://tiny.be>).
+#    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -19,34 +19,4 @@
 #
 ##############################################################################
 
-{
-    "name": "Travel Agency - Core",
-    "version": "0.1",
-    "author": "OpenJAF.",
-    "website": "http://www.openjaf.com",
-    "category": "Sales",
-    "description": """
-
-Base module for managing sales, prices and accounting in a Travel Agency
-========================================================================
-
-    """,
-    "depends": ['sale', 'contacts', 'report_aeroo'],
-    "init_xml": [
-        'data/options.xml',
-        'data/pricelist.xml',
-        'data/menu.xml'
-    ],
-    "update_xml": [
-        'view/base.xml',
-        'view/pricelist.xml',
-        'view/sale.xml',
-        'view/imports.xml',
-        'report/sale_report_view.xml',
-        'report/default_voucher.xml',
-        'security/ir.model.access.csv'
-    ],
-    "demo_xml": [],
-    "application": False,
-    "installable": True,
-}
+import sale

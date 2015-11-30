@@ -94,6 +94,7 @@
                                     <form string="Supplier Information" version="7.0">
                                         <group col="4">
                                             <field name="name" context="{'default_customer': 0, 'search_default_supplier': 1, 'default_supplier': 1}"/>
+                                            <field name='currency_cost_id' string='Currency' domain="[('name', 'in', ['GBP', 'EUR', 'USD', 'CUC'])]"/>
                                             <field name="sequence"/>
                                             <field name="min_qty"/>
                                         </group>

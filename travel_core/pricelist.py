@@ -204,6 +204,8 @@ class product_pricelist(Model):
                                     if line.min_quantity <= qty_in_seller_uom:
                                         #price = line.price
                                         price = product.price_get_partner(product.id, seller.id, params)
+                    else:
+                        price = product.list_price
 
                 else:
                     if rule.base not in price_types:

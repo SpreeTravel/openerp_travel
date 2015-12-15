@@ -433,6 +433,17 @@ class sale_order_line(Model):
                         'supplier_id': supplier_id,
                         'params': params
                         })[pricelist]
+            sale_currency_id = self.pool.get('product.pricelist').read(cr, uid, [pricelist], ['currency_id'])[0]['currency_id'][0]
+            cost_currency = self.get_supplierinfo(cr, uid, product, supplier_id)
+            if cost_currency and cost_currency.currency_cost_id:
+                cost_currency_id = cost_currency.currency_cost_id.id
+            else:
+                cost_currency_id = self.default_currency_cost(cr, uid, context)
+            
+            if sale_currency_id != cost_currency_id:
+                cr_obj = self.pool.get('res.currency')
+                price = cr_obj.compute( cr, uid, cost_currency_id, sale_currency_id, price, round=False, context=context)
+                        
             if price is False:
                 warn_msg = _("Cannot find a pricelist line matching this product and quantity.\n"
                         "You have to change either the product, the quantity or the pricelist.")
@@ -441,11 +452,11 @@ class sale_order_line(Model):
             else:
                 result.update({'price_unit': price})
 
-            cost_price = self.show_cost_price(cr, uid, result, product, qty,
+            cost_price, currency_cost_id = self.show_cost_price(cr, uid, result, product, qty,
                                               partner_id, uom, date_order,
                                               supplier_id, params, pricelist,
                                               context)
-            result.update({'price_unit_cost': cost_price})
+            result.update({'price_unit_cost': cost_price, 'currency_cost_id': currency_cost_id})
             
         if warning_msgs:
             warning = {
@@ -511,12 +522,34 @@ class sale_order_line(Model):
                 
         return {'value': result, 'domain': domain}
 
+    def get_supplierinfo(self, cr, uid, product_id, supplier_id):
+        product_id = self.pool.get('product.product').browse(cr, uid, product_id).product_tmpl_id.id
+        suppinfo_obj = self.pool.get('product.supplierinfo')
+        suppinfo_ids = suppinfo_obj.search(cr, uid, [('product_tmpl_id', '=', product_id), ('name', '=', supplier_id)])
+        if len(suppinfo_ids) == 1:
+            return suppinfo_obj.browse(cr, uid, suppinfo_ids[0])
+        elif len(suppinfo_ids) > 1:
+            raise osv.except_osv(_('Warning!'),
+                                 _("More that one price option for this product and supplier."))  
+        return None
 
     def show_cost_price(self, cr, uid, result, product, qty, partner_id, uom,
                         date_order, supplier_id, params, pricelist,
                         context=None):
+        
+        product_id = self.pool.get('product.product').browse(cr, uid, product).product_tmpl_id.id
+        suppinfo_obj = self.pool.get('product.supplierinfo')
+        suppinfo_ids = suppinfo_obj.search(cr, uid, [('product_tmpl_id', '=', product_id), ('name', '=', supplier_id)])
+        
+        cp_ids = []
         pl_obj = self.pool.get('product.pricelist')
-        cp_ids = pl_obj.search(cr, uid, [('name', '=', 'Cost Pricelist')],
+        if suppinfo_ids:
+            currency_id = suppinfo_obj.browse(cr, uid, suppinfo_ids[0]).currency_cost_id.id
+            cp_ids = pl_obj.search(cr, uid, [('name', 'ilike', 'Cost Pricelist'), ('currency_id', '=', currency_id)],
+                               context=context)
+            
+        if len(cp_ids) == 0:
+            cp_ids = pl_obj.search(cr, uid, [('name', '=', 'Cost Pricelist')],
                                context=context)
         if cp_ids:
             cp_id = cp_ids[0]
@@ -527,15 +560,17 @@ class sale_order_line(Model):
                                 'supplier_id': supplier_id,
                                 'params': params
                                 })[cp_id]
-            sale_currency_id = pl_obj.browse(cr, uid, pricelist).currency_id.id
             cost_currency_id = pl_obj.browse(cr, uid, cp_id).currency_id.id
-            if sale_currency_id != cost_currency_id:
-                cr_obj = self.pool.get('res.currency')
-                cost_price = cr_obj.compute(cr, uid, cost_currency_id,
-                                            sale_currency_id, cost_price,
-                                            round=False, context=context)
-            return cost_price
-        return 0.0
+#            sale_currency_id = pl_obj.browse(cr, uid, pricelist).currency_id.id
+#            if sale_currency_id != cost_currency_id:
+#                cr_obj = self.pool.get('res.currency')
+#                cost_price = cr_obj.compute(cr, uid, cost_currency_id,
+#                                            sale_currency_id, cost_price,
+#                                            round=False, context=context)
+            return cost_price, cost_currency_id
+        
+        
+        return 0.0, pl_obj.browse(cr, uid, pricelist).currency_id.id
 
     def fields_view_get(self, cr, uid, view_id=None, view_type='form',
                         context=None, toolbar=False, submenu=False):

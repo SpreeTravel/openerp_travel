@@ -23,12 +23,12 @@ import time
 import simplejson
 import datetime as dt
 from lxml import etree
-
 from openerp.osv import fields, osv
 from openerp.osv.orm import Model
 from openerp.tools import DEFAULT_SERVER_DATE_FORMAT as DF
 from openerp.tools.translate import _
 import openerp.addons.decimal_precision as dp
+from openerp import api, exceptions
 
 
 class sale_order(Model):
@@ -37,7 +37,7 @@ class sale_order(Model):
 
     def _get_lead_name(self, cr, uid, ids, fields, args, context=None):
         result = {}
-        
+
         for obj in self.browse(cr, uid, ids, context):
             result[obj.id] = False
             if obj.pax_ids:
@@ -46,7 +46,7 @@ class sale_order(Model):
                     if pax.id < min.id:
                         min = pax
                 result[obj.id] = min.name
-        
+
         return result
 
     def _lead_name_search(self, cr, uid, obj, field_name, args, context=None):
@@ -57,6 +57,14 @@ class sale_order(Model):
             if obj.pax_ids and name.lower() in obj.pax_ids[0].name.lower():
                 values.append(obj.id)
         result = [('id', 'in', values)]
+        return result
+
+    def _get_total_paxs(self, cr, uid, ids, fields, args, context=None):
+        result = {}
+        for obj in self.browse(cr, uid, ids, context):
+            result[obj.id] = False
+            result[obj.id] = len(obj.pax_ids)
+
         return result
 
     _columns = {
@@ -84,13 +92,17 @@ class sale_order(Model):
             fields.many2many('res.partner', 'sale_order_res_partner_pax_rel',
                              'order_id', 'pax_id', 'Paxs',
                              domain="[('pax', '=', True)]"),
+        'total_paxs':
+            fields.function(_get_total_paxs, method=True, type='integer',
+                            string='Total paxs', store=True),
         'lead_name':
             fields.function(_get_lead_name, method=True, type='char',
                             string='Lead Name', size=128, fnct_search=_lead_name_search)
     }
 
     _defaults = {
-        'shop_id': 1
+        'shop_id': 1,
+        'date_order': dt.date.today()
     }
 
     _order = 'create_date desc'
@@ -111,13 +123,13 @@ class sale_order(Model):
 
     def to_cancel(self, cr, uid, ids, context=None):
         return self.write(cr, uid, ids, {'state': 'cancel'}, context)
-    
-    def onchange_start_date(self, cr, uid, ids, start_date, end_date, context=None):   
+
+    def onchange_start_date(self, cr, uid, ids, start_date, end_date, context=None):
         return self.check_dates(start_date, end_date, 'start_date')
-     
-    def onchange_end_date(self, cr, uid, ids, start_date, end_date, context=None):        
+
+    def onchange_end_date(self, cr, uid, ids, start_date, end_date, context=None):
         return self.check_dates(start_date, end_date, 'end_date')
-    
+
     def check_dates(self, start_date, end_date, fix_date, context=None):
         res = {}
         warning = False
@@ -127,10 +139,11 @@ class sale_order(Model):
                 warning = True
 
         if warning:
-            return {'value': res, 'warning': {'title':'Dates Warning', 
-                                              'message':'End Date should be after Start Date\n'}}                    
+            return {'value': res, 'warning': {'title': 'Dates Warning',
+                                              'message': 'End Date should be after Start Date\n'}}
         return {'value': res}
-        
+
+
 class sale_context(Model):
     _name = 'sale.context'
 
@@ -177,7 +190,7 @@ class sale_context(Model):
             return obj.product_id.seller_id
         else:
             raise osv.except_osv(_('Error!'),
-                  _("There is at least one sale order line without supplier"))
+                                 _("There is at least one sale order line without supplier"))
 
     def get_supplier_info_id(self, cr, uid, obj, context=None):
         supplierinfo_obj = self.pool.get('product.supplierinfo')
@@ -217,6 +230,7 @@ class sale_context(Model):
         new_fields = self.get_context_fields(cr, uid, context)
         res['fields'].update(new_fields)
         doc = etree.XML(res['arch'])
+        field_names = ['end_date', 'adults', 'children', 'sale_line_supplement_ids', 'supplier_id', 'product_id']
         parent_node = doc.xpath("//group[@name='dynamic_fields']")
         if parent_node:
             parent_node = parent_node[0]
@@ -225,14 +239,19 @@ class sale_context(Model):
             ctx = sd.get('context', False)
             ctx = self._build_ctx(ctx, new_fields)
             sd.set('context', ctx)
-            ed = doc.xpath("//field[@name='end_date']")[0]
-            ed.set('context', ctx)
-            ad = doc.xpath("//field[@name='adults']")[0]
-            ad.set('context', ctx)
-            ch = doc.xpath("//field[@name='children']")[0]
-            ch.set('context', ctx)
-            sp = doc.xpath("//field[@name='sale_line_supplement_ids']")[0]
-            sp.set('context', ctx)
+            for field in field_names:
+                ed = doc.xpath("//field[@name='" + field + "']")[0]
+                ed.set('context', ctx)
+            # ad = doc.xpath("//field[@name='adults']")[0]
+            # ad.set('context', ctx)
+            # ch = doc.xpath("//field[@name='children']")[0]
+            # ch.set('context', ctx)
+            # sp = doc.xpath("//field[@name='sale_line_supplement_ids']")[0]
+            # sp.set('context', ctx)
+            # sp = doc.xpath("//field[@name='supplier_id']")[0]
+            # sp.set('context', ctx)
+            # # sp = doc.xpath("//field[@name='product_uom_qty']")[0]
+            # sp.set('context', ctx)
             keys = new_fields.keys()
             keys.sort()
             for f in keys:
@@ -240,7 +259,9 @@ class sale_context(Model):
                 n.set('name', f)
                 modifiers = self._build_attr(cr, uid, f)
                 n.set('modifiers', simplejson.dumps(modifiers))
-                n.set('context', ctx)
+                trigger = ", 'trigger': " + f + "}"
+                ctx_trigger = ctx[::-1].replace('}', trigger[::-1], 1)[::-1]
+                n.set('context', ctx_trigger)
                 n.set('on_change', ocg)
                 parent_node.append(n)
             res['arch'] = etree.tostring(doc)
@@ -268,26 +289,47 @@ class sale_order_line(Model):
     _columns = {
         'description': fields.text('Description'),
         'sale_context_id': fields.many2one('sale.context', 'Sale Context',
-                                          ondelete="cascade", select=True),
+                                           ondelete="cascade", select=True),
         'sale_line_supplement_ids': fields.many2many('option.value',
-                                                'sale_line_option_value_rel',
-                                                'sale_line_id',
-                                                'option_value_id',
-                                                'Supplements',
-                              domain="[('option_type_id.code', '=', 'sup')]"),
+                                                     'sale_line_option_value_rel',
+                                                     'sale_line_id',
+                                                     'option_value_id',
+                                                     'Supplements',
+                                                     domain="[('option_type_id.code', '=', 'sup')]"),
         'price_unit_cost': fields.float('Cost Price',
-                            digits_compute=dp.get_precision('Product Price')),
+                                        digits_compute=dp.get_precision('Product Price')),
         'currency_cost_id': fields.many2one('res.currency', 'Currency Cost'),
+
         'customer_id': fields.related('order_id', 'partner_id',
                                       type='many2one', relation='res.partner',
                                       readonly=True, string='Customer',
                                       store=True),
         'order_start_date': fields.related('order_id', 'date_order',
-                                           type='date', string='In',
+                                           type='date', string='In', required=True,
                                            store=True),
-        'order_end_date': fields.related('order_id', 'end_date', type='date',
+        'order_end_date': fields.related('order_id', 'end_date', type='date', required=True,
                                          string='Out', store=True)
     }
+
+    def __init__(self, pool, cr):
+        from openerp.addons.sale.sale import sale_order_line
+        states = sale_order_line._columns['state'].selection
+        try:
+            states.remove(('request', 'Request!'))
+            states.remove(('requested', 'Requested'))
+        except:
+            pass
+        draft_idx = states.index(('draft', 'Draft'))
+        states.insert(draft_idx + 1, ('request', 'Request!'))
+        states.insert(draft_idx + 2, ('requested', 'Requested'))
+        sale_order_line._columns['state'].selection = states
+        return super(sale_order_line, self).__init__(pool, cr)
+
+    def to_request(self, cr, uid, ids, context=None):
+        return self.write(cr, uid, ids, {'state': 'request'}, context)
+
+    def to_requested(self, cr, uid, ids, context=None):
+        return self.write(cr, uid, ids, {'state': 'requested'}, context)
 
     def to_confirm(self, cr, uid, ids, context=None):
         return self.write(cr, uid, ids, {'state': 'confirmed'}, context)
@@ -295,10 +337,27 @@ class sale_order_line(Model):
     def to_cancel(self, cr, uid, ids, context=None):
         return self.write(cr, uid, ids, {'state': 'cancel'}, context)
 
+    @api.onchange('price_unit_cost', 'price_unit')
+    def price_changes(self):
+        warn_msg = None
+        if self.price_unit_cost <= 0:
+            warn_msg = _('Your cost price is lower or equal zero.')
+        elif self.price_unit <= 0:
+            warn_msg = _('Your sale price is lower or equal zero.')
+        if self.price_unit_cost < self.price_unit:
+            warn_msg = _('Your cost price is lower than your real price.')
+        if warn_msg:
+            warning = {
+                'title': _('Configuration Error!'),
+                'message': warn_msg
+            }
+            return {'warning': warning}
+
     def product_id_change(self, cr, uid, ids, pricelist, product, qty=0,
-            uom=False, qty_uos=0, uos=False, name='', partner_id=False,
-            lang=False, update_tax=True, date_order=False, packaging=False,
-            fiscal_position=False, flag=False, context=None):
+                          uom=False, qty_uos=0, uos=False, name='', partner_id=False,
+                          lang=False, update_tax=True, date_order=False, packaging=False,
+                          fiscal_position=False, flag=False, context=None):
+
         context = context or {}
         lang = lang or context.get('lang', False)
         if not partner_id:
@@ -322,8 +381,8 @@ class sale_order_line(Model):
 
         if not product:
             return {'value': {'th_weight': 0,
-                'product_uos_qty': qty}, 'domain': {'product_uom': [],
-                   'product_uos': []}}
+                              'product_uos_qty': qty}, 'domain': {'product_uom': [],
+                                                                  'product_uos': []}}
         if not date_order:
             date_order = time.strftime(DF)
 
@@ -366,9 +425,9 @@ class sale_order_line(Model):
                 uos_category_id = False
             result['th_weight'] = qty * product_obj.weight
             domain = {'product_uom':
-                      [('category_id', '=', product_obj.uom_id.category_id.id)],
-                        'product_uos':
-                      [('category_id', '=', uos_category_id)]}
+                          [('category_id', '=', product_obj.uom_id.category_id.id)],
+                      'product_uos':
+                          [('category_id', '=', uos_category_id)]}
         elif uos and not uom:
             result['product_uom'] = product_obj.uom_id and product_obj.uom_id.id
             result['product_uom_qty'] = qty_uos / product_obj.uos_coeff
@@ -389,21 +448,21 @@ class sale_order_line(Model):
 
         if not pricelist:
             warn_msg = _('You have to select a pricelist or a customer in the sales form !\n'
-                    'Please set one before choosing a product.')
+                         'Please set one before choosing a product.')
             warning_msgs += _("No Pricelist ! : ") + warn_msg + "\n\n"
         else:
             price = self.pool.get('product.pricelist').price_get(cr, uid, [pricelist],
-                    product, qty or 1.0, partner_id, {
-                        'uom': uom or result.get('product_uom'),
-                        'date': date_order,
-                        'supplier_id': supplier_id,
-                        'params': params
-                        })[pricelist]
+                                                                 product, qty or 1.0, partner_id, {
+                                                                     'uom': uom or result.get('product_uom'),
+                                                                     'date': date_order,
+                                                                     'supplier_id': supplier_id,
+                                                                     'params': params
+                                                                 })[pricelist]
             if price is False:
                 warn_msg = _("Cannot find a pricelist line matching this product and quantity.\n"
-                        "You have to change either the product, the quantity or the pricelist.")
+                             "You have to change either the product, the quantity or the pricelist.")
 
-                #warning_msgs += _("No valid pricelist line found ! :") + warn_msg +"\n\n"
+                # warning_msgs += _("No valid pricelist line found ! :") + warn_msg +"\n\n"
             else:
                 result.update({'price_unit': price})
 
@@ -412,20 +471,126 @@ class sale_order_line(Model):
                                               supplier_id, params, pricelist,
                                               context)
             result.update({'price_unit_cost': cost_price})
-            
-        if params['category'] == 'transfer':
-            result.update({'end_date': params['start_date']})  
-        elif params['start_date'] > params['end_date']:
-            result.update({'end_date': params['start_date']})
 
         if warning_msgs:
             warning = {
-                       'title': _('Configuration Error!'),
-                       'message': warning_msgs
-                    }
-        if not context.get('supplier_id', False):
-            result.update({'supplier_id': product_obj.seller_id.id})
+                'title': _('Configuration Error!'),
+                'message': warning_msgs
+            }
+
+        # This is for loading only available option values
+        if context.get('params', False) and context['params'].get('category', False):
+            options = self.get_available_options(cr, uid, product_obj.id, context)
+            domain.update(options.get('domain', {}))
+            result.update(options.get('value', {}))
+
         return {'value': result, 'domain': domain, 'warning': warning}
+
+    def get_room_type_id(self, cr, uid):
+        option_value = self.pool.get('option.value')
+        values = option_value.search(cr, uid, [('option_type_id.code', '=', 'rt')])
+        return values[0] if len(values) else False
+
+    def get_available_options(self, cr, uid, product_id, context):
+        '''
+        Load only available values for the sale order form
+        '''
+
+        result = {}
+        domain = {}
+
+        # Automatically load supplier field values
+        product_model = self.pool.get('product.product')
+        try:
+            _category = context['params']['category']
+            if product_id and _category:
+                try:
+                    elements = context['params']['hotel_1_rooming_ids']
+                    if not len(elements):
+                        result.update(
+                            {'hotel_1_rooming_ids': [[0, False,
+                                                      {u'room_type_id': self.get_room_type_id(cr, uid),
+                                                       u'quantity': 1,
+                                                       u'children': 0, u'room': u'double', u'adults': 2}]]})
+                except KeyError:
+                    pass
+        except KeyError:
+            pass
+        product_obj = product_model.browse(cr, uid, product_id, context)
+        product_tmpl_id = product_obj.product_tmpl_id.id
+        suppinfo_model = self.pool.get('product.supplierinfo')
+        supp_domain = [('product_tmpl_id', '=', product_tmpl_id)]
+        # if context.get('supplier_id', False):
+        #   supp_domain = [('name', '=', context['supplier_id'])]
+        _supplier_id = context.get('supplier_id', False)
+        suppinfo_ids = suppinfo_model.search(cr, uid, supp_domain, context=context)
+        suppinfos = suppinfo_model.browse(cr, uid, suppinfo_ids)
+
+        product_rate_suplement = self.pool.get('product.rate.supplement')
+        availables_suplements = product_rate_suplement.search(cr, uid, [('suppinfo_id', '=', suppinfo_ids)],
+                                                              context=context)
+        availables_suplements = product_rate_suplement.browse(cr, uid, availables_suplements)
+        availables_suplements = list(set([s.id for s in availables_suplements]))
+
+        # domain.update({'sale_line_supplement_ids': [('id', 'in', availables_suplements)]})
+        # Automatically upload option_type values
+        params = context.get('params')
+
+        category_model = self.pool.get('product.category')
+        category_obj = category_model.browse(cr, uid, product_obj.categ_id.id)
+        model_name = category_obj.model_name
+        if not model_name or model_name == '':
+            model_name = category_obj.name.lower()
+
+        product_specific_model = self.pool.get('product.' + model_name)
+        free_fields, filter = product_specific_model.get_option_type_fields(cr, uid, product_id, context)
+        field_ids = []
+        for field_name, form_name in free_fields.iteritems():
+            for suppinfo_id in suppinfo_ids:
+                pricelist_model = self.pool.get('pricelist.partnerinfo')
+                pricelist_ids = pricelist_model.search(cr, uid, filter + [('suppinfo_id', '=', suppinfo_id)],
+                                                       context=context)
+                field_ids += list(set([getattr(p, field_name).id for p in
+                                       pricelist_model.browse(cr, uid, pricelist_ids, context=context)]))
+
+                if len(field_ids) > 0:
+                    if params.get(form_name, False):
+                        if params[form_name] not in field_ids:
+                            result.update({form_name: ''})
+                    elif len(pricelist_ids) == 1:
+                        result.update({form_name: field_ids[0]})
+            if len(field_ids):
+                # domain.update({form_name: [('id', 'in', field_ids)]})
+                pass
+            else:
+                domain.update({form_name: False})
+
+        suppinfos = self.update_suppinfos('hotel_2_meal_plan_id', 'pricelist.partnerinfo', suppinfos, context, cr, uid)
+        suppinfos = self.update_suppinfos('sale_line_supplement_ids', 'product.rate.supplement', suppinfos, context, cr,
+                                          uid)
+        tmp_list = [s.name.id for s in suppinfos]
+        if len(suppinfos) == 1:
+            result.update({'supplier_id': suppinfos[0].name.id})
+        elif _supplier_id not in tmp_list:
+            result.update({'supplier_id': False})
+        domain.update({'supplier_id': [('id', 'in', tmp_list)]})
+        return {'value': result, 'domain': domain}
+
+    def update_suppinfos(self, value_parms, name_table, suppinfos, context, cr, uid):
+        try:
+            tmp = context['params'][value_parms]
+            if type(tmp) is list:
+                print(tmp)
+                tmp = tmp[0][1]
+            elif tmp:
+                product_rate_suplement = self.pool.get(name_table)
+                availables_suplements = product_rate_suplement.search(cr, uid, [('id', '=', tmp)])
+                availables_suplements = product_rate_suplement.browse(cr, uid, availables_suplements)
+                availables_suplements = [p.suppinfo_id for p in availables_suplements]
+                suppinfos = list(set(suppinfos).intersection(set(availables_suplements)))
+        except KeyError:
+            pass
+        return suppinfos
 
     def show_cost_price(self, cr, uid, result, product, qty, partner_id, uom,
                         date_order, supplier_id, params, pricelist,
@@ -436,12 +601,12 @@ class sale_order_line(Model):
         if cp_ids:
             cp_id = cp_ids[0]
             cost_price = pl_obj.price_get(cr, uid, [cp_id],
-                            product, qty or 1.0, partner_id, {
-                                'uom': uom or result.get('product_uom'),
-                                'date': date_order,
-                                'supplier_id': supplier_id,
-                                'params': params
-                                })[cp_id]
+                                          product, qty or 1.0, partner_id, {
+                                              'uom': uom or result.get('product_uom'),
+                                              'date': date_order,
+                                              'supplier_id': supplier_id,
+                                              'params': params
+                                          })[cp_id]
             sale_currency_id = pl_obj.browse(cr, uid, pricelist).currency_id.id
             cost_currency_id = pl_obj.browse(cr, uid, cp_id).currency_id.id
             if sale_currency_id != cost_currency_id:
@@ -456,7 +621,7 @@ class sale_order_line(Model):
                         context=None, toolbar=False, submenu=False):
         context = context or {}
         res = super(sale_order_line, self).fields_view_get(cr, uid, view_id,
-                view_type, context=context, toolbar=toolbar, submenu=submenu)
+                                                           view_type, context=context, toolbar=toolbar, submenu=submenu)
         if view_type == 'form':
             sc = self.pool.get('sale.context')
             res = sc.update_view_with_context_fields(cr, uid, res, context)
@@ -466,7 +631,10 @@ class sale_order_line(Model):
         res = {}
         if category_id:
             category = self.pool.get('product.category')
-            name = category.browse(cr, uid, category_id).name.lower()
+            category_obj = category.browse(cr, uid, category_id)
+            name = category_obj.model_name
+            if not name or name == '':
+                name = category_obj.name.lower()
             res['value'] = {'category': name}
         return res
 
@@ -488,20 +656,53 @@ class sale_order_line(Model):
 
     def get_total_paxs(self, cr, uid, params, context=None):
         return params.get('adults', 0) + params.get('children', 0)
-    
+
     def get_margin_days(self, cr, uid, params, context=None):
         '''
         The number of days of the service countable for apply a per day margin
         '''
-        ini = dt.datetime.strptime(params['start_date'], DF)
-        end = dt.datetime.strptime(params['end_date'], DF)
-        return (end-ini).days + 1
+        days = 0
+        if params.get('supplement_ids', False):
+            ini = dt.datetime.strptime(params['start_date'], DF)
+            end = dt.datetime.strptime(params['end_date'], DF)
+            days = (end - ini).days + 1
+        return days
+
+    def print_voucher(self, cr, uid, ids, context=None):
+
+        datas = {
+            'model': 'sale.order.line',
+            'ids': ids,
+            'form': self.read(cr, uid, ids, context=context),
+        }
+
+        categories = set()
+
+        for id in ids:
+            categories.add(self.browse(cr, uid, id).category_id.id)
+
+        if len(categories) != 1:
+            raise osv.except_osv(_('Warning!'), _("You should select lines with the same category!"))
+
+        category = categories.pop()
+        result = self.pool.get('product.category').read(cr, uid, category, ['voucher_name'])
+        voucher_name = result['voucher_name']
+        print voucher_name
+
+        return {
+            'type': 'ir.actions.report.xml',
+            'report_name': voucher_name,
+            'datas': datas,
+            'nodestroy': True
+        }
 
     _defaults = {
         'start_date': lambda s, c, u, ctx: ctx.get('start', False),
         'end_date': lambda s, c, u, ctx: ctx.get('end', False),
         'state': 'draft',
         'adults': 1,
+        'price_unit_cost': float(1),
+        'price_unit': float(1),
         'children': 0,
         'currency_cost_id': default_currency_cost
     }

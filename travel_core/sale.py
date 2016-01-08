@@ -23,12 +23,21 @@ import time
 import simplejson
 import datetime as dt
 from lxml import etree
+from openerp import fields as f
 from openerp.osv import fields, osv
 from openerp.osv.orm import Model
 from openerp.tools import DEFAULT_SERVER_DATE_FORMAT as DF
 from openerp.tools.translate import _
 import openerp.addons.decimal_precision as dp
 from openerp import api, exceptions
+
+
+class supplier_price(Model):
+    _name = 'supplier.price'
+
+    sale_order_line = f.Many2one('sale.order.line')
+    supplier = f.Char(_('Supplier'))
+    price = f.Char(_('Price'))
 
 
 class sale_order(Model):
@@ -58,7 +67,7 @@ class sale_order(Model):
                 values.append(obj.id)
         result = [('id', 'in', values)]
         return result
-    
+
     def _get_total_paxs(self, cr, uid, ids, fields, args, context=None):
         result = {}
         for obj in self.browse(cr, uid, ids, context):
@@ -101,7 +110,7 @@ class sale_order(Model):
     }
 
     _defaults = {
-        'shop_id': 1,
+
         'date_order': dt.date.today()
     }
 
@@ -286,6 +295,8 @@ class sale_order_line(Model):
     _inherit = 'sale.order.line'
     _inherits = {'sale.context': 'sale_context_id'}
 
+    # resume_table_price = f.One2many('supplier.price', 'sale_order_line', string='Prices')
+
     _columns = {
         'description': fields.text('Description'),
         'sale_context_id': fields.many2one('sale.context', 'Sale Context',
@@ -296,6 +307,7 @@ class sale_order_line(Model):
                                                      'option_value_id',
                                                      'Supplements',
                                                      domain="[('option_type_id.code', '=', 'sup')]"),
+        'resume_table_price': fields.one2many('supplier.price', 'sale_order_line', string='Prices'),
         'price_unit_cost': fields.float('Cost Price',
                                         digits_compute=dp.get_precision('Product Price')),
         'currency_cost_id': fields.many2one('res.currency', 'Currency Cost'),
@@ -310,7 +322,7 @@ class sale_order_line(Model):
         'order_end_date': fields.related('order_id', 'end_date', type='date', required=True,
                                          string='Out', store=True)
     }
-    
+
     def __init__(self, pool, cr):
         from openerp.addons.sale.sale import sale_order_line
         states = sale_order_line._columns['state'].selection
@@ -458,17 +470,6 @@ class sale_order_line(Model):
                                                                      'supplier_id': supplier_id,
                                                                      'params': params
                                                                  })[pricelist]
-            sale_currency_id = self.pool.get('product.pricelist').read(cr, uid, [pricelist], ['currency_id'])[0]['currency_id'][0]
-            cost_currency = self.get_supplierinfo(cr, uid, product, supplier_id)
-            if cost_currency and cost_currency.currency_cost_id:
-                cost_currency_id = cost_currency.currency_cost_id.id
-            else:
-                cost_currency_id = self.default_currency_cost(cr, uid, context)
-            
-            if sale_currency_id != cost_currency_id:
-                cr_obj = self.pool.get('res.currency')
-                price = cr_obj.compute( cr, uid, cost_currency_id, sale_currency_id, price, round=False, context=context)
-                        
             if price is False:
                 warn_msg = _("Cannot find a pricelist line matching this product and quantity.\n"
                              "You have to change either the product, the quantity or the pricelist.")
@@ -477,32 +478,38 @@ class sale_order_line(Model):
             else:
                 result.update({'price_unit': price})
 
-            cost_price, currency_cost_id = self.show_cost_price(cr, uid, result, product, qty,
+            cost_price = self.show_cost_price(cr, uid, result, product, qty,
                                               partner_id, uom, date_order,
                                               supplier_id, params, pricelist,
                                               context)
-            result.update({'price_unit_cost': cost_price, 'currency_cost_id': currency_cost_id})
+            result.update({'price_unit_cost': cost_price})
 
         if warning_msgs:
             warning = {
                 'title': _('Configuration Error!'),
                 'message': warning_msgs
             }
-
+        _args = (pricelist, product, qty, partner_id, uom, date_order, params)
         # This is for loading only available option values
         if context.get('params', False) and context['params'].get('category', False):
-            options = self.get_available_options(cr, uid, product_obj.id, context)
+            options = self.get_available_options(cr, uid, product_obj.id, context, *_args)
             domain.update(options.get('domain', {}))
             result.update(options.get('value', {}))
 
         return {'value': result, 'domain': domain, 'warning': warning}
-    
+
     def get_room_type_id(self, cr, uid):
         option_value = self.pool.get('option.value')
         values = option_value.search(cr, uid, [('option_type_id.code', '=', 'rt')])
         return values[0] if len(values) else False
 
-    def get_available_options(self, cr, uid, product_id, context):
+    def get_supplier_name(self, cr, uid, _id):
+        _model = self.pool.get('res.partner')
+        _model_ids = _model.search(cr, uid, [('id', '=', _id)])
+        res_partner = _model.browse(cr, uid, _model_ids)
+        return res_partner.display_name
+
+    def get_available_options(self, cr, uid, product_id, context, *args, **kwargs):
         '''
         Load only available values for the sale order form
         '''
@@ -541,9 +548,9 @@ class sale_order_line(Model):
         availables_suplements = product_rate_suplement.search(cr, uid, [('suppinfo_id', '=', suppinfo_ids)],
                                                               context=context)
         availables_suplements = product_rate_suplement.browse(cr, uid, availables_suplements)
-        availables_suplements = list(set([s.id for s in availables_suplements]))
+        availables_suplements = list(set([int(s.supplement_id) for s in availables_suplements]))
 
-        # domain.update({'sale_line_supplement_ids': [('id', 'in', availables_suplements)]})
+        domain.update({'sale_line_supplement_ids': [('id', 'in', availables_suplements)]})
         # Automatically upload option_type values
         params = context.get('params')
 
@@ -561,65 +568,85 @@ class sale_order_line(Model):
                 pricelist_model = self.pool.get('pricelist.partnerinfo')
                 pricelist_ids = pricelist_model.search(cr, uid, filter + [('suppinfo_id', '=', suppinfo_id)],
                                                        context=context)
-                field_ids += list(set([getattr(p, field_name).id for p in
-                                       pricelist_model.browse(cr, uid, pricelist_ids, context=context)]))
+                field_ids = list(set([getattr(p, field_name).id for p in
+                                      pricelist_model.browse(cr, uid, pricelist_ids, context=context)]))
 
                 if len(field_ids) > 0:
                     if params.get(form_name, False):
                         if params[form_name] not in field_ids:
                             result.update({form_name: ''})
-                    elif len(pricelist_ids) == 1:
-                        result.update({form_name: field_ids[0]})
+                            # elif len(pricelist_ids) == 1:
+                            #     result.update({form_name: field_ids[0]})
             if len(field_ids):
-                # domain.update({form_name: [('id', 'in', field_ids)]})
-                pass
+                domain.update({form_name: [('id', 'in', field_ids)]})
             else:
                 domain.update({form_name: False})
 
-        suppinfos = self.update_suppinfos('hotel_2_meal_plan_id', 'pricelist.partnerinfo', suppinfos, context, cr, uid)
-        suppinfos = self.update_suppinfos('sale_line_supplement_ids', 'product.rate.supplement', suppinfos, context, cr,
-                                          uid)
-        tmp_list = [s.name.id for s in suppinfos]
-        if len(suppinfos) == 1:
-            result.update({'supplier_id': suppinfos[0].name.id})
-        elif _supplier_id not in tmp_list:
-            result.update({'supplier_id': False})
-        domain.update({'supplier_id': [('id', 'in', tmp_list)]})
-        return {'value': result, 'domain': domain}
-
-    def update_suppinfos(self, value_parms, name_table, suppinfos, context, cr, uid):
         try:
-            tmp = context['params'][value_parms]
-            if type(tmp) is list:
-                print(tmp)
-                tmp = tmp[0][1]
-            elif tmp:
-                product_rate_suplement = self.pool.get(name_table)
-                availables_suplements = product_rate_suplement.search(cr, uid, [('id', '=', tmp)])
-                availables_suplements = product_rate_suplement.browse(cr, uid, availables_suplements)
-                availables_suplements = [p.suppinfo_id for p in availables_suplements]
-                suppinfos = list(set(suppinfos).intersection(set(availables_suplements)))
+            tmp = context['params']['hotel_2_meal_plan_id']
+            if tmp:
+                product_rate_suplement = self.pool.get('product.rate')
+                availables_meal_plan_ids = product_rate_suplement.search(cr, uid, [('meal_plan_id', '=', tmp)])
+                availables_pricelist = list(
+                    set([x.id for x in product_rate_suplement.browse(cr, uid, availables_meal_plan_ids)]))
+                product_rate_suplement = self.pool.get('pricelist.partnerinfo')
+                availables_pricelist_partnerinfos_ids = product_rate_suplement.search(cr, uid, [
+                    ('product_rate_id', '=', availables_pricelist)])
+                meal_plan_suppinfos_ids = [int(x.suppinfo_id) for x in product_rate_suplement.browse(cr, uid,
+                                                                                                     availables_pricelist_partnerinfos_ids)]
+                suppinfo_ids = list(set(suppinfo_ids).intersection(set(meal_plan_suppinfos_ids)))
         except KeyError:
             pass
-        return suppinfos
+        try:
+            tmp = context['params']['supplement_ids']
+            if type(tmp) is list:
+                tmp = tmp[0][2]
+                if tmp:
+                    product_rate_suplement = self.pool.get('product.rate.supplement')
+                    availables_suplements_ids = product_rate_suplement.search(cr, uid, [('supplement_id', '=', tmp)])
+                    availables_suplements = product_rate_suplement.browse(cr, uid, availables_suplements_ids)
+                    suplements_suppinfo_ids = [int(p.suppinfo_id) for p in availables_suplements]
+                    suppinfo_ids = list(set(suppinfo_ids).intersection(set(suplements_suppinfo_ids)))
+        except KeyError:
+            pass
+
+        suppinfos = suppinfo_model.browse(cr, uid, suppinfo_ids)
+        tmp_list = [s.name.id for s in suppinfos]
+        try:
+            _category = context['params']['category']
+            if product_id and _category:
+                if args[0]:
+                    results = []
+                    for tmp_supplier in tmp_list:
+                        price = self.pool.get('product.pricelist').price_get(cr, uid, [args[0]],
+                                                                             args[1], args[2] or 1.0, args[3], {
+                                                                                 'uom': args[4] or result.get(
+                                                                                     'product_uom'),
+                                                                                 'date': args[5],
+                                                                                 'supplier_id': tmp_supplier,
+                                                                                 'params': params
+                                                                             })[args[0]]
+                        results.append([0, False, {
+                            u'price': price,
+                            u'supplier': self.get_supplier_name(cr, uid, tmp_supplier)
+                        }])
+                    result.update(
+                        {'resume_table_price': results})
+        except KeyError:
+            pass
+
+        if _supplier_id not in tmp_list:
+            result.update({'supplier_id': False})
+        # if len(tmp_list) == 1:
+        #     result.update({'supplier_id': tmp_list[0]})
+        domain.update({'supplier_id': [('id', 'in', tmp_list)]})
+        return {'value': result, 'domain': domain}
 
     def show_cost_price(self, cr, uid, result, product, qty, partner_id, uom,
                         date_order, supplier_id, params, pricelist,
                         context=None):
-        
-        product_id = self.pool.get('product.product').browse(cr, uid, product).product_tmpl_id.id
-        suppinfo_obj = self.pool.get('product.supplierinfo')
-        suppinfo_ids = suppinfo_obj.search(cr, uid, [('product_tmpl_id', '=', product_id), ('name', '=', supplier_id)])
-        
-        cp_ids = []
         pl_obj = self.pool.get('product.pricelist')
-        if suppinfo_ids:
-            currency_id = suppinfo_obj.browse(cr, uid, suppinfo_ids[0]).currency_cost_id.id
-            cp_ids = pl_obj.search(cr, uid, [('name', 'ilike', 'Cost Pricelist'), ('currency_id', '=', currency_id)],
-                               context=context)
-            
-        if len(cp_ids) == 0:
-            cp_ids = pl_obj.search(cr, uid, [('name', '=', 'Cost Pricelist')],
+        cp_ids = pl_obj.search(cr, uid, [('name', '=', 'Cost Pricelist')],
                                context=context)
         if cp_ids:
             cp_id = cp_ids[0]
@@ -630,17 +657,15 @@ class sale_order_line(Model):
                                               'supplier_id': supplier_id,
                                               'params': params
                                           })[cp_id]
+            sale_currency_id = pl_obj.browse(cr, uid, pricelist).currency_id.id
             cost_currency_id = pl_obj.browse(cr, uid, cp_id).currency_id.id
-#            sale_currency_id = pl_obj.browse(cr, uid, pricelist).currency_id.id
-#            if sale_currency_id != cost_currency_id:
-#                cr_obj = self.pool.get('res.currency')
-#                cost_price = cr_obj.compute(cr, uid, cost_currency_id,
-#                                            sale_currency_id, cost_price,
-#                                            round=False, context=context)
-            return cost_price, cost_currency_id
-        
-        
-        return 0.0, pl_obj.browse(cr, uid, pricelist).currency_id.id
+            if sale_currency_id != cost_currency_id:
+                cr_obj = self.pool.get('res.currency')
+                cost_price = cr_obj.compute(cr, uid, cost_currency_id,
+                                            sale_currency_id, cost_price,
+                                            round=False, context=context)
+            return cost_price
+        return 0.0
 
     def fields_view_get(self, cr, uid, view_id=None, view_type='form',
                         context=None, toolbar=False, submenu=False):
@@ -720,7 +745,7 @@ class sale_order_line(Model):
             'datas': datas,
             'nodestroy': True
         }
-        
+
     _defaults = {
         'start_date': lambda s, c, u, ctx: ctx.get('start', False),
         'end_date': lambda s, c, u, ctx: ctx.get('end', False),

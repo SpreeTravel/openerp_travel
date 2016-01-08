@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data noupdate="0">
+
+        <record model="product.supplierinfo" id="product_supplierinfo_22">
+            <field name="product_tmpl_id">3</field>
+            <field name="name">35</field>
+        </record>
+        <record model="pricelist.partnerinfo" id="pricelist_partnerinfo_22">
+            <field name="suppinfo_id" ref="product_supplierinfo_22"/>
+            <field name="start_date" eval="time.strftime('2016-02-07 00:00:01')"/>
+            <field name="end_date" eval="time.strftime('2016-02-28 00:00:01')"/>
+            <field name="simple">25</field>
+            <field name="price">50</field>
+            <field name="triple">75</field>
+            <field name="extra_adult">25</field>
+            <field name="child">5</field>
+            <field name="second_child">5</field>
+            <field name="room_type_id">15</field>
+            <field name="meal_plan_id">17</field>
+        </record>
+        <record model="pricelist.partnerinfo" id="pricelist_partnerinfo_23">
+            <field name="suppinfo_id" ref="product_supplierinfo_22"/>
+            <field name="start_date" eval="time.strftime('2016-01-15 00:00:01')"/>
+            <field name="end_date" eval="time.strftime('2016-01-25 00:00:01')"/>
+            <field name="simple">30</field>
+            <field name="price">50</field>
+            <field name="triple">80</field>
+            <field name="extra_adult">15</field>
+            <field name="child">10</field>
+            <field name="second_child">20</field>
+            <field name="room_type_id">15</field>
+            <field name="meal_plan_id">17</field>
+        </record>
+        <record model="pricelist.partnerinfo" id="pricelist_partnerinfo_24">
+            <field name="suppinfo_id" ref="product_supplierinfo_22"/>
+            <field name="start_date" eval="time.strftime('2016-03-15 00:00:01')"/>
+            <field name="end_date" eval="time.strftime('2016-04-25 00:00:01')"/>
+            <field name="simple">50</field>
+            <field name="price">80</field>
+            <field name="triple">100</field>
+            <field name="extra_adult">40</field>
+            <field name="child">0</field>
+            <field name="second_child">10</field>
+            <field name="room_type_id">14</field>
+            <field name="meal_plan_id">16</field>
+        </record>
+
+        <record model="product.supplierinfo" id="product_supplierinfo_23">
+            <field name="product_tmpl_id">3</field>
+            <field name="name">23</field>
+        </record>
+        <record model="pricelist.partnerinfo" id="pricelist_partnerinfo_25">
+            <field name="suppinfo_id" ref="product_supplierinfo_23"/>
+            <field name="start_date" eval="time.strftime('2016-01-19 00:00:01')"/>
+            <field name="end_date" eval="time.strftime('2016-01-20 00:00:01')"/>
+            <field name="simple">10</field>
+            <field name="price">30</field>
+            <field name="triple">80</field>
+            <field name="extra_adult">10</field>
+            <field name="child">5</field>
+            <field name="second_child">10</field>
+            <field name="room_type_id">14</field>
+            <field name="meal_plan_id">17</field>
+        </record>
+
+
+        <record model="product.supplierinfo" id="product_supplierinfo_24">
+            <field name="product_tmpl_id">4</field>
+            <field name="name">50</field>
+        </record>
+        <record model="pricelist.partnerinfo" id="pricelist_partnerinfo_26">
+            <field name="suppinfo_id" ref="product_supplierinfo_24"/>
+            <field name="start_date" eval="time.strftime('2016-01-07 00:00:01')"/>
+            <field name="end_date" eval="time.strftime('2016-01-28 00:00:01')"/>
+            <field name="simple">20</field>
+            <field name="price">45</field>
+            <field name="triple">150</field>
+            <field name="extra_adult">40</field>
+            <field name="child">0</field>
+            <field name="second_child">10</field>
+            <field name="room_type_id">15</field>
+            <field name="meal_plan_id">17</field>
+        </record>
+        <record model="pricelist.partnerinfo" id="pricelist_partnerinfo_27">
+            <field name="suppinfo_id" ref="product_supplierinfo_24"/>
+            <field name="start_date" eval="time.strftime('2016-01-09 00:00:01')"/>
+            <field name="end_date" eval="time.strftime('2016-01-10 00:00:01')"/>
+            <field name="simple">28</field>
+            <field name="price">60</field>
+            <field name="triple">110</field>
+            <field name="extra_adult">10</field>
+            <field name="child">5</field>
+            <field name="second_child">10</field>
+            <field name="room_type_id">15</field>
+            <field name="meal_plan_id">16</field>
+        </record>
+
+
+        <record model="product.supplierinfo" id="product_supplierinfo_25">
+            <field name="product_tmpl_id">4</field>
+            <field name="name">18</field>
+        </record>
+        <record model="pricelist.partnerinfo" id="pricelist_partnerinfo_29">
+            <field name="suppinfo_id" ref="product_supplierinfo_25"/>
+            <field name="start_date" eval="time.strftime('2016-02-09 00:00:01')"/>
+            <field name="end_date" eval="time.strftime('2016-02-10 00:00:01')"/>
+            <field name="simple">65</field>
+            <field name="price">84</field>
+            <field name="triple">1145</field>
+            <field name="extra_adult">25</field>
+            <field name="child">10</field>
+            <field name="second_child">10</field>
+            <field name="room_type_id">15</field>
+            <field name="meal_plan_id">16</field>
+        </record>
+        <record model="pricelist.partnerinfo" id="pricelist_partnerinfo_28">
+            <field name="suppinfo_id" ref="product_supplierinfo_25"/>
+            <field name="start_date" eval="time.strftime('2016-01-15 00:00:01')"/>
+            <field name="end_date" eval="time.strftime('2016-01-18 00:00:01')"/>
+            <field name="simple">24</field>
+            <field name="price">48</field>
+            <field name="triple">72</field>
+            <field name="extra_adult">12</field>
+            <field name="child">6</field>
+            <field name="second_child">3</field>
+            <field name="room_type_id">14</field>
+            <field name="meal_plan_id">16</field>
+        </record>
+    </data>
+</openerp>

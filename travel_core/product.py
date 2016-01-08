@@ -99,7 +99,7 @@ class product_product(Model):
             to_srch += ['|', '|', '&', ('start_date', '>=', sdate), ('start_date', '<=', edate),
                                   '&', ('end_date', '>=', sdate), ('end_date', '<=', edate),
                              '|', '&', ('start_date', '<=', sdate), ('end_date', '>=', sdate),
-                                  '&',  ('start_date', '<=', edate), ('end_date', '>=', edate),]
+                                  '&',  ('start_date', '<=', edate), ('end_date', '>=', edate)]
         categ = self.browse(cr, uid, pid, context).categ_id.name.lower()
         for k, v in params.items():
             if k.startswith(categ) and k.endswith('_id') and params[k]:

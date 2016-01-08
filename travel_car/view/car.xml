@@ -196,16 +196,9 @@
             </field>
         </record>
         
-        <record id="import_car_action" model="ir.actions.act_window">
-            <field name="name">Import Cars Prices</field>
-            <field name="res_model">import.car</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">form</field>            
-            <field name="view_id" ref="import_car_form"/>
-            <field name="target">new</field> 
-        </record>
+
 		
-        <menuitem id="import_car_menu" sequence="103" parent="travel_core.travel_imports_menu" action="import_car_action" />
+
            
         
     </data>

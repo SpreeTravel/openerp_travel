@@ -40,7 +40,8 @@ class product_transfer(Model):
     def price_get_partner(self, cr, uid, cls, to_search, params, context=None):
         price = 0.0
         model = self.pool.get(cls)
-        to_search_sup = [x for x in to_search]
+        exclude_fields = ['guide_id', 'confort_id', 'vehicle_type_id']
+        to_search_sup = [x for x in to_search if x[0].lower() not in exclude_fields]
         
         ov = self.pool.get('option.value')
         taxi = False

@@ -20,7 +20,6 @@
 ##############################################################################
 
 import datetime as dt
-
 from openerp.osv import fields
 from openerp.osv.orm import Model
 from openerp.tools import DEFAULT_SERVER_DATE_FORMAT as DF
@@ -52,14 +51,15 @@ class product_hotel(Model):
 
         price = 0.0
         model = self.pool.get(cls)
-        to_search_sup = [x for x in to_search]
+        to_search_sup = [x for x in to_search if x[0].lower() != 'meal_plan_id']
 
         if params.get('start_date', False) and params.get('end_date', False):
             occupation = sr.extract_values(cr, uid, rooming, context)
             pp = False
             for occ in occupation:
                 if occ['room_type_id']:
-                    pp_ids = model.search(cr, uid, to_search + [('room_type_id', '=', occ['room_type_id'])], context=context)
+                    pp_ids = model.search(cr, uid, to_search + [('room_type_id', '=', occ['room_type_id'])],
+                                          context=context)
                     for pp_id in pp_ids:
                         pp = model.browse(cr, uid, pp_id, context)
                         r_price = 0.0
@@ -113,13 +113,13 @@ class product_hotel(Model):
             return val
         else:
             return adult_price * val
-        
+
     def get_option_type_fields(self, cr, uid, product_id, context):
         '''
         Dict of the model option_type values to load on sale_order view
         '''
         return [{'meal_plan_id': 'hotel_2_meal_plan_id'}, []]
-        
+
     _order = 'hotel_name asc'
 
 
@@ -128,9 +128,9 @@ class product_rate(Model):
     _inherit = 'product.rate'
     _columns = {
         'room_type_id': fields.many2one('option.value', 'Room',
-                            domain="[('option_type_id.code', '=', 'rt')]"),
+                                        domain="[('option_type_id.code', '=', 'rt')]"),
         'meal_plan_id': fields.many2one('option.value', 'Plan',
-                            domain="[('option_type_id.code', '=', 'mp')]"),
+                                        domain="[('option_type_id.code', '=', 'mp')]"),
         'simple': fields.float('Simple'),
         'triple': fields.float('Triple'),
         'extra_adult': fields.float('Extra Adult'),

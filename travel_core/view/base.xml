@@ -50,7 +50,7 @@
                 	<sheet>
 	                	<group>
 	                    	<field name="name"/>
-	                    	<field name="code"/>
+	                    	<field name="code" readonly="1"/>
 						</group>
 						<separator/>
 						<group>

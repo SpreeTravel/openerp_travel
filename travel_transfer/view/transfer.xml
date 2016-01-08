@@ -198,16 +198,7 @@
             </field>
         </record>
         
-        <record id="import_transfer_action" model="ir.actions.act_window">
-            <field name="name">Import Transfers Prices</field>
-            <field name="res_model">import.transfer</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">form</field>            
-            <field name="view_id" ref="import_transfer_form"/>
-            <field name="target">new</field> 
-        </record>
-		
-        <menuitem id="import_transfer_menu" sequence="102" parent="travel_core.travel_imports_menu" action="import_transfer_action" />
+
         
         
     </data>

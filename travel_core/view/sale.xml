@@ -1,9 +1,9 @@
 <?xml version="1.0"?>
 <openerp>
     <data>
-        
+
         <!-- Orders -->
-        
+
         <record id="travel_sale_order_search_view" model="ir.ui.view">
             <field name="name">travel.sale.order.search.view</field>
             <field name="model">sale.order</field>
@@ -11,11 +11,16 @@
                 <search string="Sales">
                     <field name="lead_name" string="Lead name" filter_domain="[('lead_name', 'ilike', self)]"/>
                     <field name="name" string="Reference" filter_domain="[('name', 'ilike', self)]"/>
-                    <field name="client_order_ref" string="Customer Reference" filter_domain="[('client_order_ref', 'ilike', self)]"/>
-                    <filter name="upcoming" string="Upcoming" domain="[('end_date', '&lt;=', (context_today() + datetime.timedelta(30)).strftime('%%Y-%%m-%%d')), ('end_date', '&gt;=', (context_today() + datetime.timedelta(1)).strftime('%%Y-%%m-%%d')), ('state', '!=', 'cancel')]"/>
-                    <filter name="now" string="Now" domain="[('date_order', '&lt;=', (context_today() - datetime.timedelta(1)).strftime('%%Y-%%m-%%d')), ('end_date', '&gt;=', (context_today() + datetime.timedelta(1)).strftime('%%Y-%%m-%%d')), ('state', '!=', 'cancel')]"/>
-                    <filter name="next" string="Next" domain="[('date_order', '&gt;=', (context_today() + datetime.timedelta(1)).strftime('%%Y-%%m-%%d')), ('state', '!=', 'cancel')]"/>
-                    <filter name="fourweek" string="4 Weeks" domain="[('date_order', '=', (context_today() + datetime.timedelta(30)).strftime('%%Y-%%m-%%d')), ('state', '!=', 'cancel')]"/>
+                    <field name="client_order_ref" string="Customer Reference"
+                           filter_domain="[('client_order_ref', 'ilike', self)]"/>
+                    <filter name="upcoming" string="Upcoming"
+                            domain="[('end_date', '&lt;=', (context_today() + datetime.timedelta(30)).strftime('%%Y-%%m-%%d')), ('end_date', '&gt;=', (context_today() + datetime.timedelta(1)).strftime('%%Y-%%m-%%d')), ('state', '!=', 'cancel')]"/>
+                    <filter name="now" string="Now"
+                            domain="[('date_order', '&lt;=', (context_today() - datetime.timedelta(1)).strftime('%%Y-%%m-%%d')), ('end_date', '&gt;=', (context_today() + datetime.timedelta(1)).strftime('%%Y-%%m-%%d')), ('state', '!=', 'cancel')]"/>
+                    <filter name="next" string="Next"
+                            domain="[('date_order', '&gt;=', (context_today() + datetime.timedelta(1)).strftime('%%Y-%%m-%%d')), ('state', '!=', 'cancel')]"/>
+                    <filter name="fourweek" string="4 Weeks"
+                            domain="[('date_order', '=', (context_today() + datetime.timedelta(30)).strftime('%%Y-%%m-%%d')), ('state', '!=', 'cancel')]"/>
                     <separator/>
                     <filter string="Draft" domain="[('state','=','draft')]"/>
                     <filter string="Confirmed" domain="[('state','=','manual')]"/>
@@ -30,13 +35,14 @@
                 </search>
             </field>
         </record>
-        
+
         <record id="travel_sale_order_tree_view" model="ir.ui.view">
             <field name="name">travel.sale.order.tree.view</field>
             <field name="model">sale.order</field>
             <field name="priority">10</field>
             <field name="arch" type="xml">
-                <tree string="Sale" colors="gray:state == 'cancel'; red:date_order &gt;= current_date and state == 'draft'; blue:date_order &gt;= current_date and state == 'confirmed'">
+                <tree string="Sale"
+                      colors="gray:state == 'cancel'; red:date_order &gt;= current_date and state == 'draft'; blue:date_order &gt;= current_date and state == 'confirmed'">
                     <field name="name"/>
                     <field name="partner_id"/>
                     <field name="client_order_ref"/>
@@ -49,47 +55,59 @@
                 </tree>
             </field>
         </record>
-        
+
         <record id="sale.action_orders" model="ir.actions.act_window">
             <field name="view_id" ref="travel_sale_order_tree_view"/>
             <field name="context">{'all_sales': True}</field>
             <field name="domain">[]</field>
             <field name="search_view_id" ref="travel_sale_order_search_view"/>
         </record>
-        
+
         <record id="travel_sale_order_form_view" model="ir.ui.view">
             <field name="name">travel.sale.order.form.view</field>
             <field name="model">sale.order</field>
             <field name="inherit_id" ref="sale.view_order_form"/>
             <field name="arch" type="xml">
-                
+
                 <xpath expr="//form/sheet/group" position="replace">
                     <group>
                         <group>
-                            <field name="partner_id" on_change="onchange_partner_id(partner_id, context)" domain="[('customer','=',True)]" context="{'search_default_customer':1, 'show_address': 1}" options='{"always_reload": True}'/>
+                            <field name="partner_id" on_change="onchange_partner_id(partner_id, context)"
+                                   domain="[('customer','=',True)]"
+                                   context="{'search_default_customer':1, 'show_address': 1}"
+                                   options='{"always_reload": True}'/>
                             <field name="client_order_ref" string="Reference"/>
                             <label for="date_order" string="Date"/>
                             <div>
-                                <field name="date_order" class="oe_inline" nolabel="1" on_change="onchange_start_date(date_order, end_date)"/>-
-                                <field name="end_date" class="oe_inline" nolabel="1" on_change="onchange_end_date(date_order, end_date)"/>
+                                <field name="date_order" class="oe_inline" nolabel="1"
+                                       on_change="onchange_start_date(date_order, end_date)"/>-
+                                <field name="end_date" class="oe_inline" nolabel="1"
+                                       on_change="onchange_end_date(date_order, end_date)"/>
                             </div>
                             <label for="flight_in" string="Flight"/>
                             <div>
                                 <field name="flight_in" class="oe_inline" nolabel="1" style="width: 30%%"/>-
                                 <field name="flight_out" class="oe_inline" nolabel="1" style="width: 40%%"/>
                             </div>
-                            <field name="partner_invoice_id" groups="sale.group_delivery_invoice_address" context="{'default_type':'invoice'}"/>
-                            <field name="partner_shipping_id" groups="sale.group_delivery_invoice_address" context="{'default_type':'delivery'}"/>
-                            <field name="project_id" context="{'partner_id':partner_id, 'default_pricelist_id':pricelist_id, 'default_name':name, 'default_type': 'contract'}" groups="sale.group_analytic_accounting" domain="[('type','in',['view','normal','contract'])]"/>
+                            <field name="partner_invoice_id" groups="sale.group_delivery_invoice_address"
+                                   context="{'default_type':'invoice'}"/>
+                            <field name="partner_shipping_id" groups="sale.group_delivery_invoice_address"
+                                   context="{'default_type':'delivery'}"/>
+                            <field name="project_id"
+                                   context="{'partner_id':partner_id, 'default_pricelist_id':pricelist_id, 'default_name':name, 'default_type': 'contract'}"
+                                   groups="sale.group_analytic_accounting"
+                                   domain="[('type','in',['view','normal','contract'])]"/>
                         </group>
                         <group>
                             <!--<field name="shop_id" groups="base.group_no_one" on_change="onchange_shop_id(shop_id, context)" widget="selection" invisible="1"/>-->
-                            <field domain="[('type','=','sale')]" name="pricelist_id" groups="product.group_sale_pricelist" on_change="onchange_pricelist_id(pricelist_id,order_line)"/>
+                            <field domain="[('type','=','sale')]" name="pricelist_id"
+                                   groups="product.group_sale_pricelist"
+                                   on_change="onchange_pricelist_id(pricelist_id,order_line)"/>
                             <field name="currency_id" invisible="1"/>
                         </group>
                     </group>
                 </xpath>
-                
+
                 <page string='Order Lines' position="replace">
                     <page string='Order Lines'>
                         <field name="order_line" context="{'start': date_order, 'end': end_date}">
@@ -100,29 +118,32 @@
                                 <field name="th_weight" invisible="1"/>
                                 <field name="category_id"/>
                                 <field name="product_id" invisible="1"
-                                 context="{'partner_id':parent.partner_id, 'quantity':product_uom_qty, 'pricelist':parent.pricelist_id,  'uom':product_uom}"
-                                 groups="base.group_user"
-                                 on_change="product_id_change(parent.pricelist_id, product_id, product_uom_qty, product_uom, product_uos_qty, product_uos, name, parent.partner_id, False, True, parent.date_order, False, parent.fiscal_position, False, context)"/>
+                                       context="{'partner_id':parent.partner_id, 'quantity':product_uom_qty, 'pricelist':parent.pricelist_id,  'uom':product_uom}"
+                                       groups="base.group_user"
+                                       on_change="product_id_change(parent.pricelist_id, product_id, product_uom_qty, product_uom, product_uos_qty, product_uos, name, parent.partner_id, False, True, parent.date_order, False, parent.fiscal_position, False, context)"/>
                                 <field name="name" string="Name"/>
                                 <field name="start_date"/>
                                 <field name="end_date"/>
                                 <field name="adults"/>
                                 <field name="children"/>
                                 <field name="product_uom_qty"
-                                 context="{'partner_id':parent.partner_id, 'quantity':product_uom_qty, 'pricelist':parent.pricelist_id,  'uom':product_uom}"
-                                 on_change="product_id_change(parent.pricelist_id, product_id, product_uom_qty, product_uom, product_uos_qty, product_uos, name, parent.partner_id, False, False, parent.date_order, False, parent.fiscal_position, True, context)"/>
+                                       context="{'partner_id':parent.partner_id, 'quantity':product_uom_qty, 'pricelist':parent.pricelist_id,  'uom':product_uom}"
+                                       on_change="product_id_change(parent.pricelist_id, product_id, product_uom_qty, product_uom, product_uos_qty, product_uos, name, parent.partner_id, False, False, parent.date_order, False, parent.fiscal_position, True, context)"/>
                                 <field name="product_uom" invisible="1"
-                                 on_change="product_uom_change(parent.pricelist_id, product_id, product_uom_qty, product_uom, product_uos_qty, product_uos, name, parent.partner_id, False, False, parent.date_order, context)"
-                                 groups="product.group_uom" options='{"no_open": True}'/>
+                                       on_change="product_uom_change(parent.pricelist_id, product_id, product_uom_qty, product_uom, product_uos_qty, product_uos, name, parent.partner_id, False, False, parent.date_order, context)"
+                                       groups="product.group_uom" options='{"no_open": True}'/>
                                 <field name="product_uos_qty" groups="product.group_uos"/>
                                 <field name="product_uos" string="UoS" groups="product.group_uos"/>
                                 <field name="price_unit" string="Price"/>
                                 <field name="discount" groups="sale.group_discount_per_so_line"/>
                                 <field name="price_subtotal"/>
                                 <field name="supplier_id"/>
-                                <button name="to_confirm" type="object" string="Confirm" states="draft,cancel" icon="gtk-apply"/>
-                                <button name="to_cancel" type="object" string="Cancel" states="confirmed" icon="gtk-cancel"/>
-                                <button name="print_voucher" type="object" string="Voucher" states="confirmed" icon="gtk-file"/>
+                                <button name="to_confirm" type="object" string="Confirm" states="draft,cancel"
+                                        icon="gtk-apply"/>
+                                <button name="to_cancel" type="object" string="Cancel" states="confirmed"
+                                        icon="gtk-cancel"/>
+                                <button name="print_voucher" type="object" string="Voucher" states="confirmed"
+                                        icon="gtk-file"/>
                             </tree>
                             <!-- End Tree -->
                         </field>
@@ -132,21 +153,23 @@
                             <div class="oe_subtotal_footer_separator oe_inline">
                                 <label for="amount_total"/>
                                 <button name="button_dummy"
-                                 states="draft,sent" string="(update)" type="object" class="oe_edit_only oe_link"/>
+                                        states="draft,sent" string="(update)" type="object"
+                                        class="oe_edit_only oe_link"/>
                             </div>
-                            <field name="amount_total" nolabel="1" class="oe_subtotal_footer_separator" widget='monetary' options="{'currency_field': 'currency_id'}"/>
+                            <field name="amount_total" nolabel="1" class="oe_subtotal_footer_separator"
+                                   widget='monetary' options="{'currency_field': 'currency_id'}"/>
                         </group>
                         <div class="oe_clear"/>
                         <field name="note" class="oe_inline" placeholder="Terms and conditions..."/>
                     </page>
                     <page string="Paxs">
-                        <field name="pax_ids" />
+                        <field name="pax_ids"/>
                     </page>
                 </page>
-                
+
             </field>
         </record>
-        
+
         <record id="travel_sale_order_line_form_view" model="ir.ui.view">
             <field name="name">travel.sale.order.line.form.view</field>
             <field name="model">sale.order.line</field>
@@ -158,38 +181,85 @@
                         <button name="to_confirm" type="object" string="Confirm" states="draft,cancel"/>
                         <button name="to_cancel" type="object" string="Cancel" states="confirmed"/>
                         <button name="to_send" type="object" string="Send Email" states="draft"/>
-                        <field name="state" widget="statusbar" statusbar_visible="draft,confirmed,done" statusbar_colors='{"exception":"red","cancel":"red"}'/>
+                        <field name="state" widget="statusbar" statusbar_visible="draft,confirmed,done"
+                               statusbar_colors='{"exception":"red","cancel":"red"}'/>
                     </header>
                     <group>
                         <group name="standard">
                             <field name="state" invisible="1"/>
-                            <field name="category_id" domain="[('type', '=', 'normal')]" on_change="onchange_category(category_id)"/>
+                            <field name="category_id"
+                                   domain="[('type', '=', 'normal'), ('parent_id', '!=', False), ('name', '!=', 'Saleable')]"
+                                   on_change="onchange_category(category_id)"/>
                             <field name="category" invisible="1"/>
                             <field name="product_id" domain="[('categ_id', '=', category_id)]"
-                             context="{'partner_id':parent.partner_id, 'quantity':product_uom_qty, 'pricelist':parent.pricelist_id,  'uom':product_uom, 'supplier_id':supplier_id, 'params': {'category': category, 'start_date': start_date, 'end_date': end_date, 'adults': adults, 'children': children, 'supplement_ids': sale_line_supplement_ids} }"
-                             groups="base.group_user"
-                             on_change="product_id_change(parent.pricelist_id, product_id, product_uom_qty, product_uom, product_uos_qty, product_uos, name, parent.partner_id, False, True, parent.date_order, False, parent.fiscal_position, False, context)"/>
+                                   context="{'partner_id':parent.partner_id, 'quantity':product_uom_qty, 'pricelist':parent.pricelist_id,  'uom':product_uom, 'supplier_id':supplier_id, 'params': {'category': category, 'start_date': start_date, 'end_date': end_date, 'adults': adults, 'children': children, 'supplement_ids': sale_line_supplement_ids} }"
+                                   groups="base.group_user"
+                                   on_change="product_id_change(parent.pricelist_id, product_id, product_uom_qty, product_uom, product_uos_qty, product_uos, name, parent.partner_id, False, True, parent.date_order, False, parent.fiscal_position, False, context)"/>
                             <label for="start_date" string="Date"/>
                             <div>
                                 <field name="start_date"
-                                 context="{'partner_id':parent.partner_id, 'quantity':product_uom_qty, 'pricelist':parent.pricelist_id,  'uom':product_uom, 'supplier_id':supplier_id, 'params': {'category': category, 'start_date': start_date, 'end_date': end_date, 'adults': adults, 'children': children, 'supplement_ids': sale_line_supplement_ids} }"
-                                 groups="base.group_user" nolabel="1" class="oe_inline" required="1"
-                                 on_change="product_id_change(parent.pricelist_id, product_id, product_uom_qty, product_uom, product_uos_qty, product_uos, name, parent.partner_id, False, True, parent.date_order, False, parent.fiscal_position, False, context)"
+                                       context="{'partner_id':parent.partner_id, 'quantity':product_uom_qty, 'pricelist':parent.pricelist_id,  'uom':product_uom, 'supplier_id':supplier_id, 'params': {'category': category, 'start_date': start_date, 'end_date': end_date, 'adults': adults, 'children': children, 'supplement_ids': sale_line_supplement_ids} }"
+                                       groups="base.group_user" nolabel="1" class="oe_inline" required="1"
+                                       on_change="product_id_change(parent.pricelist_id, product_id, product_uom_qty, product_uom, product_uos_qty, product_uos, name, parent.partner_id, False, True, parent.date_order, False, parent.fiscal_position, False, context)"
                                 />-
                                 <field name="end_date"
-                                 context="{'partner_id':parent.partner_id, 'quantity':product_uom_qty, 'pricelist':parent.pricelist_id,  'uom':product_uom, 'supplier_id':supplier_id, 'params': {'category': category, 'start_date': start_date, 'end_date': end_date, 'adults': adults, 'children': children, 'supplement_ids': sale_line_supplement_ids} }"
-                                 groups="base.group_user" nolabel="1" class="oe_inline"
-                                 on_change="product_id_change(parent.pricelist_id, product_id, product_uom_qty, product_uom, product_uos_qty, product_uos, name, parent.partner_id, False, True, parent.date_order, False, parent.fiscal_position, False, context)"
+                                       context="{'partner_id':parent.partner_id, 'quantity':product_uom_qty, 'pricelist':parent.pricelist_id,  'uom':product_uom, 'supplier_id':supplier_id, 'params': {'category': category, 'start_date': start_date, 'end_date': end_date, 'adults': adults, 'children': children, 'supplement_ids': sale_line_supplement_ids} }"
+                                       groups="base.group_user" nolabel="1" class="oe_inline"
+                                       on_change="product_id_change(parent.pricelist_id, product_id, product_uom_qty, product_uom, product_uos_qty, product_uos, name, parent.partner_id, False, True, parent.date_order, False, parent.fiscal_position, False, context)"
                                 />
                             </div>
+
+
+                            <label for="discount" groups="sale.group_discount_per_so_line"/>
+                            <div name="discount" groups="sale.group_discount_per_so_line">
+                                <field name="discount" class="oe_inline"/>%%
+                            </div>
+
+
+                            <group name="paxs_fields" colspan="4">
+                                <field name="adults"
+                                       context="{'partner_id':parent.partner_id, 'quantity':product_uom_qty, 'pricelist':parent.pricelist_id,  'uom':product_uom, 'supplier_id':supplier_id, 'params': {'category': category, 'start_date': start_date, 'end_date': end_date, 'adults': adults, 'children': children, 'supplement_ids': sale_line_supplement_ids} }"
+                                       groups="base.group_user"
+                                       on_change="product_id_change(parent.pricelist_id, product_id, product_uom_qty, product_uom, product_uos_qty, product_uos, name, parent.partner_id, False, True, parent.date_order, False, parent.fiscal_position, False, context)"
+                                />
+                                <field name="children"
+                                       context="{'partner_id':parent.partner_id, 'quantity':product_uom_qty, 'pricelist':parent.pricelist_id,  'uom':product_uom, 'supplier_id':supplier_id, 'params': {'category': category, 'start_date': start_date, 'end_date': end_date, 'adults': adults, 'children': children, 'supplement_ids': sale_line_supplement_ids} }"
+                                       groups="base.group_user"
+                                       on_change="product_id_change(parent.pricelist_id, product_id, product_uom_qty, product_uom, product_uos_qty, product_uos, name, parent.partner_id, False, True, parent.date_order, False, parent.fiscal_position, False, context)"
+                                />
+                            </group>
+                            <group name="dynamic_fields" colspan="4">
+
+                            </group>
+                            <group name="info_fields" colspan="4">
+                                <field name="sale_line_supplement_ids" widget="many2many_tags" groups="base.group_user"
+                                       context="{'partner_id':parent.partner_id, 'quantity':product_uom_qty, 'pricelist':parent.pricelist_id,  'uom':product_uom, 'supplier_id':supplier_id, 'params': {'category': category, 'start_date': start_date, 'end_date': end_date, 'adults': adults, 'children': children, 'supplement_ids': sale_line_supplement_ids} }"
+                                       on_change="product_id_change(parent.pricelist_id, product_id, product_uom_qty, product_uom, product_uos_qty, product_uos, name, parent.partner_id, False, True, parent.date_order, False, parent.fiscal_position, False, context)"
+                                />
+                            </group>
+
+
+                        </group>
+                        <group name="extended">
+                            <field name="resume_table_price" readonly="1">
+                                <tree string="">
+                                    <field name="supplier"/>
+                                    <field name="price"/>
+                                </tree>
+                            </field>
+                            <field name="supplier_id"
+                                   context="{'supplier': True, 'partner_id':parent.partner_id, 'quantity':product_uom_qty, 'pricelist':parent.pricelist_id,  'uom':product_uom, 'supplier_id':supplier_id, 'params': {'category': category, 'start_date': start_date, 'end_date': end_date, 'adults': adults, 'children': children, 'supplement_ids': sale_line_supplement_ids} }"
+                                   groups="base.group_user"
+                                   on_change="product_id_change(parent.pricelist_id, product_id, product_uom_qty, product_uom, product_uos_qty, product_uos, name, parent.partner_id, False, True, parent.date_order, False, parent.fiscal_position, False, context)"
+                            />
                             <label for="product_uom_qty"/>
                             <div>
                                 <field
-                                 context="{'partner_id':parent.partner_id, 'quantity':product_uom_qty, 'pricelist':parent.pricelist_id,  'uom':product_uom, 'supplier_id':supplier_id, 'params': {'category': category, 'start_date': start_date, 'end_date': end_date, 'adults': adults, 'children': children, 'supplement_ids': sale_line_supplement_ids} }"
-                                 name="product_uom_qty" class="oe_inline"
-                                 on_change="product_id_change(parent.pricelist_id,product_id,product_uom_qty,product_uom,product_uos_qty,product_uos,name,parent.partner_id, False, False, parent.date_order, False, parent.fiscal_position, True, context)"/>
+                                        context="{'partner_id':parent.partner_id, 'quantity':product_uom_qty, 'pricelist':parent.pricelist_id,  'uom':product_uom, 'supplier_id':supplier_id, 'params': {'category': category, 'start_date': start_date, 'end_date': end_date, 'adults': adults, 'children': children, 'supplement_ids': sale_line_supplement_ids} }"
+                                        name="product_uom_qty" class="oe_inline"
+                                        on_change="product_id_change(parent.pricelist_id,product_id,product_uom_qty,product_uom,product_uos_qty,product_uos,name,parent.partner_id, False, False, parent.date_order, False, parent.fiscal_position, True, context)"/>
                                 <field name="product_uom" groups="product.group_uom" class="oe_inline oe_no_button"
-                                 on_change="product_uom_change(parent.pricelist_id,product_id,product_uom_qty,product_uom,product_uos_qty,product_uos,name,parent.partner_id, False, False, parent.date_order, context)"/>
+                                       on_change="product_uom_change(parent.pricelist_id,product_id,product_uom_qty,product_uom,product_uos_qty,product_uos,name,parent.partner_id, False, False, parent.date_order, context)"/>
                             </div>
                             <label for="product_uos_qty" groups="product.group_uos"/>
                             <div groups="product.group_uos">
@@ -197,61 +267,32 @@
                                 <field name="product_uos_qty" class="oe_inline"/>
                                 <field name="product_uos" options='{"no_open": True}' class="oe_inline"/>
                             </div>
-                            <label for="price_unit" />
+                            <label for="price_unit"/>
                             <div>
-                                <field name="price_unit" class="oe_inline"/> - <field name="price_unit_cost" class="oe_inline"/>
-                                <field name="currency_cost_id" widget="selection" class="oe_inline"/>
+                                <field name="price_unit" class="oe_inline"/>
+                                -
+                                <field name="price_unit_cost" class="oe_inline"/>
+                                <!--<field name="currency_cost_id" widget="selection" class="oe_inline"/>-->
                             </div>
-                            
-                            <label for="discount" groups="sale.group_discount_per_so_line"/>
-                            <div name="discount" groups="sale.group_discount_per_so_line">
-                                <field name="discount" class="oe_inline"/>%%
-                            </div>
-                            <field name="supplier_id"
-                             context="{'supplier': True, 'partner_id':parent.partner_id, 'quantity':product_uom_qty, 'pricelist':parent.pricelist_id,  'uom':product_uom, 'supplier_id':supplier_id, 'params': {'category': category, 'start_date': start_date, 'end_date': end_date, 'adults': adults, 'children': children, 'supplement_ids': sale_line_supplement_ids} }"
-                             groups="base.group_user"
-                             on_change="product_id_change(parent.pricelist_id, product_id, product_uom_qty, product_uom, product_uos_qty, product_uos, name, parent.partner_id, False, True, parent.date_order, False, parent.fiscal_position, False, context)"
-                            />
+
                             <field name="reservation_number"/>
-                        </group>
-                        <group name="extended">
-                            <group name="paxs_fields" colspan="4">
-                                <field name="adults"
-                                 context="{'partner_id':parent.partner_id, 'quantity':product_uom_qty, 'pricelist':parent.pricelist_id,  'uom':product_uom, 'supplier_id':supplier_id, 'params': {'category': category, 'start_date': start_date, 'end_date': end_date, 'adults': adults, 'children': children, 'supplement_ids': sale_line_supplement_ids} }"
-                                 groups="base.group_user"
-                                 on_change="product_id_change(parent.pricelist_id, product_id, product_uom_qty, product_uom, product_uos_qty, product_uos, name, parent.partner_id, False, True, parent.date_order, False, parent.fiscal_position, False, context)"
-                                />
-                                <field name="children"
-                                 context="{'partner_id':parent.partner_id, 'quantity':product_uom_qty, 'pricelist':parent.pricelist_id,  'uom':product_uom, 'supplier_id':supplier_id, 'params': {'category': category, 'start_date': start_date, 'end_date': end_date, 'adults': adults, 'children': children, 'supplement_ids': sale_line_supplement_ids} }"
-                                 groups="base.group_user"
-                                 on_change="product_id_change(parent.pricelist_id, product_id, product_uom_qty, product_uom, product_uos_qty, product_uos, name, parent.partner_id, False, True, parent.date_order, False, parent.fiscal_position, False, context)"
-                                />
-                            </group>
-                            <group name="dynamic_fields" colspan="4">
-                                
-                            </group>
-                            <group name="info_fields" colspan="4">
-                                <field name="sale_line_supplement_ids" widget="many2many_tags" groups="base.group_user"
-                                 context="{'partner_id':parent.partner_id, 'quantity':product_uom_qty, 'pricelist':parent.pricelist_id,  'uom':product_uom, 'supplier_id':supplier_id, 'params': {'category': category, 'start_date': start_date, 'end_date': end_date, 'adults': adults, 'children': children, 'supplement_ids': sale_line_supplement_ids} }"
-                                 on_change="product_id_change(parent.pricelist_id, product_id, product_uom_qty, product_uom, product_uos_qty, product_uos, name, parent.partner_id, False, True, parent.date_order, False, parent.fiscal_position, False, context)"
-                                />
-                            </group>
+
                         </group>
                     </group>
                     <notebook>
                         <page string="Description">
-                            <field name="name" invisible="1" />
+                            <field name="name" invisible="1"/>
                             <field name="description" nolabel="1" colspan="4"/>
                         </page>
                         <page string="Details">
                             <group>
                                 <group>
-                                    <field name="start_time" />
-                                    <field name="start_place" />    
+                                    <field name="start_time"/>
+                                    <field name="start_place"/>
                                 </group>
                                 <group>
-                                    <field name="end_time" />
-                                    <field name="end_place" />  
+                                    <field name="end_time"/>
+                                    <field name="end_place"/>
                                 </group>
                             </group>
                         </page>
@@ -264,24 +305,28 @@
                 <!-- End Form -->
             </field>
         </record>
-        
+
         <!-- Reservations -->
-        
+
         <record id="travel_sale_order_line_search_view" model="ir.ui.view">
             <field name="name">travel.sale.order.line.search.view</field>
             <field name="model">sale.order.line</field>
             <field name="arch" type="xml">
                 <search string="Reservations">
-                    <field name="customer_id" string="Customer" filter_domain="['|', ('customer_id.name', 'ilike', self), ('name', 'ilike', self)]"/>
+                    <field name="customer_id" string="Customer"
+                           filter_domain="['|', ('customer_id.name', 'ilike', self), ('name', 'ilike', self)]"/>
                     <field name="product_id" string="Product" filter_domain="[('product_id.name', 'ilike', self)]"/>
-                    <filter name="upcoming" string="Upcoming" domain="[('end_date', '&lt;=', (context_today() + datetime.timedelta(30)).strftime('%%Y-%%m-%%d')), ('end_date', '&gt;=', (context_today() + datetime.timedelta(1)).strftime('%%Y-%%m-%%d')), ('state', '!=', 'cancel')]"/>
-                    <filter name="now" string="Now" domain="[('start_date', '&lt;=', (context_today() - datetime.timedelta(1)).strftime('%%Y-%%m-%%d')), ('end_date', '&gt;=', (context_today() + datetime.timedelta(1)).strftime('%%Y-%%m-%%d')), ('state', '!=', 'cancel')]"/>
-                    <filter name="next" string="Next" domain="[('start_date', '&gt;=', (context_today() + datetime.timedelta(1)).strftime('%%Y-%%m-%%d')), ('state', '!=', 'cancel')]"/>
+                    <filter name="upcoming" string="Upcoming"
+                            domain="[('end_date', '&lt;=', (context_today() + datetime.timedelta(30)).strftime('%%Y-%%m-%%d')), ('end_date', '&gt;=', (context_today() + datetime.timedelta(1)).strftime('%%Y-%%m-%%d')), ('state', '!=', 'cancel')]"/>
+                    <filter name="now" string="Now"
+                            domain="[('start_date', '&lt;=', (context_today() - datetime.timedelta(1)).strftime('%%Y-%%m-%%d')), ('end_date', '&gt;=', (context_today() + datetime.timedelta(1)).strftime('%%Y-%%m-%%d')), ('state', '!=', 'cancel')]"/>
+                    <filter name="next" string="Next"
+                            domain="[('start_date', '&gt;=', (context_today() + datetime.timedelta(1)).strftime('%%Y-%%m-%%d')), ('state', '!=', 'cancel')]"/>
                     <separator/>
                     <filter string="Draft" domain="[('state','=','draft')]"/>
                     <filter string="Confirmed" domain="[('state','=','confirmed')]"/>
                     <filter string="Cancelled" domain="[('state','=','cancel')]"/>
-                    <separator name="products" />
+                    <separator name="products"/>
                     <group expand="0" string="Group By...">
                         <filter string="Customer" domain="[]" context="{'group_by':'customer_id'}"/>
                         <filter string="Supplier" domain="[]" context="{'group_by':'supplier_id'}"/>
@@ -294,25 +339,25 @@
                 </search>
             </field>
         </record>
-        
+
         <record id="travel_sale_order_line_tree_view" model="ir.ui.view">
             <field name="name">travel.sale.order.line.tree.view</field>
             <field name="model">sale.order.line</field>
             <field eval="7" name="priority"/>
             <field name="arch" type="xml">
                 <tree string="Products" create="false" delete="false">
-                    <field name="order_id" invisible="1" />
+                    <field name="order_id" invisible="1"/>
                     <field name="category_id"/>
-                    <field name="product_id" invisible="1" />
-                    <field name="name" string="Product" />
-                    <field name="customer_id" />
-                    <field name="start_date" />
-                    <field name="end_date" />
-                    <field name="adults" />
-                    <field name="children" />
+                    <field name="product_id" invisible="1"/>
+                    <field name="name" string="Product"/>
+                    <field name="customer_id"/>
+                    <field name="start_date"/>
+                    <field name="end_date"/>
+                    <field name="adults"/>
+                    <field name="children"/>
                     <field name="price_unit" string="Price"/>
                     <field name="supplier_id"/>
-                    <field name="state" />
+                    <field name="state"/>
                     <button name="to_confirm" type="object" string="Confirm" states="draft,cancel" icon="gtk-apply"/>
                     <button name="to_cancel" type="object" string="Cancel" states="confirmed" icon="gtk-cancel"/>
                     <button name="print_voucher" type="object" string="Voucher" states="confirmed" icon="gtk-file"/>
@@ -320,7 +365,7 @@
                 </tree>
             </field>
         </record>
-        
+
         <record id="travel_sale_order_line_action" model="ir.actions.act_window">
             <field name="name">All</field>
             <field name="type">ir.actions.act_window</field>
@@ -330,9 +375,10 @@
             <field name="view_id" ref="travel_sale_order_line_tree_view"/>
             <field name="search_view_id" ref="travel_sale_order_line_search_view"/>
         </record>
-        
+
         <menuitem id="travel_reservations_menu" name="Reservations" parent="base.menu_base_partner" sequence="2"/>
-        <menuitem id="travel_sale_order_line_menu" action="travel_sale_order_line_action" parent="travel_reservations_menu" sequence="1"/>
-        
+        <menuitem id="travel_sale_order_line_menu" action="travel_sale_order_line_action"
+                  parent="travel_reservations_menu" sequence="1"/>
+
     </data>
 </openerp>

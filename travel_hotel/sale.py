@@ -75,7 +75,6 @@ class sale_order_line(Model):
         cr.execute('update sale_context set adults=%s, children=%s where id=%s', (adults, children, obj.sale_context_id.id))
         return True
 
-
     def get_total_paxs(self, cr, uid, params, context=None):
         if params.get('category', False) == 'hotel':
             occupation = params.get('hotel_1_rooming_ids', [])

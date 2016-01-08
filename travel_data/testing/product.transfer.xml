@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
-    <data noupdate="0">
+    <data noupdate="1">
 
         <record model="product.template" id="product_template_transfer_2">
             <field name="name">T1</field>
@@ -17,12 +17,12 @@
             <field name="to">9</field>
         </record>
 
-        <record model="product.supplierinfo" id="product_supplierinfo_2">
+        <record model="product.supplierinfo" id="product_supplierinfo_32">
             <field name="product_tmpl_id" ref="product_template_transfer_2"/>
             <field name="name">46</field>
         </record>
-        <record model="pricelist.partnerinfo" id="pricelist_partnerinfo_2">
-            <field name="suppinfo_id" ref="product_supplierinfo_2"/>
+        <record model="pricelist.partnerinfo" id="pricelist_partnerinfo_32">
+            <field name="suppinfo_id" ref="product_supplierinfo_32"/>
             <field name="start_date" eval="time.strftime('2016-02-07 00:00:01')"/>
             <field name="end_date" eval="time.strftime('2016-02-28 00:00:01')"/>
             <field name="price">50</field>
@@ -32,8 +32,8 @@
             <field name="guide_id">12</field>
             <field name="confort_id">10</field>
         </record>
-        <record model="pricelist.partnerinfo" id="pricelist_partnerinfo_3">
-            <field name="suppinfo_id" ref="product_supplierinfo_2"/>
+        <record model="pricelist.partnerinfo" id="pricelist_partnerinfo_33">
+            <field name="suppinfo_id" ref="product_supplierinfo_32"/>
             <field name="start_date" eval="time.strftime('2016-01-15 00:00:01')"/>
             <field name="end_date" eval="time.strftime('2016-01-25 00:00:01')"/>
             <field name="price">80</field>
@@ -43,8 +43,8 @@
             <field name="guide_id">13</field>
             <field name="confort_id">11</field>
         </record>
-        <record model="pricelist.partnerinfo" id="pricelist_partnerinfo_4">
-            <field name="suppinfo_id" ref="product_supplierinfo_2"/>
+        <record model="pricelist.partnerinfo" id="pricelist_partnerinfo_34">
+            <field name="suppinfo_id" ref="product_supplierinfo_32"/>
             <field name="start_date" eval="time.strftime('2016-03-15 00:00:01')"/>
             <field name="end_date" eval="time.strftime('2016-04-25 00:00:01')"/>
             <field name="price">115</field>
@@ -55,12 +55,12 @@
             <field name="confort_id">10</field>
         </record>
 
-        <record model="product.supplierinfo" id="product_supplierinfo_3">
+        <record model="product.supplierinfo" id="product_supplierinfo_33">
             <field name="product_tmpl_id" ref="product_template_transfer_2"/>
             <field name="name">35</field>
         </record>
-        <record model="pricelist.partnerinfo" id="pricelist_partnerinfo_5">
-            <field name="suppinfo_id" ref="product_supplierinfo_3"/>
+        <record model="pricelist.partnerinfo" id="pricelist_partnerinfo_35">
+            <field name="suppinfo_id" ref="product_supplierinfo_33"/>
             <field name="start_date" eval="time.strftime('2016-01-19 00:00:01')"/>
             <field name="end_date" eval="time.strftime('2016-01-20 00:00:01')"/>
             <field name="price">50</field>
@@ -87,12 +87,12 @@
             <field name="to">3</field>
         </record>
 
-        <record model="product.supplierinfo" id="product_supplierinfo_4">
+        <record model="product.supplierinfo" id="product_supplierinfo_34">
             <field name="product_tmpl_id" ref="product_template_transfer_3"/>
             <field name="name">55</field>
         </record>
-        <record model="pricelist.partnerinfo" id="pricelist_partnerinfo_6">
-            <field name="suppinfo_id" ref="product_supplierinfo_4"/>
+        <record model="pricelist.partnerinfo" id="pricelist_partnerinfo_36">
+            <field name="suppinfo_id" ref="product_supplierinfo_34"/>
             <field name="start_date" eval="time.strftime('2016-01-07 00:00:01')"/>
             <field name="end_date" eval="time.strftime('2016-01-28 00:00:01')"/>
             <field name="price">43</field>
@@ -102,8 +102,8 @@
             <field name="guide_id">12</field>
             <field name="confort_id">10</field>
         </record>
-        <record model="pricelist.partnerinfo" id="pricelist_partnerinfo_7">
-            <field name="suppinfo_id" ref="product_supplierinfo_4"/>
+        <record model="pricelist.partnerinfo" id="pricelist_partnerinfo_37">
+            <field name="suppinfo_id" ref="product_supplierinfo_34"/>
             <field name="start_date" eval="time.strftime('2016-01-09 00:00:01')"/>
             <field name="end_date" eval="time.strftime('2016-01-10 00:00:01')"/>
             <field name="price">28</field>
@@ -115,12 +115,12 @@
         </record>
 
 
-        <record model="product.supplierinfo" id="product_supplierinfo_5">
+        <record model="product.supplierinfo" id="product_supplierinfo_35">
             <field name="product_tmpl_id" ref="product_template_transfer_3"/>
             <field name="name">15</field>
         </record>
-        <record model="pricelist.partnerinfo" id="pricelist_partnerinfo_9">
-            <field name="suppinfo_id" ref="product_supplierinfo_5"/>
+        <record model="pricelist.partnerinfo" id="pricelist_partnerinfo_39">
+            <field name="suppinfo_id" ref="product_supplierinfo_35"/>
             <field name="start_date" eval="time.strftime('2016-02-09 00:00:01')"/>
             <field name="end_date" eval="time.strftime('2016-02-10 00:00:01')"/>
             <field name="price">58</field>
@@ -130,8 +130,8 @@
             <field name="guide_id">12</field>
             <field name="confort_id">10</field>
         </record>
-        <record model="pricelist.partnerinfo" id="pricelist_partnerinfo_8">
-            <field name="suppinfo_id" ref="product_supplierinfo_5"/>
+        <record model="pricelist.partnerinfo" id="pricelist_partnerinfo_38">
+            <field name="suppinfo_id" ref="product_supplierinfo_35"/>
             <field name="start_date" eval="time.strftime('2016-01-15 00:00:01')"/>
             <field name="end_date" eval="time.strftime('2016-01-18 00:00:01')"/>
             <field name="price">110</field>

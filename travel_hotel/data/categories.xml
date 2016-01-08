@@ -8,6 +8,8 @@
 			<field name="type">normal</field>
 			<field name="voucher_name">hotel_travel_voucher_report</field>
 		</record>
+
+
 	</data>
 
 </openerp>

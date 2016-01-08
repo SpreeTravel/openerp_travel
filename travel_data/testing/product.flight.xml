@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
-    <data noupdate="0">
+    <data noupdate="1">
 
         <record model="product.template" id="product_template_flight_2">
             <field name="name">F1</field>
@@ -17,36 +17,36 @@
             <field name="to">1</field>
         </record>
 
-        <record model="product.supplierinfo" id="product_supplierinfo_2">
+        <record model="product.supplierinfo" id="product_supplierinfo_10">
             <field name="product_tmpl_id" ref="product_template_flight_2"/>
             <field name="name">86</field>
         </record>
-        <record model="pricelist.partnerinfo" id="pricelist_partnerinfo_2">
-            <field name="suppinfo_id" ref="product_supplierinfo_2"/>
+        <record model="pricelist.partnerinfo" id="pricelist_partnerinfo_12">
+            <field name="suppinfo_id" ref="product_supplierinfo_10"/>
             <field name="start_date" eval="time.strftime('2016-02-07 00:00:01')"/>
             <field name="end_date" eval="time.strftime('2016-02-28 00:00:01')"/>
             <field name="price">78</field>
             <field name="child">48</field>
         </record>
-        <record model="pricelist.partnerinfo" id="pricelist_partnerinfo_3">
-            <field name="suppinfo_id" ref="product_supplierinfo_2"/>
+        <record model="pricelist.partnerinfo" id="pricelist_partnerinfo_13">
+            <field name="suppinfo_id" ref="product_supplierinfo_10"/>
             <field name="start_date" eval="time.strftime('2016-01-15 00:00:01')"/>
             <field name="end_date" eval="time.strftime('2016-01-25 00:00:01')"/>
             <field name="price">80</field>
         </record>
-        <record model="pricelist.partnerinfo" id="pricelist_partnerinfo_4">
-            <field name="suppinfo_id" ref="product_supplierinfo_2"/>
+        <record model="pricelist.partnerinfo" id="pricelist_partnerinfo_14">
+            <field name="suppinfo_id" ref="product_supplierinfo_10"/>
             <field name="start_date" eval="time.strftime('2016-03-15 00:00:01')"/>
             <field name="end_date" eval="time.strftime('2016-04-25 00:00:01')"/>
             <field name="price">150</field>
         </record>
 
-        <record model="product.supplierinfo" id="product_supplierinfo_3">
+        <record model="product.supplierinfo" id="product_supplierinfo_13">
             <field name="product_tmpl_id" ref="product_template_flight_2"/>
             <field name="name">35</field>
         </record>
-        <record model="pricelist.partnerinfo" id="pricelist_partnerinfo_5">
-            <field name="suppinfo_id" ref="product_supplierinfo_3"/>
+        <record model="pricelist.partnerinfo" id="pricelist_partnerinfo_15">
+            <field name="suppinfo_id" ref="product_supplierinfo_13"/>
             <field name="start_date" eval="time.strftime('2016-01-19 00:00:01')"/>
             <field name="end_date" eval="time.strftime('2016-01-20 00:00:01')"/>
             <field name="price">50</field>
@@ -69,38 +69,38 @@
             <field name="to">6</field>
         </record>
 
-        <record model="product.supplierinfo" id="product_supplierinfo_4">
+        <record model="product.supplierinfo" id="product_supplierinfo_14">
             <field name="product_tmpl_id" ref="product_template_flight_3"/>
             <field name="name">75</field>
         </record>
-        <record model="pricelist.partnerinfo" id="pricelist_partnerinfo_6">
-            <field name="suppinfo_id" ref="product_supplierinfo_4"/>
+        <record model="pricelist.partnerinfo" id="pricelist_partnerinfo_16">
+            <field name="suppinfo_id" ref="product_supplierinfo_14"/>
             <field name="start_date" eval="time.strftime('2016-01-07 00:00:01')"/>
             <field name="end_date" eval="time.strftime('2016-01-28 00:00:01')"/>
             <field name="price">75</field>
             <field name="child">25</field>
         </record>
-        <record model="pricelist.partnerinfo" id="pricelist_partnerinfo_7">
-            <field name="suppinfo_id" ref="product_supplierinfo_4"/>
+        <record model="pricelist.partnerinfo" id="pricelist_partnerinfo_17">
+            <field name="suppinfo_id" ref="product_supplierinfo_14"/>
             <field name="start_date" eval="time.strftime('2016-01-09 00:00:01')"/>
             <field name="end_date" eval="time.strftime('2016-01-10 00:00:01')"/>
             <field name="price">28</field>
         </record>
 
 
-        <record model="product.supplierinfo" id="product_supplierinfo_5">
+        <record model="product.supplierinfo" id="product_supplierinfo_15">
             <field name="product_tmpl_id" ref="product_template_flight_3"/>
             <field name="name">12</field>
         </record>
-        <record model="pricelist.partnerinfo" id="pricelist_partnerinfo_9">
-            <field name="suppinfo_id" ref="product_supplierinfo_5"/>
+        <record model="pricelist.partnerinfo" id="pricelist_partnerinfo_19">
+            <field name="suppinfo_id" ref="product_supplierinfo_15"/>
             <field name="start_date" eval="time.strftime('2016-02-09 00:00:01')"/>
             <field name="end_date" eval="time.strftime('2016-02-10 00:00:01')"/>
             <field name="price">58</field>
             <field name="child">15</field>
         </record>
-        <record model="pricelist.partnerinfo" id="pricelist_partnerinfo_8">
-            <field name="suppinfo_id" ref="product_supplierinfo_5"/>
+        <record model="pricelist.partnerinfo" id="pricelist_partnerinfo_18">
+            <field name="suppinfo_id" ref="product_supplierinfo_15"/>
             <field name="start_date" eval="time.strftime('2016-01-15 00:00:01')"/>
             <field name="end_date" eval="time.strftime('2016-01-18 00:00:01')"/>
             <field name="price">63</field>

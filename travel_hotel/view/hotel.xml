@@ -217,16 +217,7 @@
             </field>
         </record>
         
-        <record id="import_hotel_action" model="ir.actions.act_window">
-            <field name="name">Import Hotels Prices</field>
-            <field name="res_model">import.hotel</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">form</field>            
-            <field name="view_id" ref="import_hotel_form"/>
-            <field name="target">new</field> 
-        </record>
-		
-        <menuitem id="import_hotel_menu" sequence="100" parent="travel_core.travel_imports_menu" action="import_hotel_action" />
+
        
     </data>
 </openerp>

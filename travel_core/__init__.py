@@ -25,5 +25,3 @@ import sale
 import pricelist
 import invoice
 import report
-import import_allotment
-import import_margins

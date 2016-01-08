@@ -22,13 +22,17 @@
 from openerp import tools
 from openerp.osv import fields
 from openerp.osv.orm import Model
+from openerp.tools.translate import _
 
 
 class sale_report(Model):
     _name = "sale.report"
     _inherit = "sale.report"
     _columns = {
-        'paxs': fields.integer('Paxs', readonly=True),
+        'paxs': fields.integer(_('Paxs'), readonly=True),
+        'myyear': fields.char(_('Year')),
+        'mymonth': fields.char(_('Month')),
+        'myday': fields.char(_('Day')),
         'supplier_id': fields.many2one('res.partner', 'Supplier')
     }
 
@@ -46,6 +50,9 @@ class sale_report(Model):
                     c.paxs as paxs,
                     c.supplier_id as supplier_id,
                     s.date_order as date,
+                    extract(year from s.date_order) as myyear,
+                    extract(month from s.date_order) as mymonth,
+                    extract(day from s.date_order) as myday,
                     s.date_confirm as date_confirm,
                     s.partner_id as partner_id,
                     s.user_id as user_id,
@@ -87,7 +94,10 @@ class sale_report(Model):
                     s.state,
                     s.pricelist_id,
                     s.project_id,
-                    s.section_id
+                    s.section_id,
+                    myyear,
+                    mymonth,
+                    myday
         """
         return group_by_str
 

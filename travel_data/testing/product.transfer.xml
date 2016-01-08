@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data noupdate="0">
+
+        <record model="product.template" id="product_template_transfer_2">
+            <field name="name">T1</field>
+        </record>
+        <record model="product.product" id="product_product_transfer_2">
+            <field name="product_tmpl_id" ref="product_template_transfer_2"/>
+        </record>
+        <record model="product.transfer" id="product_transfer_2">
+            <field name="transfer_name">T1</field>
+            <field name="product_id" ref="product_product_transfer_2"/>
+            <field name="name">T1</field>
+            <field name="categ_id" ref="travel_transfer.transfer"/>
+            <field name="origin">8</field>
+            <field name="to">9</field>
+        </record>
+
+        <record model="product.supplierinfo" id="product_supplierinfo_2">
+            <field name="product_tmpl_id" ref="product_template_transfer_2"/>
+            <field name="name">46</field>
+        </record>
+        <record model="pricelist.partnerinfo" id="pricelist_partnerinfo_2">
+            <field name="suppinfo_id" ref="product_supplierinfo_2"/>
+            <field name="start_date" eval="time.strftime('2016-02-07 00:00:01')"/>
+            <field name="end_date" eval="time.strftime('2016-02-28 00:00:01')"/>
+            <field name="price">50</field>
+            <field name="min_paxs">4</field>
+            <field name="max_paxs">12</field>
+            <field name="vehicle_type_id">7</field>
+            <field name="guide_id">12</field>
+            <field name="confort_id">10</field>
+        </record>
+        <record model="pricelist.partnerinfo" id="pricelist_partnerinfo_3">
+            <field name="suppinfo_id" ref="product_supplierinfo_2"/>
+            <field name="start_date" eval="time.strftime('2016-01-15 00:00:01')"/>
+            <field name="end_date" eval="time.strftime('2016-01-25 00:00:01')"/>
+            <field name="price">80</field>
+            <field name="min_paxs">2</field>
+            <field name="max_paxs">4</field>
+            <field name="vehicle_type_id">6</field>
+            <field name="guide_id">13</field>
+            <field name="confort_id">11</field>
+        </record>
+        <record model="pricelist.partnerinfo" id="pricelist_partnerinfo_4">
+            <field name="suppinfo_id" ref="product_supplierinfo_2"/>
+            <field name="start_date" eval="time.strftime('2016-03-15 00:00:01')"/>
+            <field name="end_date" eval="time.strftime('2016-04-25 00:00:01')"/>
+            <field name="price">115</field>
+            <field name="min_paxs">4</field>
+            <field name="max_paxs">12</field>
+            <field name="vehicle_type_id">8</field>
+            <field name="guide_id">12</field>
+            <field name="confort_id">10</field>
+        </record>
+
+        <record model="product.supplierinfo" id="product_supplierinfo_3">
+            <field name="product_tmpl_id" ref="product_template_transfer_2"/>
+            <field name="name">35</field>
+        </record>
+        <record model="pricelist.partnerinfo" id="pricelist_partnerinfo_5">
+            <field name="suppinfo_id" ref="product_supplierinfo_3"/>
+            <field name="start_date" eval="time.strftime('2016-01-19 00:00:01')"/>
+            <field name="end_date" eval="time.strftime('2016-01-20 00:00:01')"/>
+            <field name="price">50</field>
+            <field name="min_paxs">2</field>
+            <field name="max_paxs">8</field>
+            <field name="vehicle_type_id">9</field>
+            <field name="guide_id">13</field>
+            <field name="confort_id">11</field>
+        </record>
+
+
+        <record model="product.template" id="product_template_transfer_3">
+            <field name="name">T2</field>
+        </record>
+        <record model="product.product" id="product_product_transfer_3">
+            <field name="product_tmpl_id" ref="product_template_transfer_3"/>
+        </record>
+        <record model="product.transfer" id="product_transfer_3">
+            <field name="transfer_name">T2</field>
+            <field name="product_id" ref="product_product_transfer_3"/>
+            <field name="name">T2</field>
+            <field name="categ_id" ref="travel_transfer.transfer"/>
+            <field name="origin">8</field>
+            <field name="to">3</field>
+        </record>
+
+        <record model="product.supplierinfo" id="product_supplierinfo_4">
+            <field name="product_tmpl_id" ref="product_template_transfer_3"/>
+            <field name="name">55</field>
+        </record>
+        <record model="pricelist.partnerinfo" id="pricelist_partnerinfo_6">
+            <field name="suppinfo_id" ref="product_supplierinfo_4"/>
+            <field name="start_date" eval="time.strftime('2016-01-07 00:00:01')"/>
+            <field name="end_date" eval="time.strftime('2016-01-28 00:00:01')"/>
+            <field name="price">43</field>
+            <field name="min_paxs">5</field>
+            <field name="max_paxs">10</field>
+            <field name="vehicle_type_id">8</field>
+            <field name="guide_id">12</field>
+            <field name="confort_id">10</field>
+        </record>
+        <record model="pricelist.partnerinfo" id="pricelist_partnerinfo_7">
+            <field name="suppinfo_id" ref="product_supplierinfo_4"/>
+            <field name="start_date" eval="time.strftime('2016-01-09 00:00:01')"/>
+            <field name="end_date" eval="time.strftime('2016-01-10 00:00:01')"/>
+            <field name="price">28</field>
+            <field name="min_paxs">4</field>
+            <field name="max_paxs">8</field>
+            <field name="vehicle_type_id">9</field>
+            <field name="guide_id">13</field>
+            <field name="confort_id">11</field>
+        </record>
+
+
+        <record model="product.supplierinfo" id="product_supplierinfo_5">
+            <field name="product_tmpl_id" ref="product_template_transfer_3"/>
+            <field name="name">15</field>
+        </record>
+        <record model="pricelist.partnerinfo" id="pricelist_partnerinfo_9">
+            <field name="suppinfo_id" ref="product_supplierinfo_5"/>
+            <field name="start_date" eval="time.strftime('2016-02-09 00:00:01')"/>
+            <field name="end_date" eval="time.strftime('2016-02-10 00:00:01')"/>
+            <field name="price">58</field>
+            <field name="min_paxs">2</field>
+            <field name="max_paxs">15</field>
+            <field name="vehicle_type_id">9</field>
+            <field name="guide_id">12</field>
+            <field name="confort_id">10</field>
+        </record>
+        <record model="pricelist.partnerinfo" id="pricelist_partnerinfo_8">
+            <field name="suppinfo_id" ref="product_supplierinfo_5"/>
+            <field name="start_date" eval="time.strftime('2016-01-15 00:00:01')"/>
+            <field name="end_date" eval="time.strftime('2016-01-18 00:00:01')"/>
+            <field name="price">110</field>
+            <field name="min_paxs">2</field>
+            <field name="max_paxs">3</field>
+            <field name="vehicle_type_id">6</field>
+            <field name="guide_id">13</field>
+            <field name="confort_id">10</field>
+        </record>
+
+    </data>
+</openerp>

@@ -25,6 +25,14 @@ from openerp.osv.orm import Model
 
 class sale_rooming(Model):
     _name = 'sale.rooming'
+
+    def _load_default_room_value(self, cr, uid, context=None):
+        ctx = dict(context or {})
+        room_value = self.pool.get('option.value').search(cr, uid, [('load_default', '=', 'True')], context=ctx)
+        if room_value:
+            return room_value[0]
+        return self.pool.get('option.value').search(cr, uid, [], context=ctx)
+
     _columns = {
         'room': fields.selection([('simple', 'Single'),
                                   ('double', 'Double'),
@@ -125,7 +133,8 @@ class sale_rooming(Model):
     _defaults = {
         'room': 'double',
         'adults': 2,
-        'quantity': 1
+        'quantity': 1,
+        'room_type_id': _load_default_room_value
     }
     
 class option_value(Model):

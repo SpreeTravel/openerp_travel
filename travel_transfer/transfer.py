@@ -96,6 +96,11 @@ class product_transfer(Model):
 
     _order = 'transfer_name asc'
 
+    def unlink(self, cr, uid, ids, context=None):
+        context = dict(context or {})
+        product = self.browse(cr, uid, ids, context).product_id.id
+        self.pool.get('product.product').unlink(cr, uid, product, context)
+        return super(product_transfer,self).unlink(cr, uid, ids, context)
 
 class product_rate(Model):
     _name = 'product.rate'

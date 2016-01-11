@@ -53,3 +53,10 @@ coverage.xml
 # Sphinx documentation
 docs/_build/
 
+/.idea/encodings.xml
+/.idea/misc.xml
+/.idea/modules.xml
+/.idea/openerp_travel.iml
+/.idea/scopes/scope_settings.xml
+/.idea/vcs.xml
+/.idea/workspace.xml

@@ -58,15 +58,15 @@ class sale_order(Model):
                 values.append(obj.id)
         result = [('id', 'in', values)]
         return result
-    
+
     def _get_total_paxs(self, cr, uid, ids, fields, args, context=None):
-        result = {}        
+        result = {}
         for obj in self.browse(cr, uid, ids, context):
             result[obj.id] = False
             result[obj.id] = len(obj.pax_ids)
-        
+
         return result
-        
+
     _columns = {
         'date_order':
             fields.date('Start Date', required=True, readonly=True,
@@ -94,7 +94,7 @@ class sale_order(Model):
                              domain="[('pax', '=', True)]"),
         'total_paxs':
             fields.function(_get_total_paxs, method=True, type='integer',
-                            string='Total paxs', store=True),        
+                            string='Total paxs', store=True),
         'lead_name':
             fields.function(_get_lead_name, method=True, type='char',
                             string='Lead Name', size=128, fnct_search=_lead_name_search)
@@ -142,7 +142,7 @@ class sale_order(Model):
             return {'value': res, 'warning': {'title':'Dates Warning', 
                                               'message':'End Date should be after Start Date\n'}}                    
         return {'value': res}
-        
+
 class sale_context(Model):
     _name = 'sale.context'
 
@@ -302,7 +302,7 @@ class sale_order_line(Model):
         'order_end_date': fields.related('order_id', 'end_date', type='date',
                                          string='Out', store=True)
     }
-    
+
     def __init__(self, pool, cr):
         from openerp.addons.sale.sale import sale_order_line
         states = sale_order_line._columns['state'].selection
@@ -338,18 +338,16 @@ class sale_order_line(Model):
         if not partner_id:
             raise osv.except_osv(_('No Customer Defined !'),
                                  _('Before choosing a product,\n select a customer in the sales form.'))
+        if not date_order:
+            raise osv.except_osv(_('No Date Order Defined'),
+                                 _('Before choosing a product,\n select a date order in the sales form.'))
         warning = {}
         product_uom_obj = self.pool.get('product.uom')
         partner_obj = self.pool.get('res.partner')
         product_obj = self.pool.get('product.product')
         supplier_id = context.get('supplier_id', False)
         params = context.get('params', {})
-        context = {
-            'lang': lang,
-            'partner_id': partner_id,
-            'supplier_id': supplier_id,
-            'params': params
-        }
+
         if partner_id:
             lang = partner_obj.browse(cr, uid, partner_id).lang
         context_partner = {'lang': lang, 'partner_id': partner_id}
@@ -365,6 +363,15 @@ class sale_order_line(Model):
         warning_msgs = ''
         product_obj = product_obj.browse(cr, uid, product,
                                          context=context_partner)
+        supplier_id = product_obj.seller_ids[0].name.id
+
+        context = {
+            'lang': lang,
+            'partner_id': partner_id,
+            'supplier_id': supplier_id,
+            'params': params
+        }
+
         uom2 = False
         if uom:
             uom2 = product_uom_obj.browse(cr, uid, uom)

@@ -21,7 +21,8 @@
 
 import datetime as dt
 
-from openerp.osv import fields
+from openerp.osv import fields, osv
+from openerp.tools.translate import _
 from openerp.osv.orm import Model
 
 
@@ -75,14 +76,58 @@ class option_type(Model):
                                             'Option Values')
     }
 
+    _sql_constraints = [
+        ('code_uniq', 'unique (code)', 'The code of the option must be unique!')
+    ]
+
+    def write(self, cr, uid, ids, vals, context=None):
+        black_list = ['sup','vt','vc','guide','tm','cl','rt','mp']
+        if vals.get('code', False):
+            for option in self.browse(cr, uid, ids, context):
+                if option.code in black_list and vals['code'] != option.code:
+                    raise osv.except_osv(_('Validation!'), _('You can not modify the code for this option!'))
+        return super(option_type, self).write(cr, uid, ids, vals, context=context)
+
+    def unlink(self, cr, uid, ids, context=None):
+        context = dict(context or {})
+        black_list = ['sup','vt','vc','guide','tm','cl','rt','mp']
+        delete_option_type = []
+        for option in self.browse(cr, uid, ids, context):
+            if option.code not in black_list:
+                delete_option_type.append(option.id)
+        if not delete_option_type:
+            return False
+        return super(option_type, self).unlink(cr, uid, delete_option_type, context)
+
 
 class option_value(Model):
     _name = 'option.value'
+
     _columns = {
         'name': fields.char('Name', size=64, translate=True),
         'code': fields.char('Code', size=32),
+        'load_default': fields.boolean('Load Default'),
+        'option_code': fields.related('option_type_id', 'code', type='char', string='Potion Code', size=32),
         'option_type_id': fields.many2one('option.type', 'Option Type')
     }
+
+    _defaults = {
+        'load_default': False
+    }
+
+    def _check_load_default(self, cr, uid, ids, context=None):
+        obj = self.browse(cr, uid, ids[0], context=context)
+        if obj.load_default:
+             cr.execute('SELECT id FROM option_value WHERE load_default=True and id<>%s and option_type_id=%s ',
+                        (obj.id, obj.option_type_id.id,))
+             if cr.fetchall():
+                 return False
+        return True
+
+    _constraints = [
+        (_check_load_default, 'Error!\nOnly can choose one option with load default.',
+         ['load_default','option_type_id']),
+    ]
 
     def get_code_by_id(self, cr, uid, oid, context=None):
         return self.read(cr, uid, oid, ['code'], context)['code']

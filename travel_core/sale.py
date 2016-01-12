@@ -347,7 +347,12 @@ class sale_order_line(Model):
         product_obj = self.pool.get('product.product')
         supplier_id = context.get('supplier_id', False)
         params = context.get('params', {})
-
+        context = {
+            'lang': lang,
+            'partner_id': partner_id,
+            'supplier_id': supplier_id,
+            'params': params
+        }
         if partner_id:
             lang = partner_obj.browse(cr, uid, partner_id).lang
         context_partner = {'lang': lang, 'partner_id': partner_id}
@@ -363,19 +368,6 @@ class sale_order_line(Model):
         warning_msgs = ''
         product_obj = product_obj.browse(cr, uid, product,
                                          context=context_partner)
-        if product_obj.seller_ids:                                          
-            supplier_id = product_obj.seller_ids[0].name.id
-        else:
-            suppinfo_model  = self.pool.get('res.partner')
-            supplier_id = suppinfo_model.search(cr, uid, [('supplier', '=', True)], context=context)
-            if supplier_id:
-                supplier_id = supplier_id[0]         
-        context = {
-            'lang': lang,
-            'partner_id': partner_id,
-            'supplier_id': supplier_id,
-            'params': params
-        }
 
         uom2 = False
         if uom:
@@ -497,6 +489,7 @@ class sale_order_line(Model):
         product_obj = product_model.browse(cr, uid, product_id, context)
         product_tmpl_id = product_obj.product_tmpl_id.id
         suppinfo_model  = self.pool.get('product.supplierinfo')
+        partner_obj  = self.pool.get('res.partner')
         supp_domain = [('product_tmpl_id', '=', product_tmpl_id)]
         if context.get('supplier_id', False):
             supp_domain += [('name', '=', context['supplier_id'])]
@@ -504,7 +497,9 @@ class sale_order_line(Model):
         suppinfos    = suppinfo_model.browse(cr, uid, suppinfo_ids)
         if len(suppinfos) == 1:
             result.update({'supplier_id': suppinfos[0].name.id})
-        domain.update({'supplier_id': [('id', 'in', [s.name.id for s in suppinfos])]})    
+        list_supp = [s.name.id for s in suppinfos]
+        list_partner = partner_obj.search(cr, uid, [('supplier', '=', True)])
+        domain.update({'supplier_id': [('id', 'in', list_supp + [i for i in list_partner if i not in list_supp])]})
         
         # Automatically upload option_type values        
         params        = context.get('params')

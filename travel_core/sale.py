@@ -363,8 +363,13 @@ class sale_order_line(Model):
         warning_msgs = ''
         product_obj = product_obj.browse(cr, uid, product,
                                          context=context_partner)
-        supplier_id = product_obj.seller_ids[0].name.id
-
+        if product_obj.seller_ids:                                          
+            supplier_id = product_obj.seller_ids[0].name.id
+        else:
+            suppinfo_model  = self.pool.get('product.supplierinfo')
+            supplier_id = suppinfo_model.search(cr, uid, [], context=context)
+            if supplier_id:
+                supplier_id = supplier_id[0]         
         context = {
             'lang': lang,
             'partner_id': partner_id,

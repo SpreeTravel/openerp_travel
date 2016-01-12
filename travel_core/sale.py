@@ -366,8 +366,8 @@ class sale_order_line(Model):
         if product_obj.seller_ids:                                          
             supplier_id = product_obj.seller_ids[0].name.id
         else:
-            suppinfo_model  = self.pool.get('product.supplierinfo')
-            supplier_id = suppinfo_model.search(cr, uid, [], context=context)
+            suppinfo_model  = self.pool.get('res.partner')
+            supplier_id = suppinfo_model.search(cr, uid, [('supplier', '=', True)], context=context)
             if supplier_id:
                 supplier_id = supplier_id[0]         
         context = {

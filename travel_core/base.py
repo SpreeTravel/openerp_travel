@@ -115,6 +115,10 @@ class option_value(Model):
         'load_default': False
     }
 
+    def name_search(self, cr, user, name, args=None, operator='ilike', context=None, limit=100):
+        ids = self.search(cr, user, args)
+        return self.name_get(cr, user, ids, context=context)
+
     def _check_load_default(self, cr, uid, ids, context=None):
         obj = self.browse(cr, uid, ids[0], context=context)
         if obj.load_default:

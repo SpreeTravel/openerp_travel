@@ -31,7 +31,7 @@ class sale_rooming(Model):
         room_value = self.pool.get('option.value').search(cr, uid, [('load_default', '=', 'True')], context=ctx)
         if room_value:
             return room_value[0]
-        return self.pool.get('option.value').search(cr, uid, [], context=ctx)
+        return False
 
     _columns = {
         'room': fields.selection([('simple', 'Single'),

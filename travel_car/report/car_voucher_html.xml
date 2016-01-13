@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <template id="sale_order_line_report_id" inherit_id="travel_core.sale_order_line_report_id">
+            <xpath expr="//table" position="replace">
+                <table class="table table-condensed">
+                    <thead>
+                        <tr>
+                            <th>Product</th>
+                            <th>Start Date</th>
+                            <th>End Date</th>
+                            <th class="text-right">Confirmation</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>
+                                <span t-field="o.product_id.name_template"/>
+                            </td>
+                            <td>
+                                <span t-field="o.start_date"/>
+                            </td>
+                            <td>
+                                <span t-field="o.end_date"/>
+                            </td>
+                            <td class="text-right">
+                                <span t-field="o.state"/>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+
+            </xpath>
+        </template>
+    </data>
+</openerp>

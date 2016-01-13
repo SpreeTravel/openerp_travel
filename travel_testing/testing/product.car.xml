@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data noupdate="1">
+
+        <function model="travel.load.data" name="create_car" eval="('Peugeot',10,1,5, 4)"/>
+        <function model="travel.load.data" name="create_supplier_info_and_pricelist"
+                  eval="('car', 'Peugeot',45, {'1':{'price':45, 'start_date':'2016-01-07 00:00:01', 'end_date':'2016-01-28 00:00:01'},
+      '2':{'price':60, 'start_date':'2016-02-07 00:00:01', 'end_date':'2016-02-24 00:00:01'},
+      '3':{'price':22, 'start_date':'2016-02-27 00:00:01', 'end_date':'2016-03-05 00:00:01'}      }      )"/>
+        <function model="travel.load.data" name="create_supplier_info_and_pricelist"
+                  eval="('car', 'Peugeot',46, {'1':{'price':120, 'start_date':'2016-01-15 00:00:01', 'end_date':'2016-01-20 00:00:01'},
+      }
+      )"/>
+
+
+        <function model="travel.load.data" name="create_car" eval="('Geely',5,2,4, 4)"/>
+        <function model="travel.load.data" name="create_supplier_info_and_pricelist"
+                  eval="('car', 'Geely',51, {'1':{'price':130, 'start_date':'2016-01-17 00:00:01', 'end_date':'2016-01-25 00:00:01'},
+      '2':{'price':33, 'start_date':'2016-04-07 00:00:01', 'end_date':'2016-04-28 00:00:01'},
+      }
+      )"/>
+
+        <function model="travel.load.data" name="create_supplier_info_and_pricelist"
+                  eval="('car', 'Geely',43, {'1':{'price':53, 'start_date':'2016-01-07 00:00:01', 'end_date':'2016-02-28 00:00:01'},
+      '2':{'price':70, 'start_date':'2016-02-12 00:00:01', 'end_date':'2016-03-12 00:00:01'},
+      }
+      )"/>
+
+
+        <!--<record model="product.supplierinfo" id="product_supplierinfo_2">-->
+        <!--<field name="product_tmpl_id" ref="product_template_car_2"/>-->
+        <!--<field name="name">45</field>-->
+        <!--</record>-->
+        <!--<record model="pricelist.partnerinfo" id="pricelist_partnerinfo_2">-->
+        <!--<field name="suppinfo_id" ref="product_supplierinfo_2"/>-->
+        <!--<field name="start_date" eval="time.strftime('2016-01-07 00:00:01')"/>-->
+        <!--<field name="end_date" eval="time.strftime('2016-01-28 00:00:01')"/>-->
+        <!--<field name="price">45</field>-->
+        <!--</record>-->
+        <!--<record model="pricelist.partnerinfo" id="pricelist_partnerinfo_3">-->
+        <!--<field name="suppinfo_id" ref="product_supplierinfo_2"/>-->
+        <!--<field name="start_date" eval="time.strftime('2016-01-09 00:00:01')"/>-->
+        <!--<field name="end_date" eval="time.strftime('2016-01-10 00:00:01')"/>-->
+        <!--<field name="price">60</field>-->
+        <!--</record>-->
+        <!--<record model="pricelist.partnerinfo" id="pricelist_partnerinfo_4">-->
+        <!--<field name="suppinfo_id" ref="product_supplierinfo_2"/>-->
+        <!--<field name="start_date" eval="time.strftime('2016-01-15 00:00:01')"/>-->
+        <!--<field name="end_date" eval="time.strftime('2016-01-18 00:00:01')"/>-->
+        <!--<field name="price">22</field>-->
+        <!--</record>-->
+
+        <!--<record model="product.supplierinfo" id="product_supplierinfo_3">-->
+        <!--<field name="product_tmpl_id" ref="product_template_car_2"/>-->
+        <!--<field name="name">46</field>-->
+        <!--</record>-->
+        <!--<record model="pricelist.partnerinfo" id="pricelist_partnerinfo_5">-->
+        <!--<field name="suppinfo_id" ref="product_supplierinfo_3"/>-->
+        <!--<field name="start_date" eval="time.strftime('2016-02-09 00:00:01')"/>-->
+        <!--<field name="end_date" eval="time.strftime('2016-02-10 00:00:01')"/>-->
+        <!--<field name="price">10</field>-->
+        <!--</record>-->
+
+
+        <!--<record model="product.template" id="product_template_car_3">-->
+        <!--<field name="name">Geely</field>-->
+        <!--</record>-->
+        <!--<record model="product.product" id="product_product_car_3">-->
+        <!--<field name="product_tmpl_id" ref="product_template_car_3"/>-->
+        <!--</record>-->
+        <!--<record model="product.car" id="product_car_3">-->
+        <!--<field name="car_name">Geely</field>-->
+        <!--<field name="product_id" ref="product_product_car_3"/>-->
+        <!--<field name="name">Geely</field>-->
+        <!--<field name="categ_id" ref="travel_car.car"/>-->
+        <!--<field name="passengers">5</field>-->
+        <!--<field name="transmission_id">2</field>-->
+        <!--<field name="class_id">4</field>-->
+        <!--</record>-->
+
+        <!--<record model="product.supplierinfo" id="product_supplierinfo_4">-->
+        <!--<field name="product_tmpl_id" ref="product_template_car_3"/>-->
+        <!--<field name="name">51</field>-->
+        <!--</record>-->
+        <!--<record model="pricelist.partnerinfo" id="pricelist_partnerinfo_6">-->
+        <!--<field name="suppinfo_id" ref="product_supplierinfo_4"/>-->
+        <!--<field name="start_date" eval="time.strftime('2016-01-07 00:00:01')"/>-->
+        <!--<field name="end_date" eval="time.strftime('2016-01-28 00:00:01')"/>-->
+        <!--<field name="price">35</field>-->
+        <!--</record>-->
+        <!--<record model="pricelist.partnerinfo" id="pricelist_partnerinfo_7">-->
+        <!--<field name="suppinfo_id" ref="product_supplierinfo_4"/>-->
+        <!--<field name="start_date" eval="time.strftime('2016-01-09 00:00:01')"/>-->
+        <!--<field name="end_date" eval="time.strftime('2016-01-10 00:00:01')"/>-->
+        <!--<field name="price">78</field>-->
+        <!--</record>-->
+
+
+        <!--<record model="product.supplierinfo" id="product_supplierinfo_5">-->
+        <!--<field name="product_tmpl_id" ref="product_template_car_3"/>-->
+        <!--<field name="name">43</field>-->
+        <!--</record>-->
+        <!--<record model="pricelist.partnerinfo" id="pricelist_partnerinfo_9">-->
+        <!--<field name="suppinfo_id" ref="product_supplierinfo_5"/>-->
+        <!--<field name="start_date" eval="time.strftime('2016-02-09 00:00:01')"/>-->
+        <!--<field name="end_date" eval="time.strftime('2016-02-10 00:00:01')"/>-->
+        <!--<field name="price">18</field>-->
+        <!--</record>-->
+        <!--<record model="pricelist.partnerinfo" id="pricelist_partnerinfo_8">-->
+        <!--<field name="suppinfo_id" ref="product_supplierinfo_5"/>-->
+        <!--<field name="start_date" eval="time.strftime('2016-01-15 00:00:01')"/>-->
+        <!--<field name="end_date" eval="time.strftime('2016-01-18 00:00:01')"/>-->
+        <!--<field name="price">63</field>-->
+        <!--</record>-->
+
+
+    </data>
+</openerp>

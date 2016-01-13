@@ -28,9 +28,7 @@
     'category': '?',
     'depends': ['travel'],
     "description": """ List of cuban hotels and other tourist actors.""",
-    'init_xml': ['data/destination.csv', 'data/res.partner.csv', 'data/product.product.csv', 'data/product.hotel.csv',
-                 'testing/option.value.xml', 'testing/product.car.xml', 'testing/product.flight.xml',
-                 'testing/product.transfer.xml', 'testing/product.hotel.xml'],
+    'init_xml': ['data/destination.csv', 'data/res.partner.csv', 'data/product.product.csv', 'data/product.hotel.csv'],
     'update_xml': [],
     'demo_xml': [],
     'test': [],
@@ -40,5 +38,5 @@
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 # 'data/destination.csv', 'data/res.partner.csv', 'data/product.product.csv', 'data/product.hotel.csv',
-#                  'testing/product.car.xml', 'testing/product.flight.xml', 'testing/product.transfer.xml',
-#                  'testing/product.hotel.xml'
+#                  'testing/option.value.xml', 'testing/product.car.xml', 'testing/product.flight.xml',
+#                 'testing/product.transfer.xml', 'testing/product.hotel.xml'

@@ -27,15 +27,8 @@
     "category": "Sales",
     "description": ("Travel Agency - Flights"),
     "depends": ['travel_core'],
-    "init_xml": [
-        'data/categories.xml'
-    ],
-    "update_xml": [
-        'view/flight.xml',
-        'view/sale.xml',
-        'security/ir.model.access.csv',
-        'report/flight_voucher.xml'
-    ],
+    "data": ['data/categories.xml', 'view/flight.xml', 'view/sale.xml', 'security/ir.model.access.csv',
+             'report/flight_voucher.xml', 'report/flight_voucher_html.xml'],
     "demo_xml": [],
     "application": False,
     "installable": True,

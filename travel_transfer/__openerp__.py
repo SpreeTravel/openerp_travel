@@ -27,17 +27,12 @@
     "category": "Sales",
     "description": ("Travel Agency - Transfers"),
     "depends": ['travel_core'],
-    "init_xml": [
-        'data/options.xml',
-        'data/categories.xml'
-    ],
-    "update_xml": [
-        'view/transfer.xml',
-        'view/sale.xml',
-        'view/reservation.xml',
-        'security/ir.model.access.csv',
-        'report/transfer_voucher.xml'
-    ],
+    "data": ['data/options.xml',
+             'data/categories.xml', 'view/transfer.xml',
+             'view/sale.xml',
+             'view/reservation.xml',
+             'security/ir.model.access.csv',
+             'report/transfer_voucher.xml', 'report/transfer_voucher_html.xml'],
     "demo_xml": [],
     "application": False,
     "installable": True,

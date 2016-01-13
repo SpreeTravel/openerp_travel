@@ -6,13 +6,9 @@
         <field name="name">Hotel Travel Voucher Report</field>
         <field name="type">ir.actions.report.xml</field>
         <field name="model">sale.order.line</field>
-        <field name="report_name">hotel_travel_voucher_report</field>
-        <field name="report_type">aeroo</field>
-        <field name="in_format">oo-odt</field>
-        <field name="out_format" model="report.mimetypes" search="[('code', '=', 'oo-pdf')]"/>
-        <field name="report_rml">travel_hotel/report/hotel_voucher.odt</field>
-        <field name="parser_state">default</field>
-        <field name="tml_source">file</field>
+        <field name="report_name">travel_hotel.hotel_sale_order_line_report_id</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_flight">travel_hotel.hotel_sale_order_line_report_id</field>
     </record>
 
     <record id="action_binding2" model="ir.values">

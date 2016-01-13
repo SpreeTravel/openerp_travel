@@ -27,18 +27,9 @@
     "category": "Sales",
     "description": ("Travel Agency - Hotels"),
     "depends": ['travel_core'],
-    "init_xml": [
-        'data/options.xml',
-        'data/categories.xml'
-    ],
-    "update_xml": [
-        'view/hotel.xml',
-        'view/sale.xml',
-        'view/rooming.xml',
-        'view/reservation.xml',
-        'security/ir.model.access.csv',
-        'report/hotel_voucher.xml'
-    ],
+    "data": ['data/options.xml',
+             'data/categories.xml', 'view/hotel.xml', 'view/sale.xml', 'view/rooming.xml', 'view/reservation.xml',
+             'security/ir.model.access.csv', 'report/hotel_voucher.xml', 'report/hotel_voucher_html.xml'],
     "demo_xml": [],
     "application": False,
     "installable": True,

@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <template id="hotel_sale_order_line_report_id">
+            <t t-foreach="docs" t-as="o">
+                <t t-call="report.external_layout">
+                    <div class="page">
+                        <div class="oe_structure"/>
+                        <div class="row">
+                            <div class="col-xs-6 pull-left text-left">
+                                <!--logo-->
+                                <img t-esc="o.company_id.partner_id.image_small"/>
+                            </div>
+                            <div class="col-xs-6 pull-right text-right">
+                                <p t-esc="o.company_id.partner_id.display_name or 'Company Name'"/>
+                                <p t-esc="o.company_id.partner_id.street or 'Company Address'"/>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-xs-4">
+                            </div>
+                            <div class="col-xs-4 text-center">
+                                <h2>Voucher</h2>
+                            </div>
+                            <div class="col-xs-4">
+                            </div>
+                        </div>
+                        <div class="row">
+                            <br/>
+                        </div>
+                        <div class="row">
+                            <br/>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-xs-6 pull-left">
+                                <strong>Client</strong>
+                                <p t-esc="o.order_id.lead_name or 'Empty'"/>
+                            </div>
+                            <div class="col-xs-6 pull-right">
+                                <strong>Passenger Names</strong>
+                                <div t-foreach="o.order_id.pax_ids" t-as="l">
+                                    <p t-field="l.name"/>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <br/>
+                        </div>
+                        <div class="row">
+                            <br/>
+                        </div>
+
+                        <div class="row">
+                            <table class="table table-condensed">
+                                <thead>
+                                    <tr>
+                                        <th>Product</th>
+                                        <th>Start Date</th>
+                                        <th>End Date</th>
+                                        <th>Room Type</th>
+                                        <th>Meal Plan</th>
+                                        <th class="text-right">Confirmation</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>
+                                            <span t-field="o.product_id.name_template"/>
+                                        </td>
+                                        <td>
+                                            <span t-field="o.start_date"/>
+                                        </td>
+                                        <td>
+                                            <span t-field="o.end_date"/>
+                                        </td>
+                                        <td>
+                                            <p t-foreach="o.hotel_1_rooming_ids" t-as="h">
+                                                <span t-field="h.quantity"/>
+                                                <span t-field="h.room"/>
+                                                <span>Ad:</span>
+                                                <span t-esc="h.adults or 0"/>
+                                                <span>Ch:</span>
+                                                <span t-esc="h.children or 0"/>
+                                            </p>
+                                        </td>
+                                        <td>
+                                            <span t-field="o.hotel_2_meal_plan_id.name"/>
+                                        </td>
+                                        <td class="text-right">
+                                            <span t-field="o.state"/>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-xs-12 text-center">
+                                <h1>General Conditions</h1>
+                                <p>
+                                    <span class="bold">Office Telephones: (+53 7)</span>
+                                    <span t-esc="o.company_id.partner_id.phone or ''"/>
+                                    <span>:</span>
+                                    <span class="bold">For Emergency Call: (+53)</span>
+                                    <span t-esc="o.company_id.partner_id.mobile or ''"/>
+                                </p>
+                            </div>
+                        </div>
+
+                        <div class="oe_structure"/>
+                    </div>
+                </t>
+            </t>
+
+        </template>
+    </data>
+</openerp>
+
+
+
+
+

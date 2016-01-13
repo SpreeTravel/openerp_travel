@@ -23,40 +23,46 @@ import time
 import simplejson
 import datetime as dt
 from lxml import etree
-from openerp import fields as f
-from openerp.osv import fields, osv
-from openerp.osv.orm import Model
+from openerp import fields, api
+from openerp.models import Model
+from openerp.exceptions import except_orm
 from openerp.tools import DEFAULT_SERVER_DATE_FORMAT as DF
 from openerp.tools.translate import _
 import openerp.addons.decimal_precision as dp
-from openerp import api, exceptions
 
 
 class supplier_price(Model):
     _name = 'supplier.price'
 
-    sale_order_line = f.Many2one('sale.order.line')
-    supplier = f.Char(_('Supplier'))
-    price = f.Char(_('Price'))
+    sale_order_line = fields.Many2one('sale.order.line')
+    supplier = fields.Char(_('Supplier'))
+    price = fields.Char(_('Price'))
 
 
 class sale_order(Model):
     _name = 'sale.order'
     _inherit = 'sale.order'
 
-    def _get_lead_name(self, cr, uid, ids, fields, args, context=None):
-        result = {}
+    @api.one
+    def _get_lead_name(self):
+        self.lead_name = min(self.pax_ids).name if self.pax_ids else False
 
-        for obj in self.browse(cr, uid, ids, context):
-            result[obj.id] = False
-            if obj.pax_ids:
-                min = obj.pax_ids[0]
-                for pax in obj.pax_ids:
-                    if pax.id < min.id:
-                        min = pax
-                result[obj.id] = min.name
+    # @api.model
+    # def _get_lead_name(self, cr, uid, ids, fields, args, context=None):
+    #     result = {}
+    #     for obj in self.browse(cr, uid, ids, context):
+    #         result[obj.id] = False
+    #         if obj.pax_ids:
+    #             min = obj.pax_ids[0]
+    #             for pax in obj.pax_ids:
+    #                 if pax.id < min.id:
+    #                     min = pax
+    #             result[obj.id] = min.name
+    #
+    #     return result
 
-        return result
+    def get_today(self):
+        return dt.date.today()
 
     def _lead_name_search(self, cr, uid, obj, field_name, args, context=None):
         name = args[0][2]
@@ -76,95 +82,70 @@ class sale_order(Model):
 
         return result
 
-    _columns = {
-        'date_order':
-            fields.date('Start Date', required=True, readonly=True,
-                        select=True,
-                        states={'draft': [('readonly', False)],
-                                'sent': [('readonly', False)]}),
-        'end_date':
-            fields.date('End Date', required=True, readonly=True,
-                        select=True,
-                        states={'draft': [('readonly', False)],
-                                'sent': [('readonly', False)]}),
-        'flight_in':
-            fields.char('Flight In', size=64),
-        'flight_out':
-            fields.char('Flight Out', size=64),
-        'order_line':
-            fields.one2many('sale.order.line', 'order_id', 'Order Lines',
-                            readonly=True,
-                            states={'draft': [('readonly', False)],
-                                    'sent': [('readonly', False)],
-                                    'manual': [('readonly', False)]}),
-        'pax_ids':
-            fields.many2many('res.partner', 'sale_order_res_partner_pax_rel',
-                             'order_id', 'pax_id', 'Paxs',
-                             domain="[('pax', '=', True)]"),
-        'total_paxs':
-            fields.function(_get_total_paxs, method=True, type='integer',
-                            string='Total paxs', store=True),
-        'lead_name':
-            fields.function(_get_lead_name, method=True, type='char',
-                            string='Lead Name', size=128, fnct_search=_lead_name_search)
-    }
+    date_order = fields.Date('Start Date', required=True, readonly=True, default=get_today,
+                             select=True, states={'draft': [('readonly', False)],
+                                                  'sent': [('readonly', False)]})
+    end_date = fields.Date('End Date', required=True, readonly=True, select=True,
+                           states={'draft': [('readonly', False)],
+                                   'sent': [('readonly', False)]})
+    flight_in = fields.Char('Flight In', size=64)
+    flight_out = fields.Char('Flight Out', size=64)
+    order_line = fields.One2many('sale.order.line', 'order_id', 'Order Lines', readonly=True,
+                                 states={'draft': [('readonly', False)],
+                                         'sent': [('readonly', False)],
+                                         'manual': [('readonly', False)]})
+    pax_ids = fields.Many2many('res.partner', 'sale_order_res_partner_pax_rel', 'order_id', 'pax_id', 'Paxs',
+                               domain="[('pax', '=', True)]")
+    total_paxs = fields.Integer(compute=_get_total_paxs, string='Total paxs', store=True)
+    lead_name = fields.Char(compute=_get_lead_name, string='Lead Name', size=128,
+                            search=_lead_name_search)
 
-    _defaults = {
-
-        'date_order': dt.date.today()
-    }
+    # _defaults = {
+    #
+    #     'date_order': dt.date.today()
+    # }
 
     _order = 'create_date desc'
 
-    def write(self, cr, uid, ids, vals, context=None):
-        res = super(sale_order, self).write(cr, uid, ids, vals, context)
+    @api.multi
+    def write(self, vals):
+        res = super(sale_order, self).write(vals)
         if vals.get('state', False) in ['confirmed', 'done', 'cancel']:
-            sol = self.pool.get('sale.order.line')
+            sol = self.env['sale.order.line']
             sol_ids = []
-            for s in self.browse(cr, uid, ids, context):
+            for s in self:
                 sol_ids += [sl.id for sl in s.order_line]
             if sol_ids:
-                sol.write(cr, uid, sol_ids, {'state': vals['state']}, context)
+                sol.write({'state': vals['state']})
         return res
 
-    def to_confirm(self, cr, uid, ids, context=None):
-        return self.write(cr, uid, ids, {'state': 'manual'}, context)
+    @api.multi
+    def to_confirm(self):
+        return self.write({'state': 'manual'})
 
-    def to_cancel(self, cr, uid, ids, context=None):
-        return self.write(cr, uid, ids, {'state': 'cancel'}, context)
+    def to_cancel(self):
+        return self.write({'state': 'cancel'})
 
-    def onchange_start_date(self, cr, uid, ids, start_date, end_date, context=None):
-        return self.check_dates(start_date, end_date, 'start_date')
-
-    def onchange_end_date(self, cr, uid, ids, start_date, end_date, context=None):
-        return self.check_dates(start_date, end_date, 'end_date')
-
-    def check_dates(self, start_date, end_date, fix_date, context=None):
-        res = {}
-        warning = False
-        if start_date > end_date:
-            res['end_date'] = start_date
-            if fix_date == 'end_date':
-                warning = True
-
-        if warning:
-            return {'value': res, 'warning': {'title': 'Dates Warning',
-                                              'message': 'End Date should be after Start Date\n'}}
-        return {'value': res}
+    @api.onchange('end_date', 'start_date')
+    def check_dates(self):
+        if self.date_order > self.end_date:
+            self.end_date = self.date_order
 
 
 class sale_context(Model):
     _name = 'sale.context'
 
-    def _get_paxs(self, cr, uid, ids, fields, args, context=None):
+    @api.multi
+    def _get_paxs(self):
         result = {}
-        for obj in self.browse(cr, uid, ids, context):
+        for obj in self:
             result[obj.id] = obj.adults + obj.children
         return result
 
-    def _get_duration(self, cr, uid, ids, fields, args, context=None):
+    @api.multi
+    def _get_duration(self):
         result = {}
-        for obj in self.browse(cr, uid, ids, context):
+        for obj in self:
             result[obj.id] = 1
             if obj.end_date:
                 dsdate = dt.datetime.strptime(obj.start_date, DF)
@@ -172,25 +153,20 @@ class sale_context(Model):
                 result[obj.id] = (dedate - dsdate).days
         return result
 
-    _columns = {
-        'category_id': fields.many2one('product.category', 'Category'),
-        'category': fields.char('Category', size=64),
-        'start_date': fields.date('Start Date'),
-        'end_date': fields.date('End Date'),
-        'duration': fields.function(_get_duration, method=True, type='float',
-                                    string='Duration'),
-        'adults': fields.integer('Adults'),
-        'children': fields.integer('Children'),
-        'start_time': fields.char('Start Time', size=64),
-        'start_place': fields.char('Start Place', size=255),
-        'end_time': fields.char('End Time', size=64),
-        'end_place': fields.char('End Place', size=255),
-        'supplier_id': fields.many2one('res.partner', 'Supplier',
-                                       domain="[('supplier', '=', True)]"),
-        'reservation_number': fields.char('Reservation', size=64),
-        'paxs': fields.function(_get_paxs, type='integer', method=True,
-                                string='Paxs', store=True)
-    }
+    category_id = fields.Many2one('product.category', 'Category')
+    category = fields.Char('Category', size=64)
+    start_date = fields.Date('Start Date')
+    end_date = fields.Date('End Date')
+    duration = fields.Float(compute=_get_duration, method=True, type='float', string='Duration')
+    adults = fields.Integer('Adults')
+    children = fields.Integer('Children')
+    start_time = fields.Char('Start Time', size=64)
+    start_place = fields.Char('Start Place', size=255)
+    end_time = fields.Char('End Time', size=64)
+    end_place = fields.Char('End Place', size=255)
+    supplier_id = fields.Many2one('res.partner', 'Supplier', domain="[('supplier', '=', True)]")
+    reservation_number = fields.Char('Reservation', size=64)
+    paxs = fields.Integer(compute=_get_paxs, method=True, string='Paxs', store=True)
 
     def get_supplier(self, obj):
         if obj.supplier_id:
@@ -198,8 +174,8 @@ class sale_context(Model):
         elif obj.product_id.seller_id:
             return obj.product_id.seller_id
         else:
-            raise osv.except_osv(_('Error!'),
-                                 _("There is at least one sale order line without supplier"))
+            raise except_orm(_('Error!'),
+                             _("There is at least one sale order line without supplier"))
 
     def get_supplier_info_id(self, cr, uid, obj, context=None):
         supplierinfo_obj = self.pool.get('product.supplierinfo')
@@ -295,35 +271,35 @@ class sale_order_line(Model):
     _inherit = 'sale.order.line'
     _inherits = {'sale.context': 'sale_context_id'}
 
-    # resume_table_price = f.One2many('supplier.price', 'sale_order_line', string='Prices')
+    resume_table_price = fields.One2many('supplier.price', 'sale_order_line', string='Prices')
 
-    _columns = {
-        'description': fields.text('Description'),
-        'sale_context_id': fields.many2one('sale.context', 'Sale Context',
-                                           ondelete="cascade", select=True),
-        'sale_line_supplement_ids': fields.many2many('option.value',
-                                                     'sale_line_option_value_rel',
-                                                     'sale_line_id',
-                                                     'option_value_id',
-                                                     'Supplements',
-                                                     domain="[('option_type_id.code', '=', 'sup')]"),
-        'resume_table_price': fields.one2many('supplier.price', 'sale_order_line', string='Prices'),
-        'price_unit_cost': fields.float('Cost Price',
-                                        digits_compute=dp.get_precision('Product Price')),
-        'currency_cost_id': fields.many2one('res.currency', 'Currency Cost'),
+    description = fields.Text('Description')
 
-        'customer_id': fields.related('order_id', 'partner_id',
-                                      type='many2one', relation='res.partner',
-                                      readonly=True, string='Customer',
-                                      store=True),
-        'order_start_date': fields.related('order_id', 'date_order',
-                                           type='date', string='In', required=True,
-                                           store=True),
-        'order_end_date': fields.related('order_id', 'end_date', type='date', required=True,
-                                         string='Out', store=True)
-    }
+    sale_context_id = fields.Many2one('sale.context', 'Sale Context', ondelete="cascade", select=True)
 
-    def __init__(self, pool, cr):
+    sale_line_supplement_ids = fields.Many2many('option.value', 'sale_line_option_value_rel', 'sale_line_id',
+                                                'option_value_id', 'Supplements',
+                                                domain="[('option_type_id.code', '=', 'sup')]")
+
+    price_unit_cost = fields.Float('Cost Price', digits_compute=dp.get_precision('Product Price'))
+    currency_cost_id = fields.Many2one('res.currency', 'Currency Cost')
+    customer_id = fields.Many2one(related='order_id.partner_id', readonly=True,
+                                  string='Customer', store=True)
+    # TODO: Ver pq no se puede poner required
+    order_start_date = fields.Date(related='order_id.date_order', string='In',
+                                   store=True)
+    # TODO: Ver pq no se puede poner required
+    order_end_date = fields.Date(related='order_id.end_date', string='Out', store=True)
+
+    # @api.model
+    # def create(self, vals):
+    #     return super(sale_order_line, self).create(vals)
+    #
+    # @api.multi
+    # def write(self, vals):
+    #     return super(sale_order_line, self).create(vals)
+
+    def __init__(self, cr, uid):
         from openerp.addons.sale.sale import sale_order_line
         states = sale_order_line._columns['state'].selection
         try:
@@ -335,19 +311,19 @@ class sale_order_line(Model):
         states.insert(draft_idx + 1, ('request', 'Request!'))
         states.insert(draft_idx + 2, ('requested', 'Requested'))
         sale_order_line._columns['state'].selection = states
-        return super(sale_order_line, self).__init__(pool, cr)
+        return super(sale_order_line, self).__init__(cr, uid)
 
     def to_request(self, cr, uid, ids, context=None):
         return self.write(cr, uid, ids, {'state': 'request'}, context)
 
-    def to_requested(self, cr, uid, ids, context=None):
-        return self.write(cr, uid, ids, {'state': 'requested'}, context)
+    def to_requested(self):
+        return self.write({'state': 'requested'})
 
     def to_confirm(self, cr, uid, ids, context=None):
         return self.write(cr, uid, ids, {'state': 'confirmed'}, context)
 
-    def to_cancel(self, cr, uid, ids, context=None):
-        return self.write(cr, uid, ids, {'state': 'cancel'}, context)
+    def to_cancel(self):
+        return self.write({'state': 'cancel'})
 
     @api.onchange('price_unit_cost', 'price_unit')
     def price_changes(self):
@@ -373,8 +349,8 @@ class sale_order_line(Model):
         context = context or {}
         lang = lang or context.get('lang', False)
         if not partner_id:
-            raise osv.except_osv(_('No Customer Defined !'),
-                                 _('Before choosing a product,\n select a customer in the sales form.'))
+            raise except_orm(_('No Customer Defined !'),
+                             _('Before choosing a product,\n select a customer in the sales form.'))
         warning = {}
         product_uom_obj = self.pool.get('product.uom')
         partner_obj = self.pool.get('res.partner')
@@ -478,10 +454,8 @@ class sale_order_line(Model):
             else:
                 result.update({'price_unit': price})
 
-            cost_price = self.show_cost_price(cr, uid, result, product, qty,
-                                              partner_id, uom, date_order,
-                                              supplier_id, params, pricelist,
-                                              context)
+            cost_price = self.show_cost_price(cr, uid, result, product, qty, partner_id, uom, date_order,
+                                              supplier_id, params, pricelist, context)
             result.update({'price_unit_cost': cost_price})
 
         if warning_msgs:
@@ -732,16 +706,15 @@ class sale_order_line(Model):
             categories.add(self.browse(cr, uid, id).category_id.id)
 
         if len(categories) != 1:
-            raise osv.except_osv(_('Warning!'), _("You should select lines with the same category!"))
+            raise except_orm(_('Warning!'), _("You should select lines with the same category!"))
 
         category = categories.pop()
         result = self.pool.get('product.category').read(cr, uid, category, ['voucher_name'])
         voucher_name = result['voucher_name']
-        print voucher_name
-
+        print(voucher_name)
         return {
             'type': 'ir.actions.report.xml',
-            'report_name': voucher_name,
+            'report_name': voucher_name,  # voucher_name
             'datas': datas,
             'nodestroy': True
         }

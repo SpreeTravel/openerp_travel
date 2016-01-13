@@ -27,16 +27,8 @@
     "category": "Sales",
     "description": ("Travel Agency - Cars"),
     "depends": ['travel_core'],
-    "init_xml": [
-        'data/options.xml',
-        'data/categories.xml',
-    ],
-    "update_xml": [
-        'view/car.xml',
-        'view/sale.xml',
-        'security/ir.model.access.csv',
-        'report/car_voucher.xml'
-    ],
+    "data": ['data/options.xml', 'data/categories.xml', 'view/car.xml', 'view/sale.xml', 'security/ir.model.access.csv',
+             'report/car_voucher.xml', 'report/car_voucher_html.xml'],
     "demo_xml": [],
     "application": False,
     "installable": True,

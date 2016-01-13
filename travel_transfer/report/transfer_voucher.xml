@@ -1,27 +1,23 @@
 <?xml version="1.0"?>
 <openerp>
-<data>
-	
-    <record id="transfer_travel_voucher_report_id" model="ir.actions.report.xml">
-        <field name="name">Transfer Travel Voucher Report</field>
-        <field name="type">ir.actions.report.xml</field>
-        <field name="model">sale.order.line</field>
-        <field name="report_name">transfer_travel_voucher_report</field>
-        <field name="report_type">aeroo</field>
-        <field name="in_format">oo-odt</field>
-        <field name="out_format" model="report.mimetypes" search="[('code', '=', 'oo-pdf')]"/>
-        <field name="report_rml">travel_transfer/report/transfer_voucher.odt</field>
-        <field name="parser_state">default</field>
-        <field name="tml_source">file</field>
-    </record>
+    <data>
 
-    <record id="action_binding2" model="ir.values">
-        <field eval="'action'" name="key"/>
-        <field eval="'client_print_multi'" name="key2"/>
-        <field name="model">sale.order.line</field>
-        <field name="name">Transfer Travel Voucher</field>
-        <field eval="'ir.actions.report.xml,'+str(transfer_travel_voucher_report_id)" name="value"/>
-    </record>
-  		
-</data>
+        <record id="transfer_travel_voucher_report_id" model="ir.actions.report.xml">
+            <field name="name">Transfer Travel Voucher Report</field>
+            <field name="type">ir.actions.report.xml</field>
+            <field name="model">sale.order.line</field>
+            <field name="report_name">travel_transfer.transfer_sale_order_line_report_id</field>
+            <field name="report_type">qweb-pdf</field>
+            <field name="report_flight">travel_transfer.transfer_sale_order_line_report_id</field>
+        </record>
+
+        <record id="action_binding2" model="ir.values">
+            <field eval="'action'" name="key"/>
+            <field eval="'client_print_multi'" name="key2"/>
+            <field name="model">sale.order.line</field>
+            <field name="name">Transfer Travel Voucher</field>
+            <field eval="'ir.actions.report.xml,'+str(transfer_travel_voucher_report_id)" name="value"/>
+        </record>
+
+    </data>
 </openerp>

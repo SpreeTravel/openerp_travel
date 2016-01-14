@@ -1,34 +1,34 @@
 <?xml version="1.0"?>
 <openerp>
-  <data>
-	
-	<record id="travel_product_pricelist_item_view" model="ir.ui.view">
-        <field name="name">travel.product.pricelist.item.form</field>
-        <field name="model">product.pricelist.item</field>
-		<field name="inherit_id" ref="product.product_pricelist_item_form_view"/>
-        <field name="arch" type="xml">
-        	<field name="categ_id" position="after">
-        		<field name="supplier_id" />
-			</field>
-			<xpath expr="//group[@col='6']" position="replace">
-				<group col="7" >
-                    <label string="New Price ="/>
-                    <label string="(Base Price +"/>
-					<field name="margin_per_pax" nolabel="1"/>
-                    <label string="*paxs) *( 1 + "/>
-                    <field name="price_discount" nolabel="1"/>
-                    <label string=" ) + "/>
-                    <field name="price_surcharge" nolabel="1"/>
-                    <newline/>
-                    <field name="price_round" string="Rounding Method"/>
-                    <field name="price_min_margin" string="Min. Margin"/>
-                    <field name="price_max_margin" string="Max. Margin"/>
-                </group>
-			</xpath>
-		</field>
-	</record>
-	
-		<record id="product_supplierinfo_form_view2" model="ir.ui.view">
+    <data>
+
+        <record id="travel_product_pricelist_item_view" model="ir.ui.view">
+            <field name="name">travel.product.pricelist.item.form</field>
+            <field name="model">product.pricelist.item</field>
+            <field name="inherit_id" ref="product.product_pricelist_item_form_view"/>
+            <field name="arch" type="xml">
+                <field name="categ_id" position="after">
+                    <field name="supplier_id"/>
+                </field>
+                <xpath expr="//group[@col='6']" position="replace">
+                    <group col="7">
+                        <label string="New Price ="/>
+                        <label string="(Base Price +"/>
+                        <field name="margin_per_pax" nolabel="1"/>
+                        <label string="*paxs) *( 1 + "/>
+                        <field name="price_discount" nolabel="1"/>
+                        <label string=" ) + "/>
+                        <field name="price_surcharge" nolabel="1"/>
+                        <newline/>
+                        <field name="price_round" string="Rounding Method"/>
+                        <field name="price_min_margin" string="Min. Margin"/>
+                        <field name="price_max_margin" string="Max. Margin"/>
+                    </group>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="product_supplierinfo_form_view2" model="ir.ui.view">
             <field name="name">product.supplierinfo.form.view2</field>
             <field name="model">product.supplierinfo</field>
             <field name="inherit_id" ref="product.product_supplierinfo_form_view"/>
@@ -38,46 +38,64 @@
                 </xpath>
             </field>
         </record>
-	
-	
 
-	<!-- Export customer prices -->
-		
-		<record id="travel_customer_prices_form_view" model="ir.ui.view">
+        <record id="travel_product_pricelist_view" model="ir.ui.view">
+            <field name="name">travel.product.pricelist.view</field>
+            <field name="model">product.pricelist</field>
+            <field name="inherit_id" ref="product.product_pricelist_view"/>
+            <field name="arch" type="xml">
+                <xpath expr="//h1" position="before">
+                    <div class="oe_right oe_button_box" name="buttons">
+                        <button name="set_conditions" type="object" class="" string="Pricelist Prices"/>
+                    </div>
+
+                </xpath>
+            </field>
+        </record>
+
+
+        <!-- Export customer prices -->
+
+        <record id="travel_customer_prices_form_view" model="ir.ui.view">
             <field name="name">travel.customer.price.view</field>
             <field name="model">customer.price</field>
             <field name="arch" type="xml">
                 <form string="Export Prices" version="7.0">
-                	<group>
-                		<field name="start_date" />
-						<field name="end_date" />
-						<field name="file_price"/>
-					</group>
-					<footer>
-						<button string="Export" name="export_prices" type="object" class="oe_highlight"/>
-						or
-						<button string="Cancel" class="oe_link" special="cancel"/>
-					</footer>
+                    <group>
+                        <field name="pricelist" t-esc="o.name or 'TEST'" readonly="True"/>
+                        <field name="client" readonly="True"/>
+                        <field name="start_date"/>
+                        <field name="end_date"/>
+                        <field name="category"/>
+                        <field name="supplier"/>
+                    </group>
+                    <footer>
+                        <button string="Export" name="export_prices" type="object" class="oe_highlight"/>
+                        or
+                        <button string="Cancel" class="oe_link" special="cancel"/>
+                    </footer>
                 </form>
             </field>
         </record>
-		
-		<act_window id="export_customer_prices_wizard_action"
-            name="Export Customer Prices"
-            src_model="res.partner"
-            res_model="customer.price"
-            view_type="form" view_mode="form"
-            key2="client_action_multi" target="new"/>
-		
-		<record id="travel_customer_prices_action" model="ir.actions.act_window">
+
+        <act_window id="export_customer_prices_wizard_action"
+                    name="Export Customer Prices"
+                    src_model="res.partner"
+                    res_model="customer.price"
+                    view_type="form" view_mode="form"
+                    key2="client_action_multi" target="new"/>
+
+        <record id="travel_customer_prices_action" model="ir.actions.act_window">
             <field name="name">Export Prices</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">customer.price</field>
             <field name="view_type">form</field>
             <field name="view_mode">form</field>
-			<field name="target">new</field>
+            <field name="target">new</field>
         </record>
 
+        <!-- Export pricelist   -->
 
-  </data>
+
+    </data>
 </openerp>

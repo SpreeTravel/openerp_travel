@@ -332,7 +332,7 @@ class sale_order_line(Model):
             warn_msg = _('Your cost price is lower or equal zero.')
         elif self.price_unit <= 0:
             warn_msg = _('Your sale price is lower or equal zero.')
-        if self.price_unit_cost < self.price_unit:
+        if self.price_unit < self.price_unit_cost:
             warn_msg = _('Your cost price is lower than your real price.')
         if warn_msg:
             warning = {
@@ -711,7 +711,6 @@ class sale_order_line(Model):
         category = categories.pop()
         result = self.pool.get('product.category').read(cr, uid, category, ['voucher_name'])
         voucher_name = result['voucher_name']
-        print(voucher_name)
         return {
             'type': 'ir.actions.report.xml',
             'report_name': voucher_name,  # voucher_name

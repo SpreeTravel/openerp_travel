@@ -463,27 +463,46 @@ class customer_price(TransientModel):
                                        ('name', '!=', 'Miscellaneous')])
     supplier = fields.Many2one('res.partner', _('Supplier'))
 
-    def export_prices(self, cr, uid, ids, context=None):
+    @api.multi
+    def export_prices(self):
         wb = xlwt.Workbook()
 
-        partner_obj = self.pool.get('res.partner')
-        partner = partner_obj.browse(cr, uid, context['active_id'])
-        pricelist = partner.property_product_pricelist
+        obj = self[0]
 
-        category_obj = self.pool.get('product.category')
-        category_ids = category_obj.search(cr, uid, [('type', '=', 'normal')],
-                                           context=context)
-        for categ in category_obj.browse(cr, uid, category_ids):
-            name = categ.name
-            fields = self.get_category_price_fields(name.lower())
-            if fields:
-                ws = wb.add_sheet(name, cell_overwrite_ok=True)
-                self.write_prices(cr, uid, ws, fields, categ, pricelist, context)
-        wb.save('/tmp/prices.xls')
-        f = open('/tmp/prices.xls', 'r')
-        obj = self.browse(cr, uid, ids[0], context)
-        self.write(cr, uid, obj.id,
-                   {'file_price': base64.encodestring(f.read())}, context)
+        res = {
+
+        }
+        category_name = obj.category.name.lower()
+        product_category = self.env['product.' + category_name]
+        supplier_info = self.env['product.supplierinfo']
+        supplier_infos = supplier_info.search([('name', '=', obj.supplier.id)])
+        products = product_category.search([('seller_ids', '=', [x.id for x in supplier_infos])])
+        supplier_infos = supplier_info.search(
+            [('product_tmpl_id', '=', [x.product_id.product_tmpl_id.id for x in products]),
+             ('name', '=', obj.supplier.id)])
+        pricelist_partnerinfo = self.env['pricelist.partnerinfo']
+        pricelist_partnerinfo_elmts = pricelist_partnerinfo.search(
+            [('suppinfo_id', 'in', [x.id for x in supplier_infos])])
+
+        fields = self.get_category_price_fields(category=category_name)
+        product_pricelist_item = self.env['product.pricelist.item']
+        product_pricelist_item_elmnts = product_pricelist_item.search([('price_version_id', '=', obj.pricelist.id)])
+        if fields and pricelist_partnerinfo_elmts:
+            ws = wb.add_sheet(str(obj.pricelist.name), cell_overwrite_ok=True)
+            ws = self.write_prices(ws, fields, category_name, obj.start_date, obj.end_date, obj.supplier.name,
+                                   pricelist_partnerinfo_elmts, product_pricelist_item_elmnts)
+
+        # for categ in product_category.browse(cr, uid, products):
+        #     name = categ.name
+        #     fields = self.get_category_price_fields(name.lower())
+        #     if fields:
+        #         ws = wb.add_sheet(name, cell_overwrite_ok=True)
+        #         self.write_prices(cr, uid, ws, fields, categ, None, context)
+        # wb.save('/tmp/prices.xls')
+        # f = open('/tmp/prices.xls', 'r')
+        # obj = self.browse(cr, uid, ids[0], context)
+        # self.write(cr, uid, obj.id,
+        #            {'file_price': base64.encodestring(f.read())}, context)
         return {
             'name': 'Export Prices',
             'type': 'ir.actions.act_window',
@@ -492,7 +511,6 @@ class customer_price(TransientModel):
             'res_model': 'customer.price',
             'res_id': obj.id,
             'target': 'new',
-            'context': context
         }
 
     # TODO: sort fields just for first index
@@ -508,46 +526,86 @@ class customer_price(TransientModel):
         except:
             return []
 
-    def write_prices(self, cr, uid, ws, fields, categ, pricelist, context=None):
-        product_obj = self.pool.get('product.product')
-        product_ids = product_obj.search(cr, uid, [('categ_id', '=', categ.id)],
-                                         context=context)
-        ws.write(0, 0, 'Product')
-        x, y = 0, 1
-        for f in fields:
-            ws.write(x, y, f[2])
-            y += 1
-        x = 1
-        for prod in product_obj.browse(cr, uid, product_ids):
-            y = 0
-            ws.write(x, y, prod.name)
-            suppinfo = prod.seller_info_id
-            if suppinfo:
-                for pr in suppinfo.pricelist_ids:
-                    y = 1
-                    for f in fields:
-                        if f[0] == 2:
-                            value = getattr(pr, f[1]).name
-                        elif f[0] == 3:
-                            value = self.get_customer_price(cr, uid, pricelist,
-                                                            prod, suppinfo,
-                                                            getattr(pr, f[1]))
-                        else:
-                            value = getattr(pr, f[1])
-                        ws.write(x, y, value)
-                        y += 1
-                    x += 1
+    def write_prices(self, ws, _fields, category_name, start_date, end_date, supplier,
+                     pricelist_partnerinfo_elmts, pricelist):
+
+        # ws.write(0, 0, 'Product')
+        # x, y = 0, 1
+        # for f in fields:
+        #     ws.write(x, y, f[2])
+        #     y += 1
+        # x = 1
+        ws.write(0, 0, _('Pricelist'))
+        ws.write(0, 1, _('Category'))
+        ws.write(0, 2, _('Start Date'))
+        ws.write(0, 3, _('End Date'))
+        ws.write(0, 4, _('Supplier'))
+        count = 5
+        for x in sorted(_fields):
+            if x[1].lower() != 'start_date' and x[1].lower() != 'end_date':
+                ws.write(0, count, _(x))
+                count += 1
+        count = 1
+        for rule in pricelist:
+            for partnerinfo in pricelist_partnerinfo_elmts:
+                if start_date <= partnerinfo.start_date <= end_date:
+                    ws.write(count, 0, str(rule))
+                    ws.write(count, 1, str(category_name))
+                    ws.write(count, 2, str(partnerinfo.start_date))
+                    ws.write(count, 3, str(partnerinfo.end_date))
+                    ws.write(count, 4, str(supplier))
+                    res = self.get_customer_price(partnerinfo, rule, [f[1] for f in fields], category_name.lower())
+                    second_count = 5
+                    for x in sorted(_fields):
+                        ws.write(count, second_count, str(res[x]))
+                        second_count += 1
+                    count += 1
+        return ws
+        # y = 0
+        # ws.write(x, y, prod.name)
+        # suppinfo = prod.seller_info_id
+        # if suppinfo:
+        #     for pr in suppinfo.pricelist_ids:
+        #         y = 1
+        #         for f in fields:
+        #             if f[0] == 2:
+        #                 value = getattr(pr, f[1]).name
+        #             elif f[0] == 3:
+        #                 value = self.get_customer_price(cr, uid, pricelist,
+        #                                                 prod, suppinfo,
+        #                                                 getattr(pr, f[1]))
+        #             else:
+        #                 value = getattr(pr, f[1])
+        #             ws.write(x, y, value)
+        #             y += 1
+        #         x += 1
 
     # TODO: check currency
-    def get_customer_price(self, cr, uid, pricelist, prod, suppinfo, value):
-        for rule in pricelist.pricelist_item_ids:
-            if rule.categ_id and rule.categ_id.id != prod.categ_id.id:
-                continue
-            if rule.product_id and rule.product_id.id != prod.id:
-                continue
-            if rule.supplier_id and rule.supplier_id.id != suppinfo.name.id:
-                continue
-            value += (rule.margin_per_pax or 0.0)
-            value *= 1.0 + (rule.price_discount or 0.0)
-            break
-        return value
+    def get_customer_price(self, pricelist, partener_info, fields, category):
+        res = {'type': category}
+        for field in fields:
+            if category == 'hotel':
+                if field in ['price', 'simple', 'triple']:
+                    value = getattr(partener_info, field)
+                    res_final = (value + pricelist.margin_per_pax) * (
+                        1 + pricelist.price_discount) + pricelist.price_surcharge
+                    res.update({field: res_final})
+                else:
+                    res.update({field: getattr(partener_info, field)})
+            elif category in ['car', 'transfer']:
+                if field == 'price':
+                    value = getattr(partener_info, field)
+                    res_final = (value + pricelist.margin_per_pax) * (
+                        1 + pricelist.price_discount) + pricelist.price_surcharge
+                    res.update({field: res_final})
+                else:
+                    res.update({field: getattr(partener_info, field)})
+            elif category == 'flight':
+                if field in ['price', 'child']:
+                    value = getattr(partener_info, field)
+                    res_final = (value + pricelist.margin_per_pax) * (
+                        1 + pricelist.price_discount) + pricelist.price_surcharge
+                    res.update({field: res_final})
+                else:
+                    res.update({field: getattr(partener_info, field)})
+        return res

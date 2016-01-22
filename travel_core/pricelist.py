@@ -26,9 +26,12 @@ from openerp import fields
 from openerp.models import Model, TransientModel
 from openerp.tools.translate import _
 import openerp.addons.decimal_precision as dp
+import ho.pisa as pisa
 import time
 import xlwt
+from reportlab.pdfgen.canvas import Canvas
 import base64
+import cStringIO
 
 FIELD_TYPES = {'date': 1, 'many2one': 2, 'float': 3, 'integer': 4}
 CORE_FIELDS = [
@@ -37,6 +40,10 @@ CORE_FIELDS = [
     (3, 'price', 'Price'),
     (3, 'child', 'Child')
 ]
+
+
+def fix(chain):
+    return chain.split('_')[0]
 
 
 class product_pricelist(Model):
@@ -249,7 +256,7 @@ class product_pricelist(Model):
                     days = self.pool.get('sale.order.line').get_margin_days(cr, uid, params, context)
                     price_limit = price
                     price += days * paxs * (rule.margin_per_pax or 0.0)
-                    price = price * (1.0 + (rule.price_discount or 0.0))
+                    price *= 1.0 + (rule.price_discount or 0.0)
                     if rule.price_round:
                         price = tools.float_round(price, precision_rounding=rule.price_round)
                     price += (rule.price_surcharge or 0.0)
@@ -414,7 +421,7 @@ class product_pricelist(Model):
                         if price is not False:
                             price_limit = price
                             price += days * paxs * (res['margin_per_pax'] or 0.0)
-                            price = price * (1.0 + (res['price_discount'] or 0.0))
+                            price *= 1.0 + (res['price_discount'] or 0.0)
                             price += (res['price_surcharge'] or 0.0)
                             if res['price_min_margin']:
                                 price = max(price, price_limit + res['price_min_margin'])
@@ -463,46 +470,70 @@ class customer_price(TransientModel):
                                        ('name', '!=', 'Miscellaneous')])
     supplier = fields.Many2one('res.partner', _('Supplier'))
 
+    excel_file = fields.Binary('Excel File')
+    excel_name = fields.Char('Excel Name', readonly=True, default='Price_customers.xlsx')
+    pdf_file = fields.Binary('PDF File')
+    pdf_name = fields.Char('PDF Name', readonly=True, default='Price_customers.pdf')
+
     @api.multi
     def export_prices(self):
         wb = xlwt.Workbook()
+        body = """
+                <html>
+                  <head>
+                    <meta name="pdfkit-page-size" content="Legal"/>
+                    <meta name="pdfkit-orientation" content="Landscape"/>
+                  </head>
+                  <table>
+                  """
+        final = """
+                  </table>
+                  </html>
+                """
 
         obj = self[0]
 
-        res = {
+        if obj.category and obj.supplier:
+            category_name = obj.category.name.lower()
+            product_category = self.env['product.' + category_name]
+            supplier_info = self.env['product.supplierinfo']
+            supplier_infos = supplier_info.search([('name', '=', obj.supplier.id)])
+            products = product_category.search([('seller_ids', '=', [x.id for x in supplier_infos])])
+            supplier_infos = supplier_info.search(
+                [('product_tmpl_id', '=', [x.product_id.product_tmpl_id.id for x in products]),
+                 ('name', '=', obj.supplier.id)])
+            pricelist_partnerinfo = self.env['pricelist.partnerinfo']
+            pricelist_partnerinfo_elmts = pricelist_partnerinfo.search(
+                [('suppinfo_id', 'in', [x.id for x in supplier_infos])])
 
-        }
-        category_name = obj.category.name.lower()
-        product_category = self.env['product.' + category_name]
-        supplier_info = self.env['product.supplierinfo']
-        supplier_infos = supplier_info.search([('name', '=', obj.supplier.id)])
-        products = product_category.search([('seller_ids', '=', [x.id for x in supplier_infos])])
-        supplier_infos = supplier_info.search(
-            [('product_tmpl_id', '=', [x.product_id.product_tmpl_id.id for x in products]),
-             ('name', '=', obj.supplier.id)])
-        pricelist_partnerinfo = self.env['pricelist.partnerinfo']
-        pricelist_partnerinfo_elmts = pricelist_partnerinfo.search(
-            [('suppinfo_id', 'in', [x.id for x in supplier_infos])])
-
-        fields = self.get_category_price_fields(category=category_name)
-        product_pricelist_item = self.env['product.pricelist.item']
-        product_pricelist_item_elmnts = product_pricelist_item.search([('price_version_id', '=', obj.pricelist.id)])
-        if fields and pricelist_partnerinfo_elmts:
+            fields = self.get_category_price_fields(category=category_name)
+            product_pricelist_item = self.env['product.pricelist.item']
+            product_pricelist_item_elmnts = product_pricelist_item.search([('price_version_id', '=', obj.pricelist.id)])
             ws = wb.add_sheet(str(obj.pricelist.name), cell_overwrite_ok=True)
-            ws = self.write_prices(ws, fields, category_name, obj.start_date, obj.end_date, obj.supplier.name,
-                                   pricelist_partnerinfo_elmts, product_pricelist_item_elmnts)
+            if fields and pricelist_partnerinfo_elmts:
+                ws, body = self.write_prices(ws, fields, category_name, obj.start_date, obj.end_date, obj.supplier.name,
+                                             pricelist_partnerinfo_elmts, product_pricelist_item_elmnts, body)
+                # wb.save(f)
+                body += """
+                </tbody>
+                """
+                body += final
 
-        # for categ in product_category.browse(cr, uid, products):
-        #     name = categ.name
-        #     fields = self.get_category_price_fields(name.lower())
-        #     if fields:
-        #         ws = wb.add_sheet(name, cell_overwrite_ok=True)
-        #         self.write_prices(cr, uid, ws, fields, categ, None, context)
-        # wb.save('/tmp/prices.xls')
-        # f = open('/tmp/prices.xls', 'r')
-        # obj = self.browse(cr, uid, ids[0], context)
-        # self.write(cr, uid, obj.id,
-        #            {'file_price': base64.encodestring(f.read())}, context)
+                f = cStringIO.StringIO()
+                f2 = cStringIO.StringIO()
+                options = {
+                    'page-size': 'Letter',
+                    'margin-top': '0.75in',
+                    'margin-right': '0.75in',
+                    'margin-bottom': '0.75in',
+                    'margin-left': '0.75in',
+                    'encoding': "UTF-8",
+                    'no-outline': None
+                }
+                pisa.pisaDocument(body.encode("ISO-8859-1"), f2)
+                wb.save(f)
+                obj.write({'excel_file': base64.encodestring(f.getvalue())})
+                obj.write({'pdf_file': base64.encodestring(f2.getvalue())})
         return {
             'name': 'Export Prices',
             'type': 'ir.actions.act_window',
@@ -510,7 +541,7 @@ class customer_price(TransientModel):
             'view_mode': 'form',
             'res_model': 'customer.price',
             'res_id': obj.id,
-            'target': 'new',
+            'target': 'new'
         }
 
     # TODO: sort fields just for first index
@@ -527,61 +558,76 @@ class customer_price(TransientModel):
             return []
 
     def write_prices(self, ws, _fields, category_name, start_date, end_date, supplier,
-                     pricelist_partnerinfo_elmts, pricelist):
+                     pricelist_partnerinfo_elmts, pricelist, body):
 
-        # ws.write(0, 0, 'Product')
-        # x, y = 0, 1
-        # for f in fields:
-        #     ws.write(x, y, f[2])
-        #     y += 1
-        # x = 1
-        ws.write(0, 0, _('Pricelist'))
-        ws.write(0, 1, _('Category'))
-        ws.write(0, 2, _('Start Date'))
-        ws.write(0, 3, _('End Date'))
-        ws.write(0, 4, _('Supplier'))
+        style = xlwt.XFStyle()
+        font = xlwt.Font()
+        font.bold = True
+        style.font = font
+        elements = [_('Pricelist'.upper()), _('Product'.upper()), _('Start Date'.upper()), _('End Date'.upper()),
+                    _('Supplier'.upper())]
+        body += """
+        <thead>
+        <tr>
+        """
+        for x in range(0, 5):
+            ws.write(0, x, elements[x], style)
+            body += """
+            <th>
+            """ + elements[x] + """</th>
+            """
         count = 5
         for x in sorted(_fields):
             if x[1].lower() != 'start_date' and x[1].lower() != 'end_date':
-                ws.write(0, count, _(x))
+                ws.write(0, count, _(fix(str(x[1]).upper())), style)
+                body += """
+            <th>
+            """ + _(fix(str(x[1]).upper())) + """</th>
+            """
                 count += 1
         count = 1
+        body += """
+        </tr>
+        </thead>
+        <tbody>
+        """
         for rule in pricelist:
             for partnerinfo in pricelist_partnerinfo_elmts:
                 if start_date <= partnerinfo.start_date <= end_date:
-                    ws.write(count, 0, str(rule))
-                    ws.write(count, 1, str(category_name))
+                    ws.write(count, 0, str(rule.name))
+                    ws.write(count, 1, str(partnerinfo.suppinfo_id.product_tmpl_id.name))
                     ws.write(count, 2, str(partnerinfo.start_date))
                     ws.write(count, 3, str(partnerinfo.end_date))
                     ws.write(count, 4, str(supplier))
-                    res = self.get_customer_price(partnerinfo, rule, [f[1] for f in fields], category_name.lower())
+                    body += """
+                    <tr>
+                    <td style="text-align=center;"><span>
+                    """ + str(rule.name) + """</span></td> """ + """<td style="text-align=center;"> <span>""" + str(
+                        partnerinfo.suppinfo_id.product_tmpl_id.name) + """</span></td> """ + """<td style="text-align=center;"><span>""" + str(
+                        partnerinfo.start_date) + """</span></td> """ + """<td style="text-align=center;"><span>""" + str(
+                        partnerinfo.end_date) + """</span></td> """ + """<td style="text-align=center;"><span>""" + str(
+                        supplier) + """</span></td> """
+
+                    res = self.get_customer_price(partnerinfo, rule, [f[1] for f in _fields], category_name.lower())
                     second_count = 5
                     for x in sorted(_fields):
-                        ws.write(count, second_count, str(res[x]))
-                        second_count += 1
+                        if x[1].lower() != 'start_date' and x[1].lower() != 'end_date':
+                            try:
+                                ws.write(count, second_count, _(str(res[x[1]])))
+                                body += """<td style="text-align=center;"><span>""" + _(
+                                    str(res[x[1]])) + """</span></td> """
+                            except KeyError:
+                                ws.write(count, second_count, _('Empty'))
+                                body += """<td style="text-align=center;"><span>""" + _('Empty') + """</span></td> """
+                            second_count += 1
                     count += 1
-        return ws
-        # y = 0
-        # ws.write(x, y, prod.name)
-        # suppinfo = prod.seller_info_id
-        # if suppinfo:
-        #     for pr in suppinfo.pricelist_ids:
-        #         y = 1
-        #         for f in fields:
-        #             if f[0] == 2:
-        #                 value = getattr(pr, f[1]).name
-        #             elif f[0] == 3:
-        #                 value = self.get_customer_price(cr, uid, pricelist,
-        #                                                 prod, suppinfo,
-        #                                                 getattr(pr, f[1]))
-        #             else:
-        #                 value = getattr(pr, f[1])
-        #             ws.write(x, y, value)
-        #             y += 1
-        #         x += 1
+                    body += """
+                     </tr>"""
+
+        return ws, body
 
     # TODO: check currency
-    def get_customer_price(self, pricelist, partener_info, fields, category):
+    def get_customer_price(self, partener_info, pricelist, fields, category):
         res = {'type': category}
         for field in fields:
             if category == 'hotel':
@@ -591,21 +637,23 @@ class customer_price(TransientModel):
                         1 + pricelist.price_discount) + pricelist.price_surcharge
                     res.update({field: res_final})
                 else:
-                    res.update({field: getattr(partener_info, field)})
-            elif category in ['car', 'transfer']:
-                if field == 'price':
-                    value = getattr(partener_info, field)
-                    res_final = (value + pricelist.margin_per_pax) * (
-                        1 + pricelist.price_discount) + pricelist.price_surcharge
-                    res.update({field: res_final})
-                else:
-                    res.update({field: getattr(partener_info, field)})
-            elif category == 'flight':
+                    try:
+                        attr = getattr(partener_info, field)
+                        attr = getattr(attr, 'name')
+                    except AttributeError:
+                        continue
+                    res.update({field: attr})
+            elif category in ['car', 'transfer', 'flight']:
                 if field in ['price', 'child']:
                     value = getattr(partener_info, field)
                     res_final = (value + pricelist.margin_per_pax) * (
                         1 + pricelist.price_discount) + pricelist.price_surcharge
                     res.update({field: res_final})
                 else:
-                    res.update({field: getattr(partener_info, field)})
+                    try:
+                        attr = getattr(partener_info, field)
+                        attr = getattr(attr, 'name')
+                    except AttributeError:
+                        continue
+                    res.update({field: attr})
         return res

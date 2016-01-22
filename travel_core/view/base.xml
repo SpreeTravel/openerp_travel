@@ -1,9 +1,26 @@
 <?xml version="1.0"?>
 <openerp>
     <data>
-        
-        <menuitem id="travel_partner_supplier_menu" parent="base.menu_base_config" action="base.action_partner_supplier_form" sequence="2"/>
-        
+
+        <record id="travel_customer_price_button" model="ir.ui.view">
+            <field name="name">travel.customer.price.button</field>
+            <field name="model">res.partner</field>
+            <field name="inherit_id" ref="base.view_partner_form"/>
+            <field name="priority" eval="40"/>
+            <field name="arch" type="xml">
+                <xpath expr="//div[@name='buttons']" position="inside">
+                    <button class="oe_inline oe_stat_button" name="set_conditions"
+                            string="Customer Prices"
+                            type="object"
+                            attrs="{'invisible': [('customer', '=', False)]}" icon="fa-file"/>
+                    <!--<field string="Purchases" name="purchase_order_count" widget="statinfo"/>-->
+                </xpath>
+            </field>
+        </record>
+
+        <menuitem id="travel_partner_supplier_menu" parent="base.menu_base_config"
+                  action="base.action_partner_supplier_form" sequence="2"/>
+
         <record id="travel_res_partner_search_view" model="ir.ui.view">
             <field name="name">travel.res.partner.search.view</field>
             <field name="model">res.partner</field>
@@ -11,16 +28,21 @@
             <field name="arch" type="xml">
                 <search string="Search Partner" position="replace">
                     <search string="Search Partner">
-                        <field name="name" filter_domain="['|','|',('name','ilike',self),('parent_id','ilike',self),('ref','=',self)]"/>
+                        <field name="name"
+                               filter_domain="['|','|',('name','ilike',self),('parent_id','ilike',self),('ref','=',self)]"/>
                         <filter string="Contacts" name="type_person" domain="[('is_company','=',0)]"/>
-                        <filter string="Customers" name="customer" domain="[('customer','=',1)]" help="Customer Partners"/>
-                        <filter string="Suppliers" name="supplier" domain="[('supplier','=',1)]" help="Supplier Partners"/>
+                        <filter string="Customers" name="customer" domain="[('customer','=',1)]"
+                                help="Customer Partners"/>
+                        <filter string="Suppliers" name="supplier" domain="[('supplier','=',1)]"
+                                help="Supplier Partners"/>
                         <separator/>
                         <field name="category_id" string="Tag" filter_domain="[('category_id','ilike', self)]"/>
                         <field name="user_id"/>
-                        <field name="parent_id" domain="[('is_company','=',1)]" filter_domain="[('parent_id','child_of',[self])]"/>
+                        <field name="parent_id" domain="[('is_company','=',1)]"
+                               filter_domain="[('parent_id','child_of',[self])]"/>
                         <group expand="0" string="Group By...">
-                            <filter string="Salesperson" icon="terp-personal" domain="[]" context="{'group_by' : 'user_id'}"/>
+                            <filter string="Salesperson" icon="terp-personal" domain="[]"
+                                    context="{'group_by' : 'user_id'}"/>
                             <filter string="Company" context="{'group_by': 'parent_id'}"/>
                             <filter string="Country" context="{'group_by': 'country_id'}"/>
                         </group>
@@ -28,9 +50,9 @@
                 </search>
             </field>
         </record>
-        
+
         <!-- Options -->
-        
+
         <record id="travel_option_type_tree_view" model="ir.ui.view">
             <field name="name">travel.option.type.tree</field>
             <field name="model">option.type</field>
@@ -41,32 +63,32 @@
                 </tree>
             </field>
         </record>
-		
-		<record id="travel_option_type_form_view" model="ir.ui.view">
+
+        <record id="travel_option_type_form_view" model="ir.ui.view">
             <field name="name">travel.option.type.form</field>
             <field name="model">option.type</field>
             <field name="arch" type="xml">
                 <form string="Option" version="7.0">
-                	<sheet>
-	                	<group>
-	                    	<field name="name"/>
-	                    	<field name="code" readonly="1"/>
-						</group>
-						<separator/>
-						<group>
-							<field name="option_value_ids">
-								<tree string="Values" editable="bottom">
-									<field name="name"/>
-									<field name="code"/>
-								</tree>		
-							</field>
-						</group>
-					</sheet>
+                    <sheet>
+                        <group>
+                            <field name="name"/>
+                            <field name="code" readonly="1"/>
+                        </group>
+                        <separator/>
+                        <group>
+                            <field name="option_value_ids">
+                                <tree string="Values" editable="bottom">
+                                    <field name="name"/>
+                                    <field name="code"/>
+                                </tree>
+                            </field>
+                        </group>
+                    </sheet>
                 </form>
             </field>
         </record>
-		
-		<record id="travel_option_type_action" model="ir.actions.act_window">
+
+        <record id="travel_option_type_action" model="ir.actions.act_window">
             <field name="name">Options</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">option.type</field>
@@ -74,11 +96,12 @@
             <field name="view_mode">tree,form</field>
             <field name="view_id" ref="travel_option_type_tree_view"/>
         </record>
-        
-        <menuitem id="travel_option_type_menu" parent="base.menu_base_config" action="travel_option_type_action" sequence="5"/>
-        
+
+        <menuitem id="travel_option_type_menu" parent="base.menu_base_config" action="travel_option_type_action"
+                  sequence="5"/>
+
         <!-- Destinations -->
-        
+
         <record id="travel_destination_tree_view" model="ir.ui.view">
             <field name="name">travel.destination.tree.view</field>
             <field name="model">destination</field>
@@ -90,7 +113,7 @@
                 </tree>
             </field>
         </record>
-        
+
         <record id="travel_destination_form_view" model="ir.ui.view">
             <field name="name">travel.destination.form.view</field>
             <field name="model">destination</field>
@@ -112,7 +135,7 @@
                 </form>
             </field>
         </record>
-        
+
         <record id="travel_destination_action" model="ir.actions.act_window">
             <field name="name">Destinations</field>
             <field name="type">ir.actions.act_window</field>
@@ -121,8 +144,9 @@
             <field name="view_mode">tree,form</field>
             <field name="view_id" ref="travel_destination_tree_view"/>
         </record>
-        
-        <menuitem id="travel_destination_menu" parent="base.menu_base_config" action="travel_destination_action" sequence="4"/>
-        
+
+        <menuitem id="travel_destination_menu" parent="base.menu_base_config" action="travel_destination_action"
+                  sequence="4"/>
+
     </data>
 </openerp>

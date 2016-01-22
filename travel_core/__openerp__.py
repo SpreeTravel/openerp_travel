@@ -37,7 +37,11 @@ Base module for managing sales, prices and accounting in a Travel Agency
         'data/pricelist.xml',
         'data/menu.xml'
     ],
-    "data": ['view/report_saleorder.xml'],
+    "data": ['view/report_saleorder.xml',
+             'report/hotels_report_view.xml',
+             'report/flights_report_view.xml',
+             'report/transfer_report_view.xml',
+             'report/car_report_view.xml'],
     "update_xml": [
         'view/base.xml',
         'view/pricelist.xml',

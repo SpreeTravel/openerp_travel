@@ -33,7 +33,7 @@ class sale_report(Model):
         'myyear': fields.char(_('Year')),
         'mymonth': fields.char(_('Month')),
         'myday': fields.char(_('Day')),
-        'supplier_id': fields.many2one('res.partner', 'Supplier')
+        'supplier_id': fields.many2one('res.partner', _('Supplier'))
     }
 
     # TODO: incluir la agrupacion por el campo origin en el

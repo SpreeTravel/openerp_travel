@@ -20,14 +20,36 @@
 ##############################################################################
 
 import datetime as dt
-
-from openerp.osv import fields
-from openerp.osv.orm import Model
+from openerp import fields, api
+from openerp.models import Model
 
 
 class res_partner(Model):
     _name = 'res.partner'
     _inherit = 'res.partner'
+
+    @api.multi
+    def set_conditions(self):
+        import datetime
+        if len(self):
+            element = self[0]
+
+            pool = self.env['customer.price']
+            obj = pool.create({
+                'pricelist': element.property_product_pricelist.id,
+                'client': element.name,
+                'start_date': datetime.datetime.now(),
+                'end_date': datetime.datetime.now()
+            })
+            return {
+                "name": 'Export Prices',
+                "type": 'ir.actions.act_window',
+                "res_model": 'customer.price',
+                "view_type": 'form',
+                "view_mode": 'form',
+                "target": 'new',
+                'res_id': obj.id
+            }
 
     def _get_reservations(self, cr, uid, ids, fields, args, context=None):
         result = {}
@@ -35,9 +57,9 @@ class res_partner(Model):
         for obj in self.browse(cr, uid, ids, context):
             result[obj.id] = []
             to_search = [('start_date', '>=', dt.datetime.today())]
-            if obj.customer == True:
+            if obj.customer:
                 to_search.append(('customer_id', '=', obj.id))
-            elif obj.supplier == True:
+            elif obj.supplier:
                 to_search.append(('supplier_id', '=', obj.id))
             else:
                 continue
@@ -45,20 +67,19 @@ class res_partner(Model):
             result[obj.id] = l_ids
         return result
 
-    _columns = {
-        'reservation_ids': fields.function(_get_reservations, method=True,
-                                           type='many2many',
-                                           relation='sale.order.line',
-                                           string='Reservations'),
-        'pax': fields.boolean('Pax'),
-        # TODO: poner el campo pax tambien en el formulario de partner
-    }
+    reservation_ids = fields.Many2many(compute=_get_reservations, method=True,
 
-    def create(self, cr, uid, vals, context=None):
+                                       relation='sale.order.line',
+                                       string='Reservations')
+    pax = fields.Boolean('Pax')
+
+    # TODO: poner el campo pax tambien en el formulario de partner
+
+    def create(self, vals, context=None):
         context = context or {}
         if context.get('supplier', False):
             vals['supplier'] = True
-        return super(res_partner, self).create(cr, uid, vals, context)
+        return super(res_partner, self).create(vals, context=context)
 
     _sql_constraints = [
         ('name_partner_unique', 'unique (name)',
@@ -68,21 +89,17 @@ class res_partner(Model):
 
 class option_type(Model):
     _name = 'option.type'
-    _columns = {
-        'name': fields.char('Name', size=64, translate=True),
-        'code': fields.char('Code', size=32),
-        'option_value_ids': fields.one2many('option.value', 'option_type_id',
-                                            'Option Values')
-    }
+    name = fields.Char('Name', size=64, translate=True)
+    code = fields.Char('Code', size=32)
+    option_value_ids = fields.One2many('option.value', 'option_type_id',
+                                       'Option Values')
 
 
 class option_value(Model):
     _name = 'option.value'
-    _columns = {
-        'name': fields.char('Name', size=64, translate=True),
-        'code': fields.char('Code', size=32),
-        'option_type_id': fields.many2one('option.type', 'Option Type')
-    }
+    name = fields.Char('Name', size=64, translate=True)
+    code = fields.Char('Code', size=32)
+    option_type_id = fields.Many2one('option.type', 'Option Type')
 
     def get_code_by_id(self, cr, uid, oid, context=None):
         return self.read(cr, uid, oid, ['code'], context)['code']
@@ -90,22 +107,19 @@ class option_value(Model):
     def get_id_by_code(self, cr, uid, code, context=None):
         res = self.search(cr, uid, [('code', '=', code)], context=context)
         return res and res[0] or False
-    
+
+
 class destination(Model):
     _name = 'destination'
-    _columns = {
-        'code': fields.char('Code', size=8),
-        'name': fields.char('Name', size=128, required=True),
-        'description': fields.text('Description'),
-        'parent_id': fields.many2one('destination', 'Parent'),
-        'child_ids': fields.one2many('destination', 'parent_id', 'Children')
-    }
+    code = fields.Char('Code', size=8)
+    name = fields.Char('Name', size=128, required=True)
+    description = fields.Text('Description')
+    parent_id = fields.Many2one('destination', 'Parent')
+    child_ids = fields.One2many('destination', 'parent_id', 'Children')
 
 
 class destination_distance(Model):
     _name = 'destination.distance'
-    _columns = {
-        'origin': fields.many2one('destination', 'Origin'),
-        'target': fields.many2one('destination', 'Target'),
-        'distance': fields.float('Distance')
-    }
+    origin = fields.Many2one('destinaon', 'Origin')
+    target = fields.Many2one('destination', 'Target')
+    distance = fields.Float('Distance')

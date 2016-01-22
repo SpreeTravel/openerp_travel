@@ -20,3 +20,7 @@
 ##############################################################################
 
 import sale_report
+import hotels_report
+import car_report
+import flights_report
+import transfer_report

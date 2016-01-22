@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <record id="travel_flight_report_search_view" model="ir.ui.view">
+            <field name="name">travel.flight.report.search.view</field>
+            <field name="model">flight.report</field>
+            <field name="arch" type="xml">
+                <search string="Flights Analysis">
+
+                    <group expand="1" string="Group By...">
+                        <filter string="Supplier" icon="terp-personal" name="Supplier"
+                                context="{'group_by':'supplier'}"/>
+                        <filter string="Start Date" icon="terp-personal" name="Start Date"
+                                context="{'group_by':'start_date'}"/>
+                        <filter string="End Date" icon="terp-personal" name="End Date"
+                                context="{'group_by':'end_date'}"/>
+                        <filter string="Name" icon="terp-personal" name="Name"
+                                context="{'group_by':'name'}"/>
+
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <record id="travel_flight_report_tree" model="ir.ui.view">
+            <field name="name">travel.pricelist.partnerinfo.report.tree</field>
+            <field name="model">flight.report</field>
+            <field name="arch" type="xml">
+                <tree string="Flights Report" create="false">
+                    <field name="name"/>
+                    <field name="start_date"/>
+                    <field name="end_date"/>
+                    <field name="supplier"/>
+                    <field name="adults"/>
+                    <field name="child"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="action_travel_flight_report_all" model="ir.actions.act_window">
+            <field name="name">Flight Report</field>
+            <field name="res_model">flight.report</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree</field>
+            <field name="search_view_id" ref="travel_flight_report_search_view"/>
+            <field name="view_id" ref="travel_flight_report_tree"/>
+            <!--<field name="context">{'search_default_Sales':1, 'group_by_no_leaf':1,'group_by':[]}</field>-->
+            <!--<field name="help">This report performs analysis on your quotations and sales orders. Analysis check your-->
+            <!--sales revenues and sort it by different group criteria (salesman, partner, product, etc.) Use this-->
+            <!--report to perform analysis on sales not having invoiced yet. If you want to analyse your turnover, you-->
+            <!--should use the Invoice Analysis report in the Accounting application.-->
+            <!--</field>-->
+        </record>
+
+        <menuitem action="action_travel_flight_report_all"
+                  id="menu_action_travel_flight_report_all" parent="pricelist_next_id_64" sequence="10"/>
+
+
+        <record id="sale.action_order_report_all" model="ir.actions.act_window">
+            <field name="search_view_id" ref="travel_flight_report_search_view"/>
+        </record>
+
+    </data>
+</openerp>

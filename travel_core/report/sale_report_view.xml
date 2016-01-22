@@ -43,5 +43,6 @@
             <field name="search_view_id" ref="travel_sale_report_search_view"/>
         </record>
 
+
     </data>
 </openerp>

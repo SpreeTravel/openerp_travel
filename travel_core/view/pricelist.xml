@@ -39,6 +39,8 @@
             </field>
         </record>
 
+
+
         <record id="travel_product_pricelist_view" model="ir.ui.view">
             <field name="name">travel.product.pricelist.view</field>
             <field name="model">product.pricelist</field>
@@ -62,12 +64,16 @@
             <field name="arch" type="xml">
                 <form string="Export Prices" version="7.0">
                     <group>
-                        <field name="pricelist" t-esc="o.name or 'TEST'" readonly="True"/>
+                        <field name="pricelist" t-esc="o.name or 'Pricelist'" readonly="True"/>
                         <field name="client" readonly="True"/>
                         <field name="start_date"/>
                         <field name="end_date"/>
                         <field name="category"/>
                         <field name="supplier"/>
+                        <field name="excel_file" filename="excel_name"/>
+                        <field name="excel_name" invisible="1"/>
+                        <field name="pdf_file" filename="pdf_name"/>
+                        <field name="pdf_name" invisible="1"/>
                     </group>
                     <footer>
                         <button string="Export" name="export_prices" type="object" class="oe_highlight"/>

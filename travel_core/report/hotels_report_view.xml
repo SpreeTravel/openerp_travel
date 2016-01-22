@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <menuitem id="pricelist_next_id_64" name="Prices" parent="base.menu_reporting" sequence="1"
+                  groups="base.group_sale_manager"/>
+
+        <record id="travel_hotels_report_search_view" model="ir.ui.view">
+            <field name="name">travel.hotels.report.search.view</field>
+            <field name="model">hotels.report</field>
+            <field name="arch" type="xml">
+                <search string="Hotels Analysis">
+                    <group expand="1" string="Group By...">
+                        <filter string="Supplier" icon="terp-personal" name="Supplier"
+                                context="{'group_by':'supplier'}"/>
+                        <filter string="Start Date" icon="terp-partner" name="Start Date"
+                                context="{'group_by':'start_date'}"/>
+                        <filter string="End Date" icon="terp-partner" name="End Date"
+                                context="{'group_by':'end_date'}"/>
+                        <filter string="Room Type" icon="terp-partner" name="Room Type"
+                                context="{'group_by':'room'}"/>
+                        <filter string="Plan" icon="terp-partner" name="Plan"
+                                context="{'group_by':'plan'}"/>
+                        <filter string="Name" icon="terp-personal" name="Name"
+                                context="{'group_by':'name'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <record id="travel_hotels_report_tree" model="ir.ui.view">
+            <field name="name">travel.hotels.report.tree</field>
+            <field name="model">hotels.report</field>
+            <field name="arch" type="xml">
+                <tree string="Hotel Report" create="false">
+                    <field name="name"/>
+                    <field name="start_date"/>
+                    <field name="end_date"/>
+                    <field name="room"/>
+                    <field name="plan"/>
+                    <field name="simple"/>
+                    <field name="double"/>
+                    <field name="triple"/>
+                    <field name="extra_adult"/>
+                    <field name="child"/>
+                    <field name="second_child"/>
+                    <field name="supplier"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="action_travel_hotels_report_all" model="ir.actions.act_window">
+            <field name="name">Hotels Report</field>
+            <field name="res_model">hotels.report</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree</field>
+            <field name="search_view_id" ref="travel_hotels_report_search_view"/>
+            <field name="view_id" ref="travel_hotels_report_tree"/>
+
+        </record>
+
+        <menuitem action="action_travel_hotels_report_all"
+                  id="menu_action_travel_hotels_report_all" parent="pricelist_next_id_64" sequence="10"/>
+
+
+        <record id="sale.action_order_report_all" model="ir.actions.act_window">
+            <field name="search_view_id" ref="travel_hotels_report_search_view"/>
+        </record>
+
+    </data>
+</openerp>

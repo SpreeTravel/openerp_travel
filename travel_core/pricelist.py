@@ -29,7 +29,6 @@ import openerp.addons.decimal_precision as dp
 import ho.pisa as pisa
 import time
 import xlwt
-from reportlab.pdfgen.canvas import Canvas
 import base64
 import cStringIO
 
@@ -607,8 +606,15 @@ class customer_price(TransientModel):
                         partnerinfo.start_date) + """</span></td> """ + """<td style="text-align=center;"><span>""" + str(
                         partnerinfo.end_date) + """</span></td> """ + """<td style="text-align=center;"><span>""" + str(
                         supplier) + """</span></td> """
-
-                    res = self.get_customer_price(partnerinfo, rule, [f[1] for f in _fields], category_name.lower())
+                    product_rate_supplement = self.env['product.rate.supplement']
+                    supplement = product_rate_supplement.search(
+                        [('suppinfo_id', '=', getattr(partnerinfo.suppinfo_id, 'id'))])
+                    if supplement and start_date <= supplement.start_date <= end_date:
+                        res = self.get_customer_price(partnerinfo, rule, [f[1] for f in _fields], category_name.lower(),
+                                                      supplement)
+                    else:
+                        res = self.get_customer_price(partnerinfo, rule, [f[1] for f in _fields], category_name.lower(),
+                                                      None)
                     second_count = 5
                     for x in sorted(_fields):
                         if x[1].lower() != 'start_date' and x[1].lower() != 'end_date':
@@ -627,12 +633,15 @@ class customer_price(TransientModel):
         return ws, body
 
     # TODO: check currency
-    def get_customer_price(self, partener_info, pricelist, fields, category):
+    def get_customer_price(self, partener_info, pricelist, fields, category, supplement):
         res = {'type': category}
+
         for field in fields:
             if category == 'hotel':
                 if field in ['price', 'simple', 'triple']:
                     value = getattr(partener_info, field)
+                    if supplement:
+                        value += supplement.price
                     res_final = (value + pricelist.margin_per_pax) * (
                         1 + pricelist.price_discount) + pricelist.price_surcharge
                     res.update({field: res_final})
@@ -646,6 +655,8 @@ class customer_price(TransientModel):
             elif category in ['car', 'transfer', 'flight']:
                 if field in ['price', 'child']:
                     value = getattr(partener_info, field)
+                    if supplement:
+                        value += supplement.price
                     res_final = (value + pricelist.margin_per_pax) * (
                         1 + pricelist.price_discount) + pricelist.price_surcharge
                     res.update({field: res_final})

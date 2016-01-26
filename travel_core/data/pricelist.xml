@@ -1,7 +1,7 @@
 <?xml version="1.0" ?>
 <openerp>
 
-	<data>
+	<data noupdate="1">
 		
 		<record id="item1" model="product.pricelist.item">
             <field name="price_version_id" ref="product.ver0"/>

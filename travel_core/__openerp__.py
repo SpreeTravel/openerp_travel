@@ -33,23 +33,25 @@ Base module for managing sales, prices and accounting in a Travel Agency
     """,
     "depends": ['sale', 'contacts'],
     "init_xml": [
-        'data/options.xml',
-        'data/pricelist.xml',
-        'data/menu.xml'
+
     ],
     "data": ['view/report_saleorder.xml',
+             'data/options.xml',
+             'data/pricelist.xml',
+             'data/menu.xml',
              'report/hotels_report_view.xml',
              'report/flights_report_view.xml',
              'report/transfer_report_view.xml',
-             'report/car_report_view.xml'],
+             'report/car_report_view.xml',
+             'view/base.xml',
+             'view/pricelist.xml',
+             'view/sale.xml',
+             'report/sale_report_view.xml',
+             'report/default_voucher.xml',
+             'report/travel_voucher.xml',
+             'security/ir.model.access.csv'],
     "update_xml": [
-        'view/base.xml',
-        'view/pricelist.xml',
-        'view/sale.xml',
-        'report/sale_report_view.xml',
-        'report/default_voucher.xml',
-        'report/travel_voucher.xml',
-        'security/ir.model.access.csv'
+
     ],
     "demo_xml": [],
     "application": False,

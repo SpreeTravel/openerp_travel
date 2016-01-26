@@ -1,67 +1,67 @@
 <?xml version="1.0"?>
 <openerp>
-	<data>
-		
-		<record id="travel_menu" model="ir.ui.menu">
-			<field name="name">Travel</field>
-			<field name="parent_id" ref="base.menu_custom" />
-			<field name="sequence">100</field>
-		</record>
-		
-		<record id="product.menu_products_category" model="ir.ui.menu">
-			<field name="parent_id" ref="travel_menu" />
-		</record>
-		
-		<!--
-		<record id="product.menu_products" model="ir.ui.menu">			
-			<field name="parent_id" ref="travel_menu" />
-		</record>
-		-->
-		
-		<record id="product.prod_config_main" model="ir.ui.menu">
-			<field name="parent_id" ref="travel_menu" />
-		</record>
-		
-		<record id="sale.menu_sale_quotations" model="ir.ui.menu">
-			<field name="parent_id" ref="travel_menu" />
-		</record>
-		
-		<record id="product.menu_product_uom_categ_form_action" model="ir.ui.menu">
-			<field name="parent_id" ref="travel_menu" />
-		</record>
-		
-		<record id="account_voucher.menu_action_sale_receipt" model="ir.ui.menu">
-			<field name="parent_id" ref="travel_menu" />
-		</record>
-		
-		<record id="account_voucher.menu_action_purchase_receipt" model="ir.ui.menu">
-			<field name="parent_id" ref="travel_menu" />
-		</record>
-		
-		<record id="account_voucher.menu_encode_entries_by_voucher" model="ir.ui.menu">
-			<field name="parent_id" ref="travel_menu" />
-		</record>
-		
-		<record id="product.menu_product_pricelist_main" model="ir.ui.menu">
-			<field name="parent_id" ref="travel_menu" />
-		</record>
-	    
-	    <!-- Reorder pricelist -->
-	    
-	    <record id="sale.menu_sale_order" model="ir.ui.menu">
-			<field name="sequence">1</field>
-		</record>
-		
-	    <record id="base.menu_partner_form" model="ir.ui.menu">
-			<field name="parent_id" ref="base.menu_base_config" />
-			<field name="action" ref="base.action_partner_customer_form" />
-			<field name="sequence">1</field>
-		</record>
-		
-		<record id="product.menu_product_pricelist_action2" model="ir.ui.menu">
-			<field name="parent_id" ref="base.menu_base_config" />
-			<field name="sequence">3</field>
-		</record>
-		
-	</data>
+    <data noupdate="1">
+
+        <record id="travel_menu" model="ir.ui.menu">
+            <field name="name">Travel</field>
+            <field name="parent_id" ref="base.menu_custom"/>
+            <field name="sequence">100</field>
+        </record>
+
+        <record id="product.menu_products_category" model="ir.ui.menu">
+            <field name="parent_id" ref="travel_menu"/>
+        </record>
+
+        <!--
+        <record id="product.menu_products" model="ir.ui.menu">
+            <field name="parent_id" ref="travel_menu" />
+        </record>
+        -->
+
+        <record id="product.prod_config_main" model="ir.ui.menu">
+            <field name="parent_id" ref="travel_menu"/>
+        </record>
+
+        <record id="sale.menu_sale_quotations" model="ir.ui.menu">
+            <field name="parent_id" ref="travel_menu"/>
+        </record>
+
+        <record id="product.menu_product_uom_categ_form_action" model="ir.ui.menu">
+            <field name="parent_id" ref="travel_menu"/>
+        </record>
+
+        <record id="account_voucher.menu_action_sale_receipt" model="ir.ui.menu">
+            <field name="parent_id" ref="travel_menu"/>
+        </record>
+
+        <record id="account_voucher.menu_action_purchase_receipt" model="ir.ui.menu">
+            <field name="parent_id" ref="travel_menu"/>
+        </record>
+
+        <record id="account_voucher.menu_encode_entries_by_voucher" model="ir.ui.menu">
+            <field name="parent_id" ref="travel_menu"/>
+        </record>
+
+        <record id="product.menu_product_pricelist_main" model="ir.ui.menu">
+            <field name="parent_id" ref="travel_menu"/>
+        </record>
+
+        <!-- Reorder pricelist -->
+
+        <record id="sale.menu_sale_order" model="ir.ui.menu">
+            <field name="sequence">1</field>
+        </record>
+
+        <record id="base.menu_partner_form" model="ir.ui.menu">
+            <field name="parent_id" ref="base.menu_base_config"/>
+            <field name="action" ref="base.action_partner_customer_form"/>
+            <field name="sequence">1</field>
+        </record>
+
+        <record id="product.menu_product_pricelist_action2" model="ir.ui.menu">
+            <field name="parent_id" ref="base.menu_base_config"/>
+            <field name="sequence">3</field>
+        </record>
+
+    </data>
 </openerp>

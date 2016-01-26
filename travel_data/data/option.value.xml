@@ -2,6 +2,12 @@
 <openerp>
     <data noupdate="0">
 
+        <record model="option.value" id="option_value_sp1">
+            <field name="name">sp1</field>
+            <field name="code">sp1</field>
+            <field name="option_type_id">1</field>
+        </record>
+
         <record model="option.value" id="option_value_standard">
             <field name="name">standard</field>
             <field name="code">std</field>
@@ -25,11 +31,6 @@
             <field name="name">cp</field>
             <field name="code">cp</field>
             <field name="option_type_id">4</field>
-        </record>
-        <record model="option.value" id="option_value_sp1">
-            <field name="name">sp1</field>
-            <field name="code">sp1</field>
-            <field name="option_type_id">1</field>
         </record>
 
 

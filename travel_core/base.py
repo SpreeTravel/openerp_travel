@@ -75,11 +75,12 @@ class res_partner(Model):
 
     # TODO: poner el campo pax tambien en el formulario de partner
 
+    @api.model
     def create(self, vals, context=None):
         context = context or {}
         if context.get('supplier', False):
             vals['supplier'] = True
-        return super(res_partner, self).create(vals, context=context)
+        return super(res_partner, self).create(vals)
 
     _sql_constraints = [
         ('name_partner_unique', 'unique (name)',

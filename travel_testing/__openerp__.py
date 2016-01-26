@@ -21,14 +21,14 @@
 
 
 {
-    'name': 'Cuba Tourism Initial Data',
+    'name': 'Cuba Tourism Initial Data For Testing',
     'version': '1.0',
     "author": "JAF S.A.",
     "website": "http://www.jaf.com",
     'category': '?',
     'depends': ['travel_data'],
-    "description": """ List of cuban hotels and other tourist actors.""",
-    'data': ['testing/option.value.xml', 'testing/product.car.xml',
+    "description": """ List of types of products and some data about them.""",
+    'data': ['testing/product.car.xml',
              'testing/product.flight.xml',
              'testing/product.transfer.xml', 'testing/product.hotel.xml'
              ],

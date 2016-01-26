@@ -20,8 +20,8 @@
 ##############################################################################
 
 import datetime as dt
-from openerp.osv import fields
-from openerp.osv.orm import Model
+from openerp import fields, api
+from openerp.models import Model
 from openerp.tools import DEFAULT_SERVER_DATE_FORMAT as DF
 
 ROOM = {1: 'simple', 2: 'price', 3: 'triple'}
@@ -32,18 +32,20 @@ class product_hotel(Model):
     _inherits = {'product.product': 'product_id'}
     _inherit = ['mail.thread']
 
-    _columns = {
-        'product_id': fields.many2one('product.product', 'Product',
-                                      required=True, ondelete="cascade"),
-        'res_partner_id': fields.many2one('res.partner', 'Contact'),
-        'chain_id': fields.many2one('res.partner', 'Chain'),
-        'stars': fields.selection([('1', '1'), ('2', '2'), ('3', '3'),
-                                   ('4', '4'), ('5', '5')], 'Stars'),
-        'destination': fields.many2one('destination', 'Destination'),
-        'hotel_name': fields.related('product_id', 'name', type='char',
-                                     string='Name', size=128, select=True,
-                                     store=True)
-    }
+    product_id = fields.Many2one('product.product', 'Product', required=True, ondelete="cascade")
+    res_partner_id = fields.Many2one('res.partner', 'Contact')
+    chain_id = fields.Many2one('res.partner', 'Chain')
+    stars = fields.Selection([('1', '1'), ('2', '2'), ('3', '3'), ('4', '4'), ('5', '5')], 'Stars')
+    destination = fields.Many2one('destination', 'Destination')
+    hotel_name = fields.Char(related='product_id.name', string='Name', size=128, select=True, store=True)
+
+    @api.multi
+    def unlink(self):
+        for x in self:
+            product_product = self.env['product.product']
+            pp = product_product.search([('id', '=', x.product_id.id)])
+            pp.unlink()
+        return super(product_hotel, self).unlink()
 
     def price_get_partner(self, cr, uid, cls, to_search, params, context=None):
         sr = self.pool.get('sale.rooming')
@@ -126,13 +128,10 @@ class product_hotel(Model):
 class product_rate(Model):
     _name = 'product.rate'
     _inherit = 'product.rate'
-    _columns = {
-        'room_type_id': fields.many2one('option.value', 'Room',
-                                        domain="[('option_type_id.code', '=', 'rt')]"),
-        'meal_plan_id': fields.many2one('option.value', 'Plan',
-                                        domain="[('option_type_id.code', '=', 'mp')]"),
-        'simple': fields.float('Simple'),
-        'triple': fields.float('Triple'),
-        'extra_adult': fields.float('Extra Adult'),
-        'second_child': fields.float('Second Child')
-    }
+
+    room_type_id = fields.Many2one('option.value', 'Room', domain="[('option_type_id.code', '=', 'rt')]")
+    meal_plan_id = fields.Many2one('option.value', 'Plan', domain="[('option_type_id.code', '=', 'mp')]")
+    simple = fields.Float('Simple')
+    triple = fields.Float('Triple')
+    extra_adult = fields.Float('Extra Adult')
+    second_child = fields.Float('Second Child')

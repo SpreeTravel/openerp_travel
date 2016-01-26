@@ -19,26 +19,30 @@
 #
 ##############################################################################
 
-from openerp.osv import fields
-from openerp.osv.orm import Model
+from openerp import fields, api
+from openerp.models import Model
 
 
 class product_flight(Model):
     _name = 'product.flight'
     _inherits = {'product.product': 'product_id'}
     _inherit = ['mail.thread']
-    _columns = {
-        'product_id': fields.many2one('product.product', 'Product',
-                                      required=True, ondelete="cascade"),
-        'local': fields.boolean('Local'),
-        'origin': fields.many2one('destination', 'Origin'),
-        'to': fields.many2one('destination', 'To'),
-        'flight_name': fields.related('product_id', 'name', type='char',
-                                      string='Name', size=128, select=True,
-                                      store=True),
-    }
+
+    product_id = fields.Many2one('product.product', 'Product', required=True, ondelete="cascade")
+    local = fields.Boolean('Local')
+    origin = fields.Many2one('destination', 'Origin')
+    to = fields.Many2one('destination', 'To')
+    flight_name = fields.Char(realted='product_id.name', string='Name', size=128, select=True, store=True)
 
     _order = 'flight_name asc'
+
+    @api.multi
+    def unlink(self):
+        for x in self:
+            product_product = self.env['product.product']
+            pp = product_product.search([('id', '=', x.product_id.id)])
+            pp.unlink()
+        return super(product_flight, self).unlink()
 
     def price_get_partner(self, cr, uid, cls, to_search, params, context=None):
         price = 0.0
@@ -68,10 +72,10 @@ class product_flight(Model):
                     if not rate_ids or pp.product_rate_id.id in rate_ids:
                         price += supp.price
         return price
-        
+
     def get_option_type_fields(self, cr, uid, product_id, context):
         '''
         Dict of the model option_type values to load on sale_order view
         '''
-        
+
         return [{}, []]

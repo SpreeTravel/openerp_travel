@@ -19,30 +19,34 @@
 #
 ##############################################################################
 
-from openerp.osv import fields
-from openerp.osv.orm import Model
+from openerp import fields, api
+from openerp.models import Model
 
 
 class product_transfer(Model):
     _name = 'product.transfer'
     _inherits = {'product.product': 'product_id'}
     _inherit = ['mail.thread']
-    _columns = {
-        'product_id': fields.many2one('product.product', 'Product',
-                                      required=True, ondelete="cascade"),
-        'transfer_name': fields.related('product_id', 'name', type='char',
-                                        string='Name', size=128, select=True,
-                                        store=True),
-        'origin': fields.many2one('destination', 'Origin'),
-        'to': fields.many2one('destination', 'To')
-    }
+
+    product_id = fields.Many2one('product.product', 'Product', required=True, ondelete="cascade")
+    transfer_name = fields.Char(related='product_id.name', string='Name', size=128, select=True, store=True)
+    origin = fields.Many2one('destination', 'Origin')
+    to = fields.Many2one('destination', 'To')
+
+    @api.multi
+    def unlink(self):
+        for x in self:
+            product_product = self.env['product.product']
+            pp = product_product.search([('id', '=', x.product_id.id)])
+            pp.unlink()
+        return super(product_transfer, self).unlink()
 
     def price_get_partner(self, cr, uid, cls, to_search, params, context=None):
         price = 0.0
         model = self.pool.get(cls)
         exclude_fields = ['guide_id', 'confort_id', 'vehicle_type_id']
         to_search_sup = [x for x in to_search if x[0].lower() not in exclude_fields]
-        
+
         ov = self.pool.get('option.value')
         taxi = False
         if params.get('transfer_1_vehicle_type_id', False):
@@ -78,21 +82,21 @@ class product_transfer(Model):
                     rate_ids = [r.id for r in supp.rate_ids]
                     if not rate_ids or pp.product_rate_id.id in rate_ids:
                         price += supp.price
-        return price  
-          
+        return price
+
     def get_option_type_fields(self, cr, uid, product_id, context):
         '''
         Dict of the model option_type values to load on sale_order view
         '''
-        params  = context['params']
-        fields = {'vehicle_type_id': 'transfer_1_vehicle_type_id', 
-                  'guide_id': 'transfer_2_guide_id', 
+        params = context['params']
+        fields = {'vehicle_type_id': 'transfer_1_vehicle_type_id',
+                  'guide_id': 'transfer_2_guide_id',
                   'confort_id': 'transfer_3_confort_id'}
         adults = params.get('adults', 0)
         children = params.get('children', 0)
         paxs = adults + children
         filter = [('min_paxs', '<=', paxs), ('max_paxs', '>=', paxs)]
-                
+
         return [fields, filter]
 
     _order = 'transfer_name asc'
@@ -101,26 +105,24 @@ class product_transfer(Model):
 class product_rate(Model):
     _name = 'product.rate'
     _inherit = 'product.rate'
-    _columns = {
-        'min_paxs': fields.integer('Min Paxs'),
-        'max_paxs': fields.integer('Max Paxs'),
-        'vehicle_type_id': fields.many2one('option.value', 'Type',
-                            domain="[('option_type_id.code', '=', 'vt')]"),
-        'guide_id': fields.many2one('option.value', 'Guide',
-                            domain="[('option_type_id.code', '=', 'guide')]"),
-        'confort_id': fields.many2one('option.value', 'Confort',
-                            domain="[('option_type_id.code', '=', 'vc')]")
-    }
+
+    min_paxs = fields.Integer('Min Paxs')
+    max_paxs = fields.Integer('Max Paxs')
+    vehicle_type_id = fields.Many2one('option.value', 'Type',
+                                      domain="[('option_type_id.code', '=', 'vt')]")
+    guide_id = fields.Many2one('option.value', 'Guide',
+                               domain="[('option_type_id.code', '=', 'guide')]")
+    confort_id = fields.Many2one('option.value', 'Confort',
+                                 domain="[('option_type_id.code', '=', 'vc')]")
 
 
 class sale_context(Model):
     _name = 'sale.context'
     _inherit = 'sale.context'
-    _columns = {
-        'transfer_1_vehicle_type_id': fields.many2one('option.value', 'Type',
-                            domain="[('option_type_id.code', '=', 'vt')]"),
-        'transfer_2_guide_id': fields.many2one('option.value', 'Guide',
-                            domain="[('option_type_id.code', '=', 'guide')]"),
-        'transfer_3_confort_id': fields.many2one('option.value', 'Confort',
-                            domain="[('option_type_id.code', '=', 'vc')]")
-    }
+
+    transfer_1_vehicle_type_id = fields.Many2one('option.value', 'Type',
+                                                 domain="[('option_type_id.code', '=', 'vt')]")
+    transfer_2_guide_id = fields.Many2one('option.value', 'Guide',
+                                          domain="[('option_type_id.code', '=', 'guide')]")
+    transfer_3_confort_id = fields.Many2one('option.value', 'Confort',
+                                            domain="[('option_type_id.code', '=', 'vc')]")

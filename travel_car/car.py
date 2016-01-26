@@ -20,9 +20,8 @@
 ##############################################################################
 
 import datetime as dt
-
-from openerp.osv import fields
-from openerp.osv.orm import Model
+from openerp import fields, api
+from openerp.models import Model
 from openerp.tools import DEFAULT_SERVER_DATE_FORMAT as DF
 
 
@@ -30,20 +29,20 @@ class product_car(Model):
     _name = 'product.car'
     _inherits = {'product.product': 'product_id'}
     _inherit = ['mail.thread']
-    _columns = {
-        'product_id': fields.many2one('product.product', 'Product',
-                                      required=True, ondelete="cascade"),
-        'car_name': fields.related('product_id', 'name', type='char',
-                                   string='Name', size=128, select=True,
-                                   store=True),
-        'transmission_id': fields.many2one('option.value',
-                                            'Transmission',
-                               domain="[('option_type_id.code', '=', 'tm')]"),
-        'class_id': fields.many2one('option.value',
-                                            'Class',
-                               domain="[('option_type_id.code', '=', 'cl')]"),
-        'passengers': fields.integer('Passengers'),
-    }
+
+    product_id = fields.Many2one('product.product', 'Product', required=True, ondelete="cascade")
+    car_name = fields.Char(realted='product_id.name', string='Name', size=128, select=True, store=True)
+    transmission_id = fields.Many2one('option.value', 'Transmission', domain="[('option_type_id.code', '=', 'tm')]")
+    class_id = fields.Many2one('option.value', 'Class', domain="[('option_type_id.code', '=', 'cl')]")
+    passengers = fields.Integer('Passengers')
+
+    @api.multi
+    def unlink(self):
+        for x in self:
+            product_product = self.env['product.product']
+            pp = product_product.search([('id', '=', x.product_id.id)])
+            pp.unlink()
+        return super(product_car, self).unlink()
 
     def price_get_partner(self, cr, uid, cls, to_search, params, context=None):
         price = 0.0
@@ -54,7 +53,7 @@ class product_car(Model):
             dsdate = dt.datetime.strptime(params['start_date'], DF)
             dedate = dt.datetime.strptime(params['end_date'], DF)
             days = (dedate - dsdate).days
-            #to_search += [('min_days', '<=', days), ('max_days', '>=', days)]
+            # to_search += [('min_days', '<=', days), ('max_days', '>=', days)]
             pp_ids = model.search(cr, uid, to_search, context=context)
             for pp_id in pp_ids:
                 pp = model.browse(cr, uid, pp_id, context)
@@ -81,18 +80,18 @@ class product_car(Model):
                     if not rate_ids or pp.product_rate_id.id in rate_ids:
                         price += supp.price
         return price
-        
+
     def get_option_type_fields(self, cr, uid, product_id, context):
         '''
         Dict of the model option_type values to load on sale_order view
         '''
-        
+
         return [{}, []]
 
     _order = 'car_name asc'
 
 #
-#class product_rate(Model):
+# class product_rate(Model):
 #    _name = 'product.rate'
 #    _inherit = 'product.rate'
 #    _columns = {
@@ -105,7 +104,7 @@ class product_car(Model):
 #    }
 #
 #
-#class sale_context(Model):
+# class sale_context(Model):
 #    _name = 'sale.context'
 #    _inherit = 'sale.context'
 #    _columns = {

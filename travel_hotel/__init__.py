@@ -24,3 +24,4 @@ import rooming
 import allotment
 import sale
 import imports
+import hotels_report

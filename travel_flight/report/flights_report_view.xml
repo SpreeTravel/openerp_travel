@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data>
+
+
         <record id="travel_flight_report_search_view" model="ir.ui.view">
             <field name="name">travel.flight.report.search.view</field>
             <field name="model">flight.report</field>
@@ -53,7 +55,7 @@
         </record>
 
         <menuitem action="action_travel_flight_report_all"
-                  id="menu_action_travel_flight_report_all" parent="pricelist_next_id_64" sequence="10"/>
+                  id="menu_action_travel_flight_report_all" parent="travel_hotel.pricelist_next_id_64" sequence="10"/>
 
 
         <record id="sale.action_order_report_all" model="ir.actions.act_window">

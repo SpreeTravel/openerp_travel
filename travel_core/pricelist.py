@@ -32,17 +32,35 @@ import xlwt
 import base64
 import cStringIO
 
-FIELD_TYPES = {'date': 1, 'many2one': 2, 'float': 3, 'integer': 4}
+FIELD_TYPES = {'date': 1, 'many2one': 5, 'float': 3, 'integer': 4}
 CORE_FIELDS = [
     (1, 'start_date', 'Start Date'),
     (1, 'end_date', 'End Date'),
-    (3, 'price', 'Price'),
+    (2, 'price', 'Price'),
     (3, 'child', 'Child')
 ]
 
 
 def fix(chain):
-    return chain.split('_')[0]
+    chain = chain.split('_')
+    if len(chain) > 2:
+        res = ''
+        for x in range(0, len(chain) - 2):
+            res += chain[x] + ' '
+        res += chain[len(chain) - 2]
+        return res
+    else:
+        return chain[0]
+
+
+def remove_wrong_characters(string):
+    for x in ['/', '\\', '?', '*', '-', '[', ']']:
+        string = string.replace(x, ' ')
+
+    if len(string) > 32:
+        return string[:30]
+    else:
+        return string
 
 
 class product_pricelist(Model):
@@ -470,7 +488,7 @@ class customer_price(TransientModel):
     supplier = fields.Many2one('res.partner', _('Supplier'))
 
     excel_file = fields.Binary('Excel File')
-    excel_name = fields.Char('Excel Name', readonly=True, default='Price_customers.xlsx')
+    excel_name = fields.Char('Excel Name', readonly=True, default='Price_customers.xls')
     pdf_file = fields.Binary('PDF File')
     pdf_name = fields.Char('PDF Name', readonly=True, default='Price_customers.pdf')
 
@@ -483,11 +501,10 @@ class customer_price(TransientModel):
                     <meta name="pdfkit-page-size" content="Legal"/>
                     <meta name="pdfkit-orientation" content="Landscape"/>
                   </head>
-                  <table>
+
                   """
         final = """
-                  </table>
-                  </html>
+                </html>
                 """
 
         obj = self[0]
@@ -508,11 +525,18 @@ class customer_price(TransientModel):
             fields = self.get_category_price_fields(category=category_name)
             product_pricelist_item = self.env['product.pricelist.item']
             product_pricelist_item_elmnts = product_pricelist_item.search([('price_version_id', '=', obj.pricelist.id)])
-            ws = wb.add_sheet(str(obj.pricelist.name), cell_overwrite_ok=True)
             if fields and pricelist_partnerinfo_elmts:
-                ws, body = self.write_prices(ws, fields, category_name, obj.start_date, obj.end_date, obj.supplier.name,
-                                             pricelist_partnerinfo_elmts, product_pricelist_item_elmnts, body)
-                # wb.save(f)
+                for pricelist in product_pricelist_item_elmnts:
+                    ws = wb.add_sheet(str(remove_wrong_characters(pricelist.name)), cell_overwrite_ok=True)
+                    body += """
+                    <table>
+                    """
+                    ws, body = self.write_prices(ws, fields, category_name, obj.start_date, obj.end_date,
+                                                 obj.supplier.name,
+                                                 pricelist_partnerinfo_elmts, pricelist, body)
+                    body += """
+                    </table>
+                    """
                 body += """
                 </tbody>
                 """
@@ -550,10 +574,13 @@ class customer_price(TransientModel):
             categ = importlib.import_module('openerp.addons.travel_' + category + '.' + category)
             category_fields = [x for x in CORE_FIELDS]
             if hasattr(categ, 'product_rate'):
-                category_fields += [(FIELD_TYPES[v._type], k, v.string) for k, v in categ.product_rate._columns.items()]
+                category_fields += [
+                    (FIELD_TYPES[getattr(categ.product_rate, x).type], x, getattr(categ.product_rate, x).string)
+                    for x in categ.product_rate.__dict__ if isinstance(getattr(categ.product_rate, x), fields.Field)]
                 category_fields.sort()
             return category_fields
-        except:
+        except Exception, e:
+            print e
             return []
 
     def write_prices(self, ws, _fields, category_name, start_date, end_date, supplier,
@@ -563,19 +590,37 @@ class customer_price(TransientModel):
         font = xlwt.Font()
         font.bold = True
         style.font = font
-        elements = [_('Pricelist'.upper()), _('Product'.upper()), _('Start Date'.upper()), _('End Date'.upper()),
-                    _('Supplier'.upper())]
+        elements = [_('Product'.upper()), _('Start Date'.upper()), _('End Date'.upper())]
+
+        product_rate_supplement = self.env['product.rate.supplement']
+
         body += """
         <thead>
+        <caption style=text-align=center; align=top><h1>""" + pricelist.name + """</h1>
+        </caption>
         <tr>
         """
-        for x in range(0, 5):
+        for x in range(0, 3):
             ws.write(0, x, elements[x], style)
             body += """
             <th>
             """ + elements[x] + """</th>
             """
-        count = 5
+        count = 3
+        if category_name.lower() == 'hotel':
+            tmp_fields = []
+            for x in _fields:
+                if x[1].lower() == 'price':
+                    tmp_fields.append((x[0] + 3, 'double', 'Double'))
+                elif x[1].lower() not in ['simple', 'triple', 'start_date', 'end_date']:
+                    tmp_fields.append((x[0] + 5, x[1], x[2]))
+                elif x[1].lower() == 'simple':
+                    tmp_fields.append((x[0] + 1, x[1], x[2]))
+                elif x[1].lower() == 'triple':
+                    tmp_fields.append((x[0] + 3, x[1], x[2]))
+                else:
+                    tmp_fields.append((x[0], x[1], x[2]))
+            _fields = tmp_fields
         for x in sorted(_fields):
             if x[1].lower() != 'start_date' and x[1].lower() != 'end_date':
                 ws.write(0, count, _(fix(str(x[1]).upper())), style)
@@ -584,64 +629,82 @@ class customer_price(TransientModel):
             """ + _(fix(str(x[1]).upper())) + """</th>
             """
                 count += 1
+        if category_name.lower() == 'hotel':
+            tmp_fields = []
+            for x in _fields:
+                if x[1].lower() == 'double':
+                    tmp_fields.append((x[0], 'price', 'Price'))
+                else:
+                    tmp_fields.append((x[0], x[1], x[2]))
+            _fields = tmp_fields
+        non_repeated_supplemetes = []
+        for partnerinfo in pricelist_partnerinfo_elmts:
+            supplements = product_rate_supplement.search(
+                [('suppinfo_id', '=', getattr(partnerinfo.suppinfo_id, 'id'))])
+            for supplement in supplements:
+                if supplement and start_date <= supplement.start_date <= end_date:
+                    if supplement.supplement_id.id not in non_repeated_supplemetes:
+                        non_repeated_supplemetes.append(supplement.supplement_id.id)
+                        x = supplement.supplement_id.name
+                        ws.write(0, count, _(fix(str(x).upper())), style)
+                        body += """
+            <th>
+            """ + _(fix(str(x).upper())) + """</th>
+            """
+                    count += 1
         count = 1
         body += """
         </tr>
         </thead>
         <tbody>
         """
-        for rule in pricelist:
-            for partnerinfo in pricelist_partnerinfo_elmts:
-                if start_date <= partnerinfo.start_date <= end_date:
-                    ws.write(count, 0, str(rule.name))
-                    ws.write(count, 1, str(partnerinfo.suppinfo_id.product_tmpl_id.name))
-                    ws.write(count, 2, str(partnerinfo.start_date))
-                    ws.write(count, 3, str(partnerinfo.end_date))
-                    ws.write(count, 4, str(supplier))
-                    body += """
-                    <tr>
-                    <td style="text-align=center;"><span>
-                    """ + str(rule.name) + """</span></td> """ + """<td style="text-align=center;"> <span>""" + str(
-                        partnerinfo.suppinfo_id.product_tmpl_id.name) + """</span></td> """ + """<td style="text-align=center;"><span>""" + str(
-                        partnerinfo.start_date) + """</span></td> """ + """<td style="text-align=center;"><span>""" + str(
-                        partnerinfo.end_date) + """</span></td> """ + """<td style="text-align=center;"><span>""" + str(
-                        supplier) + """</span></td> """
-                    product_rate_supplement = self.env['product.rate.supplement']
-                    supplement = product_rate_supplement.search(
-                        [('suppinfo_id', '=', getattr(partnerinfo.suppinfo_id, 'id'))])
+        for partnerinfo in pricelist_partnerinfo_elmts:
+            if start_date <= partnerinfo.start_date <= end_date:
+                ws.write(count, 0, str(partnerinfo.suppinfo_id.product_tmpl_id.name))
+                ws.write(count, 1, str(partnerinfo.start_date))
+                ws.write(count, 2, str(partnerinfo.end_date))
+                body += """
+                <tr>
+                <td style="text-align=center;"> <span>""" + str(
+                    partnerinfo.suppinfo_id.product_tmpl_id.name) + """</span></td> """ + """<td style="text-align=center;"><span>""" + str(
+                    partnerinfo.start_date) + """</span></td> """ + """<td style="text-align=center;"><span>""" + str(
+                    partnerinfo.end_date) + """</span></td> """
+                res = self.get_customer_price(partnerinfo, pricelist, [f[1] for f in _fields], category_name.lower())
+                second_count = 3
+                for x in sorted(_fields):
+                    if x[1].lower() != 'start_date' and x[1].lower() != 'end_date':
+                        try:
+                            ws.write(count, second_count, _(str(res[x[1]])))
+                            body += """<td style="text-align=center;"><span>""" + _(
+                                str(res[x[1]])) + """</span></td> """
+                        except KeyError:
+                            ws.write(count, second_count, _('Empty'))
+                            body += """<td style="text-align=center;"><span>""" + _('Empty') + """</span></td> """
+                        second_count += 1
+                supplements = product_rate_supplement.search(
+                    [('suppinfo_id', '=', getattr(partnerinfo.suppinfo_id, 'id'))])
+                for supplement in supplements:
                     if supplement and start_date <= supplement.start_date <= end_date:
-                        res = self.get_customer_price(partnerinfo, rule, [f[1] for f in _fields], category_name.lower(),
-                                                      supplement)
-                    else:
-                        res = self.get_customer_price(partnerinfo, rule, [f[1] for f in _fields], category_name.lower(),
-                                                      None)
-                    second_count = 5
-                    for x in sorted(_fields):
-                        if x[1].lower() != 'start_date' and x[1].lower() != 'end_date':
-                            try:
-                                ws.write(count, second_count, _(str(res[x[1]])))
-                                body += """<td style="text-align=center;"><span>""" + _(
-                                    str(res[x[1]])) + """</span></td> """
-                            except KeyError:
-                                ws.write(count, second_count, _('Empty'))
-                                body += """<td style="text-align=center;"><span>""" + _('Empty') + """</span></td> """
-                            second_count += 1
-                    count += 1
-                    body += """
-                     </tr>"""
+                        x = supplement.price
+                        ws.write(count, second_count, _(str(x)))
+                        body += """<td style="text-align=center;"><span>""" + _(
+                            str(x)) + """</span></td> """
+                        second_count += 1
+                count += 1
+                body += """
+                 </tr>"""
 
         return ws, body
 
     # TODO: check currency
-    def get_customer_price(self, partener_info, pricelist, fields, category, supplement):
+    def get_customer_price(self, partener_info, pricelist, fields, category):
         res = {'type': category}
 
         for field in fields:
             if category == 'hotel':
                 if field in ['price', 'simple', 'triple']:
                     value = getattr(partener_info, field)
-                    if supplement:
-                        value += supplement.price
+
                     res_final = (value + pricelist.margin_per_pax) * (
                         1 + pricelist.price_discount) + pricelist.price_surcharge
                     res.update({field: res_final})
@@ -650,13 +713,15 @@ class customer_price(TransientModel):
                         attr = getattr(partener_info, field)
                         attr = getattr(attr, 'name')
                     except AttributeError:
-                        continue
+                        try:
+                            attr = getattr(partener_info.product_rate_id, field)
+                        except AttributeError:
+                            continue
                     res.update({field: attr})
             elif category in ['car', 'transfer', 'flight']:
                 if field in ['price', 'child']:
                     value = getattr(partener_info, field)
-                    if supplement:
-                        value += supplement.price
+
                     res_final = (value + pricelist.margin_per_pax) * (
                         1 + pricelist.price_discount) + pricelist.price_surcharge
                     res.update({field: res_final})
@@ -665,6 +730,9 @@ class customer_price(TransientModel):
                         attr = getattr(partener_info, field)
                         attr = getattr(attr, 'name')
                     except AttributeError:
-                        continue
+                        try:
+                            attr = getattr(partener_info.product_rate_id, field)
+                        except AttributeError:
+                            continue
                     res.update({field: attr})
         return res

@@ -25,6 +25,14 @@ from openerp.osv.orm import Model
 
 class sale_rooming(Model):
     _name = 'sale.rooming'
+
+    def _load_default_room_value(self, cr, uid, context=None):
+        ctx = dict(context or {})
+        room_value = self.pool.get('option.value').search(cr, uid, [('load_default', '=', 'True')], context=ctx)
+        if room_value:
+            return room_value[0]
+        return False
+
     _columns = {
         'room': fields.selection([('simple', 'Single'),
                                   ('double', 'Double'),
@@ -33,7 +41,7 @@ class sale_rooming(Model):
         'children': fields.integer('Children'),
         'quantity': fields.integer('Qty'),
         'room_type_id': fields.many2one('option.value', 'Room',
-                                domain="[('option_type_id.code', '=', 'rt')]"),
+                                        domain="[('option_type_id.code', '=', 'rt')]"),
         'sale_context_id': fields.many2one('sale.context', 'Context')
     }
 
@@ -125,50 +133,30 @@ class sale_rooming(Model):
     _defaults = {
         'room': 'double',
         'adults': 2,
-        'quantity': 1
+        'quantity': 1,
+        'room_type_id': _load_default_room_value
     }
-    
+
+
 class option_value(Model):
     _name = 'option.value'
     _inherit = 'option.value'
-    
+
     def _name_search(self, cr, user, name='', args=None, operator='ilike', context=None, limit=100, name_get_uid=None):
         if context.get('name_search_product_id', False):
-            product_model   = self.pool.get('product.product')
-            product_tmpl_id = product_model.browse(cr, user, context['name_search_product_id'], context).product_tmpl_id.id
-            suppinfo_model  = self.pool.get('product.supplierinfo')
+            product_model = self.pool.get('product.product')
+            product_tmpl_id = product_model.browse(cr, user, context['name_search_product_id'],
+                                                   context).product_tmpl_id.id
+            suppinfo_model = self.pool.get('product.supplierinfo')
             domain = [('product_tmpl_id', '=', product_tmpl_id)]
             if context.get('name_search_supplier_id', False):
                 domain += [('name', '=', context['name_search_supplier_id'])]
-            suppinfo_ids    = suppinfo_model.search(cr, user, domain, context=context)
+            suppinfo_ids = suppinfo_model.search(cr, user, domain, context=context)
             room_type_ids = []
             for suppinfo_id in suppinfo_ids:
-                pricelist_model  = self.pool.get('pricelist.partnerinfo')
+                pricelist_model = self.pool.get('pricelist.partnerinfo')
                 pricelist_ids = pricelist_model.search(cr, user, [('suppinfo_id', '=', suppinfo_id)], context=context)
-                room_type_ids = list(set([p.room_type_id.id for p in pricelist_model.browse(cr, user, pricelist_ids, context=context)]))
-            args += [('id', 'in', room_type_ids)]                
+                room_type_ids = list(
+                    set([p.room_type_id.id for p in pricelist_model.browse(cr, user, pricelist_ids, context=context)]))
+            args += [('id', 'in', room_type_ids)]
         return super(option_value, self)._name_search(cr, user, name, args, operator, context, limit, name_get_uid)
-    
-    
-    
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-    
-    
-    
-    
-    
-        

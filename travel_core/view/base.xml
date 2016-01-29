@@ -80,6 +80,8 @@
                                 <tree string="Values" editable="bottom">
                                     <field name="name"/>
                                     <field name="code"/>
+                                    <field name="option_code" invisible="1"/>
+                                    <field name="load_default" attrs="{'readonly':[('option_code','!=', 'rt')]}"/>
                                 </tree>
                             </field>
                         </group>

@@ -1,0 +1,544 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+#	* travel_transfer
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 8.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2016-01-29 19:43+0000\n"
+"PO-Revision-Date: 2016-01-29 19:43+0000\n"
+"Last-Translator: <>\n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
+
+#. module: travel_transfer
+#: model:ir.actions.act_window,help:travel_transfer.travel_product_transfer_action
+msgid "<p class=\"oe_view_nocontent_create\">\n"
+"                    Click to define a new product.\n"
+"                </p>\n"
+"            "
+msgstr "<p class=\"oe_view_nocontent_create\">\n"
+"                    Click para definir un producto nuevo.\n"
+"                </p>\n"
+"            "
+
+#. module: travel_transfer
+#: view:import.transfer:travel_transfer.import_transfer_form
+#: view:product.transfer:travel_transfer.travel_product_transfer_form_view
+#: view:sale.order.line:travel_transfer.travel_reservations_transfer_tree_view
+msgid "Cancel"
+msgstr "Cancelar"
+
+#. module: travel_transfer
+#: view:sale.order.line:travel_transfer.travel_reservations_transfer_search_view
+msgid "Cancelled"
+msgstr "Cancelado"
+
+#. module: travel_transfer
+#: view:sale.order.line:travel_transfer.travel_reservations_transfer_search_view
+msgid "Category"
+msgstr "Categorías"
+
+#. module: travel_transfer
+#: view:website:travel_transfer.transfer_sale_order_line_report_id
+msgid "Client"
+msgstr "Cliente"
+
+#. module: travel_transfer
+#: view:product.transfer:travel_transfer.travel_product_transfer_search_view
+msgid "Company"
+msgstr "Compañias"
+
+#. module: travel_transfer
+#: view:product.transfer:travel_transfer.travel_product_transfer_form_view
+#: view:sale.order.line:travel_transfer.travel_reservations_transfer_tree_view
+msgid "Confirm"
+msgstr "Confirmar"
+
+#. module: travel_transfer
+#: view:website:travel_transfer.transfer_sale_order_line_report_id
+msgid "Confirmation"
+msgstr "Confirmación"
+
+#. module: travel_transfer
+#: view:sale.order.line:travel_transfer.travel_reservations_transfer_search_view
+msgid "Confirmed"
+msgstr "Confirmado"
+
+#. module: travel_transfer
+#: field:product.rate,confort_id:0
+#: field:sale.context,transfer_3_confort_id:0
+#: view:transfer.report:travel_transfer.travel_transfers_report_search_view
+#: view:website:travel_transfer.transfer_sale_order_line_report_id
+msgid "Confort"
+msgstr "Confort"
+
+#. module: travel_transfer
+#: field:import.transfer,create_uid:0
+#: field:product.transfer,create_uid:0
+msgid "Created by"
+msgstr "Creado por"
+
+#. module: travel_transfer
+#: field:import.transfer,create_date:0
+#: field:product.transfer,create_date:0
+msgid "Created on"
+msgstr "Creado en"
+
+#. module: travel_transfer
+#: view:product.transfer:travel_transfer.travel_product_transfer_form_view
+msgid "Currency"
+msgstr "Moneda"
+
+#. module: travel_transfer
+#: view:sale.order.line:travel_transfer.travel_reservations_transfer_search_view
+msgid "Customer"
+msgstr "Cliente"
+
+#. module: travel_transfer
+#: view:sale.order.line:travel_transfer.travel_reservations_transfer_search_view
+#: view:website:travel_transfer.transfer_sale_order_line_report_id
+msgid "Date"
+msgstr "Fecha"
+
+#. module: travel_transfer
+#: help:product.transfer,message_last_post:0
+msgid "Date of the last message posted on the record."
+msgstr "Fecha del último mensaje posteado."
+
+#. module: travel_transfer
+#: view:product.transfer:travel_transfer.travel_product_transfer_form_view
+msgid "Description for Suppliers"
+msgstr "Descripción para los Proveedores"
+
+#. module: travel_transfer
+#: view:sale.order.line:travel_transfer.travel_reservations_transfer_search_view
+msgid "Draft"
+msgstr "Borrador"
+
+#. module: travel_transfer
+#: model:ir.model,name:travel_transfer.model_product_transfer
+msgid "Email Thread"
+msgstr "Hilo de mensajes"
+
+#. module: travel_transfer
+#: code:addons\travel_transfer\transfer_report.py:36
+#: view:transfer.report:travel_transfer.travel_transfers_report_search_view
+#, python-format
+msgid "End Date"
+msgstr "Fecha Final"
+
+#. module: travel_transfer
+#: field:import.transfer,file:0
+msgid "File"
+msgstr "Fichero"
+
+#. module: travel_transfer
+#: field:product.transfer,message_follower_ids:0
+msgid "Followers"
+msgstr "Seguidores"
+
+#. module: travel_transfer
+#: view:website:travel_transfer.transfer_sale_order_line_report_id
+msgid "For Emergency Call: (+53)"
+msgstr "Llamadas de emergencia: (+53)"
+
+#. module: travel_transfer
+#: model:option.value,name:travel_transfer.vehicle_guide
+msgid "GUIDE"
+msgstr "GUIDE"
+
+#. module: travel_transfer
+#: view:website:travel_transfer.transfer_sale_order_line_report_id
+msgid "General Conditions"
+msgstr "Condiciones Generales"
+
+#. module: travel_transfer
+#: view:product.transfer:travel_transfer.travel_product_transfer_form_view
+#: view:sale.order.line:travel_transfer.travel_reservations_transfer_tree_view
+msgid "Go to Order"
+msgstr "Ir a la orden"
+
+#. module: travel_transfer
+#: view:sale.order.line:travel_transfer.travel_reservations_transfer_search_view
+#: view:transfer.report:travel_transfer.travel_transfers_report_search_view
+msgid "Group By..."
+msgstr "Agrupar por..."
+
+#. module: travel_transfer
+#: view:product.transfer:travel_transfer.travel_product_transfer_search_view
+msgid "Group by..."
+msgstr "Agrupar por..."
+
+#. module: travel_transfer
+#: field:product.rate,guide_id:0
+#: field:sale.context,transfer_2_guide_id:0
+#: view:transfer.report:travel_transfer.travel_transfers_report_search_view
+#: view:website:travel_transfer.transfer_sale_order_line_report_id
+msgid "Guide"
+msgstr "Guide"
+
+#. module: travel_transfer
+#: help:product.transfer,message_summary:0
+msgid "Holds the Chatter summary (number of messages, ...). This summary is directly in html format in order to be inserted in kanban views."
+msgstr "Holds the Chatter summary (number of messages, ...). This summary is directly in html format in order to be inserted in kanban views."
+
+#. module: travel_transfer
+#: view:transfer.report:travel_transfer.travel_transfers_report_tree
+msgid "Hotel Report"
+msgstr "Reporte de Hoteles"
+
+#. module: travel_transfer
+#: field:import.transfer,id:0
+#: field:product.transfer,id:0
+msgid "ID"
+msgstr "ID"
+
+#. module: travel_transfer
+#: help:product.transfer,message_unread:0
+msgid "If checked new messages require your attention."
+msgstr "Si se marca nuevos mensajes requieren su atención."
+
+#. module: travel_transfer
+#: view:import.transfer:travel_transfer.import_transfer_form
+msgid "Import"
+msgstr "Importar"
+
+#. module: travel_transfer
+#: view:product.transfer:travel_transfer.travel_product_transfer_form_view
+msgid "Information"
+msgstr "Información"
+
+#. module: travel_transfer
+#: field:product.transfer,message_is_follower:0
+msgid "Is a Follower"
+msgstr "Es un seguidor"
+
+#. module: travel_transfer
+#: model:option.value,name:travel_transfer.vehicle_confort_luxury
+msgid "LUXURY"
+msgstr "LUXURY"
+
+#. module: travel_transfer
+#: field:product.transfer,message_last_post:0
+msgid "Last Message Date"
+msgstr "Fecha del último mensaje"
+
+#. module: travel_transfer
+#: field:import.transfer,write_uid:0
+#: field:product.transfer,write_uid:0
+msgid "Last Updated by"
+msgstr "Última actualización por"
+
+#. module: travel_transfer
+#: field:import.transfer,write_date:0
+#: field:product.transfer,write_date:0
+msgid "Last Updated on"
+msgstr "Última actualización en"
+
+#. module: travel_transfer
+#: model:option.value,name:travel_transfer.vehicle_type_micro
+msgid "MICROBUS"
+msgstr "MICROBUS"
+
+#. module: travel_transfer
+#: model:option.value,name:travel_transfer.vehicle_type_mini
+msgid "MINIBUS"
+msgstr "MINIBUS"
+
+#. module: travel_transfer
+#: view:transfer.report:travel_transfer.travel_transfers_report_search_view
+msgid "Man Pax"
+msgstr "Man Pax"
+
+#. module: travel_transfer
+#: field:product.transfer,message_ids:0
+msgid "Messages"
+msgstr "Mensajes"
+
+#. module: travel_transfer
+#: help:product.transfer,message_ids:0
+msgid "Messages and communication history"
+msgstr "Historial de mensajes y comunicación"
+
+#. module: travel_transfer
+#: code:addons\travel_transfer\transfer_report.py:37
+#: code:addons\travel_transfer\transfer_report.py:38
+#: view:transfer.report:travel_transfer.travel_transfers_report_search_view
+#, python-format
+msgid "Min Pax"
+msgstr "Min Pax"
+
+#. module: travel_transfer
+#: model:option.value,name:travel_transfer.vehicle_no_guide
+msgid "NO GUIDE"
+msgstr "NO GUIDE"
+
+#. module: travel_transfer
+#: code:addons\travel_transfer\transfer_report.py:34
+#: field:product.transfer,transfer_name:0
+#: view:transfer.report:travel_transfer.travel_transfers_report_search_view
+#, python-format
+msgid "Name"
+msgstr "Nombre"
+
+#. module: travel_transfer
+#: view:sale.order.line:travel_transfer.travel_reservations_transfer_search_view
+msgid "Next"
+msgstr "Siguiente"
+
+#. module: travel_transfer
+#: view:sale.order.line:travel_transfer.travel_reservations_transfer_search_view
+msgid "Now"
+msgstr "Ahora"
+
+#. module: travel_transfer
+#: model:option.value,name:travel_transfer.vehicle_type_omni
+msgid "OMNIBUS"
+msgstr "OMNIBUS"
+
+#. module: travel_transfer
+#: view:website:travel_transfer.transfer_sale_order_line_report_id
+msgid "Office Telephones: (+53 7)"
+msgstr "Teléfono de la oficina: (+53 7)"
+
+#. module: travel_transfer
+#: view:product.transfer:travel_transfer.travel_product_transfer_search_view
+#: field:product.transfer,origin:0
+msgid "Origin"
+msgstr "Origin"
+
+#. module: travel_transfer
+#: view:website:travel_transfer.transfer_sale_order_line_report_id
+msgid "Passenger Names"
+msgstr "Nombre de los pasajeros"
+
+#. module: travel_transfer
+#: code:addons\travel_transfer\transfer_report.py:45
+#: view:sale.order.line:travel_transfer.travel_reservations_transfer_tree_view
+#, python-format
+msgid "Price"
+msgstr "Precio"
+
+#. module: travel_transfer
+#: view:product.transfer:travel_transfer.travel_product_transfer_form_view
+msgid "Pricelist"
+msgstr "Tarifa"
+
+#. module: travel_transfer
+#: model:ir.ui.menu,name:travel_transfer.pricelist_next_id_64
+msgid "Prices"
+msgstr "Precios"
+
+#. module: travel_transfer
+#: view:product.transfer:travel_transfer.travel_product_transfer_form_view
+msgid "Procurements"
+msgstr "Contratos"
+
+#. module: travel_transfer
+#: view:product.transfer:travel_transfer.travel_product_transfer_form_view
+#: view:product.transfer:travel_transfer.travel_product_transfer_search_view
+#: field:product.transfer,product_id:0
+#: view:sale.order.line:travel_transfer.travel_reservations_transfer_search_view
+#: view:sale.order.line:travel_transfer.travel_reservations_transfer_tree_view
+#: view:website:travel_transfer.transfer_sale_order_line_report_id
+msgid "Product"
+msgstr "Producto"
+
+#. module: travel_transfer
+#: view:product.transfer:travel_transfer.travel_product_transfer_form_view
+msgid "Product Name"
+msgstr "Nombre del Producto"
+
+#. module: travel_transfer
+#: view:product.transfer:travel_transfer.travel_product_transfer_tree_view
+#: view:sale.order.line:travel_transfer.travel_reservations_transfer_tree_view
+msgid "Products"
+msgstr "Productos"
+
+#. module: travel_transfer
+#: view:product.transfer:travel_transfer.travel_product_transfer_form_view
+msgid "Purchase"
+msgstr "Compra"
+
+#. module: travel_transfer
+#: view:product.transfer:travel_transfer.travel_product_transfer_form_view
+#: view:sale.order.line:travel_transfer.travel_reservations_transfer_search_view
+msgid "Reservations"
+msgstr "Reservaciones"
+
+#. module: travel_transfer
+#: field:import.transfer,result:0
+msgid "Result"
+msgstr "Resultado"
+
+#. module: travel_transfer
+#: model:option.value,name:travel_transfer.vehicle_confort_standard
+msgid "STANDARD"
+msgstr "STANDARD"
+
+#. module: travel_transfer
+#: view:sale.order.line:travel_transfer.travel_reservations_transfer_search_view
+msgid "Sale"
+msgstr "Venta"
+
+#. module: travel_transfer
+#: field:import.transfer,sheet:0
+msgid "Sheet"
+msgstr "Hoja"
+
+#. module: travel_transfer
+#: code:addons\travel_transfer\transfer_report.py:35
+#: view:transfer.report:travel_transfer.travel_transfers_report_search_view
+#, python-format
+msgid "Start Date"
+msgstr "Fecha de Inicio"
+
+#. module: travel_transfer
+#: view:sale.order.line:travel_transfer.travel_reservations_transfer_search_view
+msgid "Status"
+msgstr "Estado"
+
+#. module: travel_transfer
+#: field:product.transfer,message_summary:0
+msgid "Summary"
+msgstr "Resumen"
+
+#. module: travel_transfer
+#: view:product.transfer:travel_transfer.travel_product_transfer_form_view
+msgid "Supplements"
+msgstr "Suplementos"
+
+#. module: travel_transfer
+#: code:addons\travel_transfer\transfer_report.py:46
+#: view:sale.order.line:travel_transfer.travel_reservations_transfer_search_view
+#: view:transfer.report:travel_transfer.travel_transfers_report_search_view
+#, python-format
+msgid "Supplier"
+msgstr "Proveedor"
+
+#. module: travel_transfer
+#: view:product.transfer:travel_transfer.travel_product_transfer_form_view
+msgid "Supplier Information"
+msgstr "Información del Proveedor"
+
+#. module: travel_transfer
+#: view:product.transfer:travel_transfer.travel_product_transfer_form_view
+msgid "Suppliers"
+msgstr "Proveedor"
+
+#. module: travel_transfer
+#: model:option.value,name:travel_transfer.vehicle_type_taxi
+msgid "TAXI"
+msgstr "TAXI"
+
+#. module: travel_transfer
+#: view:product.transfer:travel_transfer.travel_product_transfer_form_view
+msgid "The prices below will only be taken into account when your pricelist is set as based on supplier prices."
+msgstr "Los precios de abajo solo se tendrán en cuenta cuando la tarifa esté basada en los precios de proveedores."
+
+#. module: travel_transfer
+#: view:product.transfer:travel_transfer.travel_product_transfer_form_view
+msgid "This note will be displayed on requests for quotation..."
+msgstr "Esta nota será mostrada en la solicitud de presupuesto..."
+
+#. module: travel_transfer
+#: field:product.transfer,to:0
+msgid "To"
+msgstr "para"
+
+#. module: travel_transfer
+#: model:product.category,name:travel_transfer.transfer
+#: view:sale.order.line:travel_transfer.travel_sale_order_line_transfer_search_view
+#: view:sale.report:travel_transfer.travel_sale_report_transfer_search_view
+msgid "Transfer"
+msgstr "Transferencia"
+
+#. module: travel_transfer
+#: model:ir.model,name:travel_transfer.model_transfer_report
+msgid "Transfer Report"
+msgstr "Reporte de Transferencia"
+
+#. module: travel_transfer
+#: model:ir.actions.report.xml,name:travel_transfer.transfer_travel_voucher_report_id
+msgid "Transfer Travel Voucher Report"
+msgstr "Voucher de Transfer"
+
+#. module: travel_transfer
+#: model:ir.actions.act_window,name:travel_transfer.travel_product_transfer_action
+#: model:ir.actions.act_window,name:travel_transfer.travel_reservations_transfer_action
+#: model:ir.ui.menu,name:travel_transfer.travel_product_transfer_menu
+#: model:ir.ui.menu,name:travel_transfer.travel_reservations_transfer_menu
+msgid "Transfers"
+msgstr "Transferencias"
+
+#. module: travel_transfer
+#: view:transfer.report:travel_transfer.travel_transfers_report_search_view
+msgid "Transfers Analysis"
+msgstr "Análisis de Transferencias"
+
+#. module: travel_transfer
+#: model:ir.actions.act_window,name:travel_transfer.action_travel_transfers_report_all
+#: model:ir.ui.menu,name:travel_transfer.menu_action_travel_transfers_report_all
+msgid "Transfers Report"
+msgstr "Reporte de Transferencias"
+
+#. module: travel_transfer
+#: field:product.rate,vehicle_type_id:0
+#: field:sale.context,transfer_1_vehicle_type_id:0
+#: view:website:travel_transfer.transfer_sale_order_line_report_id
+msgid "Type"
+msgstr "Tipo"
+
+#. module: travel_transfer
+#: field:product.transfer,message_unread:0
+msgid "Unread Messages"
+msgstr "Mensajes no leídos"
+
+#. module: travel_transfer
+#: view:sale.order.line:travel_transfer.travel_reservations_transfer_search_view
+msgid "Upcoming"
+msgstr "Próximas"
+
+#. module: travel_transfer
+#: view:transfer.report:travel_transfer.travel_transfers_report_search_view
+msgid "Vehicle"
+msgstr ""
+
+#. module: travel_transfer
+#: model:option.type,name:travel_transfer.option_type_vehicle_confort
+msgid "Vehicle Confort"
+msgstr "Confort del Vehículo"
+
+#. module: travel_transfer
+#: model:option.type,name:travel_transfer.option_type_vehicle_guide
+msgid "Vehicle Guide"
+msgstr "Guía del Vehículo"
+
+#. module: travel_transfer
+#: code:addons\travel_transfer\transfer_report.py:39
+#: model:option.type,name:travel_transfer.option_type_vehicle_type
+#, python-format
+msgid "Vehicle Type"
+msgstr "Tipo de Vehículo"
+
+#. module: travel_transfer
+#: view:sale.order.line:travel_transfer.travel_reservations_transfer_tree_view
+#: view:website:travel_transfer.transfer_sale_order_line_report_id
+msgid "Voucher"
+msgstr "Voucher"
+
+#. module: travel_transfer
+#: view:product.transfer:travel_transfer.travel_product_transfer_form_view
+msgid "describe the product characteristics..."
+msgstr "describa las características del producto..."
+
+#. module: travel_transfer
+#: view:import.transfer:travel_transfer.import_transfer_form
+msgid "or"
+msgstr "o"
+

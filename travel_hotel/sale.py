@@ -22,19 +22,45 @@
 import simplejson
 from lxml import etree
 
-from openerp.osv import fields
-from openerp.osv.orm import Model
+from openerp import fields, api
+from openerp.models import Model
+
+
+class sale_order(Model):
+    _name = 'sale.order'
+    _inherit = 'sale.order'
+
+    @api.one
+    def copy(self):
+        res = super(sale_order, self).copy()
+        category_table = self.env['product.category']
+        category = category_table.search([('name', '=', 'Hotel')])
+        for ol in self.order_line:
+            if ol.category_id.id == category.id:
+                vals = []
+                for rooming in ol.hotel_1_rooming_ids:
+                    vals.append([0, False, {
+                        'id': rooming.id,
+                        'room_type_id': rooming.room_type_id,
+                        'quantity': rooming.quantity,
+                        'children': rooming.children,
+                        'room': rooming.room,
+                        'adults': rooming.adults
+                    }])
+                for x in res.order_line:
+                    if x.category_id.id == category.id and x.product_id.id == ol.product_id.id and x.start_date == ol.start_date and x.end_date == ol.end_date:
+                        x.update({'hotel_1_rooming_ids': vals})
+        return res
 
 
 class sale_context(Model):
     _name = 'sale.context'
     _inherit = 'sale.context'
-    _columns = {
-        'hotel_1_rooming_ids': fields.one2many('sale.rooming', 'sale_context_id',
-                                               'Rooming'),
-        'hotel_2_meal_plan_id': fields.many2one('option.value', 'Plan',
-                            domain="[('option_type_id.code', '=', 'mp')]")
-    }
+
+    hotel_1_rooming_ids = fields.One2many('sale.rooming', 'sale_context_id',
+                                          'Rooming')
+    hotel_2_meal_plan_id = fields.Many2one('option.value', 'Plan',
+                                           domain="[('option_type_id.code', '=', 'mp')]")
 
     def update_view_with_context_fields(self, cr, uid, res, context=None):
         res = super(sale_context, self).update_view_with_context_fields(cr, uid, res, context)
@@ -72,15 +98,16 @@ class sale_order_line(Model):
         for x in obj.hotel_1_rooming_ids:
             adults += x.adults * x.quantity
             children += x.children * x.quantity
-        cr.execute('update sale_context set adults=%s, children=%s where id=%s', (adults, children, obj.sale_context_id.id))
+        cr.execute('update sale_context set adults=%s, children=%s where id=%s',
+                   (adults, children, obj.sale_context_id.id))
         return True
 
     def get_total_paxs(self, cr, uid, params, context=None):
         if params.get('category', False) == 'hotel':
             occupation = params.get('hotel_1_rooming_ids', [])
             return self.pool.get('sale.rooming').get_total_paxs(cr, uid, occupation, context)
-        return params.get('adults', 0) + params.get('children', 0)  
-      
+        return params.get('adults', 0) + params.get('children', 0)
+
     def get_margin_days(self, cr, uid, params, context=None):
         '''
         The number of days of the service countable for apply a per day margin.

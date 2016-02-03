@@ -52,7 +52,7 @@
         </record>
 
         <menuitem action="action_travel_cars_report_all"
-                  id="menu_action_travel_cars_report_all" parent="travel_hotel.pricelist_next_id_64" sequence="10"/>
+                  id="menu_action_travel_cars_report_all" parent="travel_core.pricelist_next_id_64" sequence="10"/>
 
 
         <record id="sale.action_order_report_all" model="ir.actions.act_window">

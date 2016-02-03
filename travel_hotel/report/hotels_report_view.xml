@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data>
-        <menuitem id="pricelist_next_id_64" name="Prices" parent="base.menu_reporting" sequence="1"
-                  groups="base.group_sale_manager"/>
+
 
         <record id="travel_hotels_report_search_view" model="ir.ui.view">
             <field name="name">travel.hotels.report.search.view</field>
@@ -59,7 +58,7 @@
         </record>
 
         <menuitem action="action_travel_hotels_report_all"
-                  id="menu_action_travel_hotels_report_all" parent="pricelist_next_id_64" sequence="10"/>
+                  id="menu_action_travel_hotels_report_all" parent="travel_core.pricelist_next_id_64" sequence="10"/>
 
 
         <record id="sale.action_order_report_all" model="ir.actions.act_window">

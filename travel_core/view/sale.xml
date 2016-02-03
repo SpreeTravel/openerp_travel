@@ -138,6 +138,8 @@
                                 <field name="supplier_id"/>
                                 <button name="to_confirm" type="object" string="Confirm" states="draft,cancel"
                                         icon="gtk-apply"/>
+                                <button name="to_mail" type="object" string="Mail" icon="gtk-copy"
+                                        attrs="{'invisible': [('supplier_id', '=', False)]}"/>
                                 <button name="to_cancel" type="object" string="Cancel" states="confirmed"
                                         icon="gtk-cancel"/>
                                 <button name="print_voucher" type="object" string="Voucher" states="confirmed"

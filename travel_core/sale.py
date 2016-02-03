@@ -316,12 +316,14 @@ class sale_order_line(Model):
     def to_request(self, cr, uid, ids, context=None):
         return self.write(cr, uid, ids, {'state': 'request'}, context)
 
+    @api.multi
     def to_requested(self):
         return self.write({'state': 'requested'})
 
     def to_confirm(self, cr, uid, ids, context=None):
         return self.write(cr, uid, ids, {'state': 'confirmed'}, context)
 
+    @api.multi
     def to_cancel(self):
         return self.write({'state': 'cancel'})
 
@@ -716,6 +718,45 @@ class sale_order_line(Model):
             'report_name': voucher_name,  # voucher_name
             'datas': datas,
             'nodestroy': True
+        }
+
+    @api.multi
+    def to_mail(self):
+        '''
+        This function opens a window to compose an email, category template message loaded
+        '''
+        assert len(self) == 1, 'This option should only be used for a single id at a time.'
+        ir_model_data = self.env['ir.model.data']
+        obj = self[0]
+        module = 'travel_' + obj.category_id.name.lower()
+        try:
+            template_id = \
+                ir_model_data.get_object_reference(module, obj.category_id.name.lower() + '_supplier_email_template')[1]
+        except ValueError:
+            template_id = False
+        print template_id
+        try:
+            compose_form_id = ir_model_data.get_object_reference('mail', 'email_compose_message_wizard_form')[1]
+        except ValueError:
+            compose_form_id = False
+        ctx = dict()
+        ctx.update({
+            'default_model': 'sale.order.line',
+            'default_res_id': self[0].id,
+            'default_use_template': bool(template_id),
+            'default_template_id': template_id,
+            'default_composition_mode': 'comment',
+            'mark_so_as_sent': True
+        })
+        return {
+            'type': 'ir.actions.act_window',
+            'view_type': 'form',
+            'view_mode': 'form',
+            'res_model': 'mail.compose.message',
+            'views': [(compose_form_id, 'form')],
+            'view_id': compose_form_id,
+            'target': 'new',
+            'context': ctx,
         }
 
     _defaults = {

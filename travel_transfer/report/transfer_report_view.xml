@@ -33,8 +33,7 @@
                 </search>
             </field>
         </record>
-        <menuitem id="pricelist_next_id_64" name="Prices" parent="base.menu_reporting" sequence="1"
-                  groups="base.group_sale_manager"/>
+
 
         <record id="travel_transfers_report_tree" model="ir.ui.view">
             <field name="name">travel.pricelist.partnerinfo.report.tree</field>
@@ -71,7 +70,7 @@
         </record>
 
         <menuitem action="action_travel_transfers_report_all"
-                  id="menu_action_travel_transfers_report_all" parent="travel_hotel.pricelist_next_id_64"
+                  id="menu_action_travel_transfers_report_all" parent="travel_core.pricelist_next_id_64"
                   sequence="10"/>
 
 

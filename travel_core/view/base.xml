@@ -1,6 +1,8 @@
 <?xml version="1.0"?>
 <openerp>
     <data>
+        <menuitem id="pricelist_next_id_64" name="Prices" parent="base.menu_reporting" sequence="1"
+                  groups="base.group_sale_manager"/>
 
         <record id="travel_customer_price_button" model="ir.ui.view">
             <field name="name">travel.customer.price.button</field>

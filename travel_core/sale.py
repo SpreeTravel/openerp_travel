@@ -728,13 +728,12 @@ class sale_order_line(Model):
         assert len(self) == 1, 'This option should only be used for a single id at a time.'
         ir_model_data = self.env['ir.model.data']
         obj = self[0]
-        module = 'travel_' + obj.category_id.name.lower()
+        module = 'travel_core'
         try:
             template_id = \
-                ir_model_data.get_object_reference(module, obj.category_id.name.lower() + '_supplier_email_template')[1]
+                ir_model_data.get_object_reference(module, 'core_supplier_email_template')[1]
         except ValueError:
             template_id = False
-        print template_id
         try:
             compose_form_id = ir_model_data.get_object_reference('mail', 'email_compose_message_wizard_form')[1]
         except ValueError:

@@ -74,9 +74,5 @@
                   sequence="10"/>
 
 
-        <record id="sale.action_order_report_all" model="ir.actions.act_window">
-            <field name="search_view_id" ref="travel_transfers_report_search_view"/>
-        </record>
-
     </data>
 </openerp>

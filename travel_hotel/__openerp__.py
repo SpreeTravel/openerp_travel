@@ -31,8 +31,8 @@
              'data/categories.xml', 'view/hotel.xml', 'view/sale.xml', 'view/rooming.xml', 'view/reservation.xml',
              'security/ir.model.access.csv', 'report/hotel_voucher.xml',
              'report/hotels_report_view.xml',
-             'report/hotel_voucher_html.xml',
-             'edi/hotel_sale_order_action_data.xml'],
+             'report/hotel_voucher_html.xml'
+             ],
     "demo_xml": [],
     "application": False,
     "installable": True,

@@ -80,9 +80,10 @@
        % endif
 
     </p>
+    </br>
 
     <p>Si tiene alguna pregunta, no dude en contactárnos.</p>
-    <p>Gracias por escorgernos ${object.order_id.company_id.name or 'us'}!</p>
+    <p>Gracias por escorgernos ${object.order_id.company_id.name or ''}!</p>
     <br/>
     <br/>
     <div style="width: 375px; margin: 0px; padding: 0px; background-color: #8E0000; border-top-left-radius: 5px 5px; border-top-right-radius: 5px 5px; background-repeat: repeat no-repeat;">

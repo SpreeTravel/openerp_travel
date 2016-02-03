@@ -108,6 +108,39 @@ class sale_order(Model):
     _order = 'create_date desc'
 
     @api.multi
+    def action_quotation_send(self):
+        assert len(self) == 1, 'This option should only be used for a single id at a time.'
+        obj = self[0]
+        ir_model_data = self.env['ir.model.data']
+        try:
+            template_id = ir_model_data.get_object_reference('travel_core', 'core_client_email_template')[1]
+        except ValueError:
+            template_id = False
+        try:
+            compose_form_id = ir_model_data.get_object_reference('mail', 'email_compose_message_wizard_form')[1]
+        except ValueError:
+            compose_form_id = False
+        ctx = dict()
+        ctx.update({
+            'default_model': 'sale.order',
+            'default_res_id': obj.id,
+            'default_use_template': bool(template_id),
+            'default_template_id': template_id,
+            'default_composition_mode': 'comment',
+            'mark_so_as_sent': True
+        })
+        return {
+            'type': 'ir.actions.act_window',
+            'view_type': 'form',
+            'view_mode': 'form',
+            'res_model': 'mail.compose.message',
+            'views': [(compose_form_id, 'form')],
+            'view_id': compose_form_id,
+            'target': 'new',
+            'context': ctx,
+        }
+
+    @api.multi
     def write(self, vals):
         res = super(sale_order, self).write(vals)
         if vals.get('state', False) in ['confirmed', 'done', 'cancel']:
@@ -741,7 +774,7 @@ class sale_order_line(Model):
         ctx = dict()
         ctx.update({
             'default_model': 'sale.order.line',
-            'default_res_id': self[0].id,
+            'default_res_id': obj.id,
             'default_use_template': bool(template_id),
             'default_template_id': template_id,
             'default_composition_mode': 'comment',

@@ -45,7 +45,8 @@ Base module for managing sales, prices and accounting in a Travel Agency
              'report/sale_report_view.xml',
              'report/default_voucher.xml',
              'report/travel_voucher.xml',
-             'edi/hotel_sale_order_action_data.xml',
+             'edi/core_sale_order_line_action_data.xml',
+             'edi/core_sale_order_action_data.xml',
              'security/ir.model.access.csv'],
     "update_xml": [
 

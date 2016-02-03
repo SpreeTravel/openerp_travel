@@ -1,0 +1,148 @@
+<?xml version="1.0" ?>
+<openerp>
+    <!-- Mail template is done in a NOUPDATE block
+         so users can freely customize/delete them -->
+    <data noupdate="0">
+
+        <!--Email template -->
+        <record id="core_client_email_template" model="email.template">
+            <field name="name">Sales Order - Send by Email</field>
+            <field name="email_from">${(object.user_id.email or '')|safe}</field>
+            <field name="subject">${object.company_id.name|safe}
+                ${object.state in ('draft', 'sent') and 'Quotation' or 'Order'} (Ref ${object.name or 'n/a' })
+            </field>
+            <field name="partner_to">${object.partner_invoice_id.id}</field>
+            <field name="model_id" ref="sale.model_sale_order"/>
+            <field name="auto_delete" eval="True"/>
+            <!--<field name="report_template" ref="report_sale_order"/>-->
+            <!--<field name="report_name">-->
+            <!--${(object.name or '').replace('/','_')}_${object.state == 'draft' and 'draft' or ''}-->
+            <!--</field>-->
+            <field name="lang">${object.partner_id.lang}</field>
+            <field name="body_html"><![CDATA[
+<div style="font-family: 'Lucica Grande', Ubuntu, Arial, Verdana, sans-serif; font-size: 12px; color: rgb(34, 34, 34); background-color: #FFF; ">
+
+    <p>Estimado ${object.partner_id.name},</p>
+
+    <p>Aquí está ${object.state in ('draft', 'sent') and 'presupuesto' or 'confirmación de orden'} de ${object.company_id.name}: </p>
+
+    <p style="border-left: 1px solid #8e0000; margin-left: 30px;">
+       &nbsp;&nbsp;<strong>REFERENCIAS</strong><br />
+       &nbsp;&nbsp;Número : <strong>${object.name}</strong><br />
+       &nbsp;&nbsp;Total: <strong>${object.amount_total} ${object.pricelist_id.currency_id.name}</strong><br />
+       &nbsp;&nbsp;Fecha:  ${object.date_order} <br />
+       % if object.origin:
+       &nbsp;&nbsp;Referencia: ${object.origin}<br />
+       % endif
+       % if object.client_order_ref:
+       &nbsp;&nbsp;Tu referencia: ${object.client_order_ref}<br />
+       % endif
+       % if object.user_id:
+       &nbsp;&nbsp;Contacto: <a href="mailto:${object.user_id.email or ''}?subject=Order%20${object.name}">${object.user_id.name}</a>
+       % endif
+    </p>
+
+    </br>
+    <h2>Detalles de Servicios:</h2>
+
+    %for x in object.order_line:
+<h3>Servicio: ${loop.index}</h3>
+<p style="border-left: 1px solid #8e0000; margin-left: 30px;">
+       &nbsp;&nbsp;${x.category_id.name}: <strong>${x.product_id.name}</strong><br />
+       &nbsp;&nbsp;Fecha de Inicio: <strong>${x.start_date}</strong><br />
+       &nbsp;&nbsp;Fecha de Fin: <strong>${x.end_date}</strong><br />
+       &nbsp;&nbsp;Cantidad: <strong>${x.product_uom_qty| int}</strong><br />
+       % if x.hotel_2_meal_plan_id:
+       &nbsp;&nbsp;Plan: ${x.hotel_2_meal_plan_id.name}<br />
+       % endif
+       % if x.category_id.name != 'Hotel':
+       &nbsp;&nbsp;Adultos: ${x.adults}<br />
+       &nbsp;&nbsp;Niños: ${x.children}<br />
+       % endif
+       % if x.category_id.name == 'Transfer':
+       &nbsp;&nbsp;Tipo de Transporte: ${x.transfer_1_vehicle_type_id.name}<br />
+       &nbsp;&nbsp;Guía: ${x.transfer_2_guide_id.name}<br />
+       &nbsp;&nbsp;Confort: ${x.transfer_3_confort_id.name}<br />
+       % endif
+       % if x.sale_line_supplement_ids| length:
+       &nbsp;&nbsp;Suplemento:
+       % for s in x.sale_line_supplement_ids:
+       %if loop.last:
+        ${s.name}</br>
+        %else
+        ${s.name},
+        %endif
+
+        %endfor
+       % endif
+       % if x.category_id.name == 'Hotel':
+       <table>
+       <thead>
+              <tr>
+            <th align="center"><strong>Hab</strong></th>
+            <th align="center"><strong>Tipo</strong></th>
+            <th align="center"><strong>Adultos</strong></th>
+            <th align="center"><strong>Niños</strong></th>
+            <th align="center"><strong>Cantidad</strong></th>
+
+        </tr>
+        </thead>
+        <tbody>
+        % for h in x.hotel_1_rooming_ids:
+        <tr style="text-align=center;">
+            <td align="center">${h.room}</td>
+            <td align="center">${h.room_type_id.name}</td>
+            <td align="center"><span>${h.adults or 0}</span></td>
+            <td align="center">${h.children or 0}</td>
+            <td align="center">${h.quantity or 0}</td>
+        </tr>
+        %endfor
+        </tbody>
+       </table>
+       % endif
+
+    </p>
+    %endfor
+
+
+    <br/>
+     <p>Si tiene alguna pregunta, no dude en contactárnos.</p>
+    <p>Gracias por escorgernos ${object.company_id.name or ''}!</p>
+    <br/>
+    <br/>
+    <div style="width: 375px; margin: 0px; padding: 0px; background-color: #8E0000; border-top-left-radius: 5px 5px; border-top-right-radius: 5px 5px; background-repeat: repeat no-repeat;">
+        <h3 style="margin: 0px; padding: 2px 14px; font-size: 12px; color: #DDD;">
+            <strong style="text-transform:uppercase;">${object.company_id.name}</strong></h3>
+    </div>
+    <div style="width: 347px; margin: 0px; padding: 5px 14px; line-height: 16px; background-color: #F2F2F2;">
+        <span style="color: #222; margin-bottom: 5px; display: block; ">
+        % if object.company_id.street:
+            ${object.company_id.street}<br/>
+        % endif
+        % if object.company_id.street2:
+            ${object.company_id.street2}<br/>
+        % endif
+        % if object.company_id.city or object.company_id.zip:
+            ${object.company_id.zip} ${object.company_id.city}<br/>
+        % endif
+        % if object.company_id.country_id:
+            ${object.company_id.state_id and ('%s, ' % object.company_id.state_id.name) or ''} ${object.company_id.country_id.name or ''}<br/>
+        % endif
+        </span>
+        % if object.company_id.phone:
+            <div style="margin-top: 0px; margin-right: 0px; margin-bottom: 0px; margin-left: 0px; padding-top: 0px; padding-right: 0px; padding-bottom: 0px; padding-left: 0px; ">
+                Phone:&nbsp; ${object.company_id.phone}
+            </div>
+        % endif
+        % if object.company_id.website:
+            <div>
+                Web :&nbsp;<a href="${object.company_id.website}">${object.company_id.website}</a>
+            </div>
+        %endif
+        <p></p>
+    </div>
+</div>
+            ]]></field>
+        </record>
+    </data>
+</openerp>

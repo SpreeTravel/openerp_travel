@@ -1,6 +1,11 @@
 id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
 portal_sale.access_sale_order,sale.order,sale.model_sale_order,base.group_portal,1,1,1,1
-portal_sale.access_sale_order_line,sale.order.line,sale.model_sale_order_line,base.group_portal,1,1,1,1
+portal_sale.access_sale_order_line,sale.order.line,travel_core.model_sale_order_line,base.group_portal,1,1,1,1
+portal_sale.access_supplier_price,supplier.price,travel_core.model_supplier_price,base.group_portal,1,0,0,0
+portal_sale.access_sale_rooming,sale.rooming,travel_hotel.model_sale_rooming,base.group_portal,1,0,0,0
+portal_sale.access_option_value,option.value,travel_hotel.model_option_value,base.group_portal,1,0,0,0
+portal_sale.access_sale_context,sale.context,travel_hotel.model_sale_context,base.group_portal,1,0,0,0
+portal_sale.access_res_partner,res.partner.price,travel_core.model_res_partner,base.group_portal,1,0,0,0
 access_stock_warehouse_portal,stock.warehouse,stock.model_stock_warehouse,base.group_portal,1,0,0,0
 access_account_fiscal_position_portal,account.fiscal.position,account.model_account_fiscal_position,base.group_portal,1,0,0,0
 access_product_template_portal,product.template.portal,product.model_product_template,base.group_portal,1,0,0,0

@@ -136,13 +136,13 @@
                                 <field name="discount" groups="sale.group_discount_per_so_line"/>
                                 <field name="price_subtotal"/>
                                 <field name="supplier_id"/>
-                                <button name="to_confirm" type="object" string="Confirm" states="draft,cancel"
+                                <button name="to_confirm" type="object" invisible="context.get('portal', False)" string="Confirm" states="draft,cancel"
                                         icon="gtk-apply"/>
-                                <button name="to_mail" type="object" string="Mail" icon="gtk-copy"
+                                <button name="to_mail" type="object" invisible="context.get('portal', False)" string="Mail" icon="gtk-copy"
                                         attrs="{'invisible': [('supplier_id', '=', False)]}"/>
-                                <button name="to_cancel" type="object" string="Cancel" states="confirmed"
+                                <button name="to_cancel" type="object" invisible="context.get('portal', False)" string="Cancel" states="confirmed"
                                         icon="gtk-cancel"/>
-                                <button name="print_voucher" type="object" string="Voucher" states="confirmed"
+                                <button name="print_voucher" type="object" invisible="context.get('portal', False)" string="Voucher" states="confirmed"
                                         icon="gtk-file"/>
                             </tree>
                             <!-- End Tree -->

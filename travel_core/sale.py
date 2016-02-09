@@ -83,8 +83,7 @@ class sale_order(Model):
         return result
 
     date_order = fields.Date('Start Date', required=True, readonly=True, default=get_today,
-                             select=True, states={'draft': [('readonly', False)],
-                                                  'sent': [('readonly', False)]})
+                             select=True, states={'draft': [('readonly', False)], 'sent': [('readonly', False)]})
     end_date = fields.Date('End Date', required=True, readonly=True, select=True,
                            states={'draft': [('readonly', False)],
                                    'sent': [('readonly', False)]})

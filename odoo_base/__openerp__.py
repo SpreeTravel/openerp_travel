@@ -20,24 +20,13 @@
 ##############################################################################
 
 {
-    "name": "Travel Agency - Cars",
+    "name": "Base Updates",
     "version": "0.1",
     "author": "OpenJAF",
     "website": "http://www.openjaf.com",
     "category": "Sales",
-    "description": ("Travel Agency - Cars"),
-    "depends": ['travel_core'],
-    "init_xml": [
-        'data/options.xml',
-        'data/categories.xml',
-    ],
-    "update_xml": [
-        'view/car.xml',
-        'view/sale.xml',
-        'security/ir.model.access.csv',
-        #'report/car_voucher.xml'
-    ],
-    "demo_xml": [],
+    "description": ("Base Updates"),
+    "depends": ['base'],
     "application": False,
     "installable": True,
 }

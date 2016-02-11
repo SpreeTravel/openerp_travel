@@ -37,6 +37,7 @@ class SaleOrder(models.Model):
             return obj
         return super(SaleOrder, self).create(vals)
 
+
     @api.model
     def find_salesperson(self, partner_id):
         orders = self.search([('partner_id', '=', partner_id)])

@@ -64,6 +64,10 @@ class sale_order(Model):
     def get_today(self):
         return dt.date.today()
 
+    # @api.model
+    # def check_access_rights(self, operation, raise_exception=True):
+    #     pass
+
     def _lead_name_search(self, cr, uid, obj, field_name, args, context=None):
         name = args[0][2]
         values = []
@@ -82,17 +86,23 @@ class sale_order(Model):
 
         return result
 
+    client_order_ref = fields.Char('Reference/Description', copy=False, readonly=True,
+                                   states={'draft': [('readonly', False)],
+                                           'sent': [('readonly', False)]})
+
     date_order = fields.Date('Start Date', required=True, readonly=True, default=get_today,
                              select=True, states={'draft': [('readonly', False)], 'sent': [('readonly', False)]})
     end_date = fields.Date('End Date', required=True, readonly=True, select=True,
                            states={'draft': [('readonly', False)],
                                    'sent': [('readonly', False)]})
-    flight_in = fields.Char('Flight In', size=64)
-    flight_out = fields.Char('Flight Out', size=64)
+    flight_in = fields.Char('Flight In', size=64, readonly=True, states={'draft': [('readonly', False)],
+                                                                         'sent': [('readonly', False)]})
+    flight_out = fields.Char('Flight Out', size=64, readonly=True, states={'draft': [('readonly', False)],
+                                                                           'sent': [('readonly', False)]})
     order_line = fields.One2many('sale.order.line', 'order_id', 'Order Lines', readonly=True,
                                  states={'draft': [('readonly', False)],
                                          'sent': [('readonly', False)],
-                                         'manual': [('readonly', False)]})
+                                         })
     pax_ids = fields.Many2many('res.partner', 'sale_order_res_partner_pax_rel', 'order_id', 'pax_id', 'Paxs',
                                domain="[('pax', '=', True)]")
     total_paxs = fields.Integer(compute=_get_total_paxs, string='Total paxs', store=True)
@@ -357,6 +367,9 @@ class sale_order_line(Model):
 
     @api.multi
     def to_cancel(self):
+        if self[0] and self[0].order_id and self[0].order_id.state.lower() == 'manual':
+            raise except_orm(_('Configuration Error!'),
+                             _('You can not cancel the line, cancel order first!!!'))
         return self.write({'state': 'cancel'})
 
     @api.onchange('price_unit_cost', 'price_unit')

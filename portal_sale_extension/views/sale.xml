@@ -44,8 +44,8 @@
                 <xpath expr="//field[@name='order_line']/tree/field[@name='price_unit']" position="attributes" >
                     <attribute name="readonly">context.get('portal', False)</attribute>
                 </xpath>
-                <!--<xpath expr="//field[@name='order_line']/tree/button[@name='to_confirm']" position="attributes" >-->
-                    <!--<attribute name="invisible">context.get('portal', False)</attribute>-->
+                <!--<xpath expr="//field[@name='order_line']/tree/field[@name='start_date']" position="replace" >-->
+                    <!--<field name="start_date">start_date</field>-->
                 <!--</xpath>-->
                 <!--<xpath expr="//field[@name='order_line']/tree/button[@name='to_cancel']" position="attributes" >-->
                     <!--<attribute name="invisible">context.get('portal', False)</attribute>-->

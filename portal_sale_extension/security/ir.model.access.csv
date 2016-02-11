@@ -1,5 +1,5 @@
 id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
-portal_sale.access_sale_order,sale.order,sale.model_sale_order,base.group_portal,1,1,0,0
+portal_sale.access_sale_order,sale.order,sale.model_sale_order,base.group_portal,1,1,1,0
 portal_sale.access_sale_order_line,sale.order.line,travel_core.model_sale_order_line,base.group_portal,1,1,0,0
 portal_sale.access_supplier_price,supplier.price,travel_core.model_supplier_price,base.group_portal,1,0,0,0
 portal_sale.access_sale_rooming,sale.rooming,travel_hotel.model_sale_rooming,base.group_portal,1,1,0,0

@@ -15,6 +15,11 @@
                             string="Customer Prices"
                             type="object"
                             attrs="{'invisible': [('customer', '=', False)]}" icon="fa-file"/>
+                    <button class="oe_inline oe_stat_button" name="send_invitation"
+                            string="Partner Invitation "
+                            type="object"
+                            attrs="{'invisible': ['|',('customer', '=', False), ('is_company', '=', False)]}"
+                            icon="fa-envelope"/>
                     <!--<field string="Purchases" name="purchase_order_count" widget="statinfo"/>-->
                 </xpath>
             </field>

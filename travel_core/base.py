@@ -53,6 +53,46 @@ class res_partner(Model):
                 'res_id': obj.id
             }
 
+    @api.multi
+    def send_invitation(self):
+        assert len(self) == 1, 'This option should only be used for a single id at a time.'
+        obj = self[0]
+        ir_model_data = self.env['ir.model.data']
+        try:
+            template_id = ir_model_data.get_object_reference('travel_core', 'core_partner_invitation_email_template')[1]
+        except ValueError:
+            template_id = False
+        try:
+            compose_form_id = ir_model_data.get_object_reference('mail', 'email_compose_message_wizard_form')[1]
+        except ValueError:
+            compose_form_id = False
+        ctx = dict()
+        ctx.update({
+            'default_model': 'res.partner',
+            'default_res_id': obj.id,
+            'default_use_template': bool(template_id),
+            'default_template_id': template_id,
+            'default_composition_mode': 'comment',
+            'mark_so_as_sent': True
+        })
+        return {
+            'type': 'ir.actions.act_window',
+            'view_type': 'form',
+            'view_mode': 'form',
+            'res_model': 'mail.compose.message',
+            'views': [(compose_form_id, 'form')],
+            'view_id': compose_form_id,
+            'target': 'new',
+            'context': ctx,
+        }
+
+    @api.one
+    def get_signup_url(self):
+        menu = self.env.ref('sale.menu_sale_quotations')
+        action = self.env.ref('portal_sale.action_quotations_portal')
+        return self.with_context(signup_valid=True)._get_signup_url_for_action(action=action.id,
+                                                                               menu_id=menu.id)[self.id]
+
     def _get_reservations(self, cr, uid, ids, fields, args, context=None):
         result = {}
         order_line = self.pool.get('sale.order.line')

@@ -1,17 +1,18 @@
 <?xml version="1.0"?>
 <openerp>
     <data>
-        
+
         <record id="travel_product_package_search_view" model="ir.ui.view">
             <field name="name">travel.product.package.search.view</field>
             <field name="model">product.package</field>
             <field name="arch" type="xml">
                 <search string="Product">
-                    <field name="name" string="Product" filter_domain="['|','|',('name','ilike',self),('origin.name','ilike',self),('to.name','ilike','self')]"/>
+                    <field name="name" string="Product"
+                           filter_domain="['|','|',('name','ilike',self),('origin.name','ilike',self),('to.name','ilike','self')]"/>
                 </search>
             </field>
         </record>
-        
+
         <record id="travel_product_package_tree_view" model="ir.ui.view">
             <field name="name">travel.product.package.tree.view</field>
             <field name="model">product.package</field>
@@ -28,7 +29,7 @@
                 </tree>
             </field>
         </record>
-        
+
         <record id="travel_product_package_form_view" model="ir.ui.view">
             <field name="name">travel_product_package_form_view</field>
             <field name="model">product.package</field>
@@ -46,7 +47,8 @@
                             </h1>
                             <label for="categ_id" class="oe_edit_only"/>
                             <h2>
-                                <field name="categ_id" readonly="context.get('category', False)" options='{"no_open": True}'/>
+                                <field name="categ_id" readonly="context.get('category', False)"
+                                       options='{"no_open": True}'/>
                             </h2>
                         </div>
                         <group>
@@ -55,6 +57,22 @@
                             </group>
                         </group>
                         <notebook>
+                            <page string="Packages">
+                                <separator string="Packages Lines"/>
+                                <field name="product_line_ids" context="{'package_id': id, 'lines': product_line_ids}">
+                                    <tree string="Products" editable="bottom">
+                                        <field name="order" context="{'id': id}" readonly="True"/>
+                                        <field name="num_day"/>
+                                        <field name="category_id"
+                                               domain="[('type', '=', 'normal'), ('parent_id', '!=', False), ('name', '!=', 'Saleable')]"/>
+                                        <field name="product_id"/>
+                                        <field name="supplier_id"/>
+                                        <button name="up" type="object" string="Up" icon="gtk-go-up"/>
+                                        <button name="down" type="object" string="Down" icon="gtk-go-down"/>
+                                        <button name="edit" type="object" string="Edit" icon="gtk-edit"/>
+                                    </tree>
+                                </field>
+                            </page>
                             <page string="Information">
                                 <group>
                                     <group>
@@ -64,16 +82,7 @@
                                     <group>
                                         <field name="price_extra" groups="product.group_product_variant"/>
                                     </group>
-                                </group>
-                                <field name="description" placeholder="describe the product characteristics..."/>
-                                <group>
-                                	<field name="product_line_ids">
-										<tree string="Products" editable="bottom">
-											<field name="start_day"/>
-											<field name="end_day"/>
-											<field name="product_id"/>
-										</tree>
-									</field>
+                                    <field name="description" placeholder="describe the product characteristics..."/>
                                 </group>
                             </page>
                             <page string="Procurements" groups="base.group_user">
@@ -91,43 +100,46 @@
                                     </tree>
                                     <form string="Supplier Information" version="7.0">
                                         <group col="4">
-                                            <field name="name" context="{'default_customer': 0, 'search_default_supplier': 1, 'default_supplier': 1}"/>
-                                            <field name='currency_cost_id' string='Currency' domain="[('name', 'in', ['GBP', 'EUR', 'USD', 'CUC'])]"/>
+                                            <field name="name"
+                                                   context="{'default_customer': 0, 'search_default_supplier': 1, 'default_supplier': 1}"/>
+                                            <field name='currency_cost_id' string='Currency'
+                                                   domain="[('name', 'in', ['GBP', 'EUR', 'USD', 'CUC'])]"/>
                                             <field name="sequence"/>
                                             <field name="min_qty"/>
                                         </group>
                                         <p groups="product.group_purchase_pricelist" class="oe_grey">
-                                            The prices below will only be taken into account when your pricelist is set as based on supplier prices.
+                                            The prices below will only be taken into account when your pricelist is set
+                                            as based on supplier prices.
                                         </p>
-										<notebook>
-											<page string="Pricelist">
-		                                        <field name="pricelist_ids">
-		                                            <tree string="Pricelist" editable="bottom">
-		                                                <field name="start_date"/>
-		                                                <field name="end_date"/>
-		                                                <field name="min_paxs"/>
-		                                                <field name="max_paxs"/>
-		                                                <field name="room"/>
-		                                                <field name="price"/>
-		                                                <field name="min_quantity" invisible="1"/>
-		                                            </tree>
-		                                        </field>
-											</page>
-											<page string="Supplements">
-												<field name="supplement_ids">
-													<tree string="Supplements" editable="bottom">
-														<field name="start_date"/>
-		                                                <field name="end_date"/>
-														<field name="supplement_id" />
-														<field name="price" />
-													</tree>
-												</field>
-											</page>
-										</notebook>
+                                        <notebook>
+                                            <page string="Pricelist">
+                                                <field name="pricelist_ids">
+                                                    <tree string="Pricelist" editable="bottom">
+                                                        <field name="start_date"/>
+                                                        <field name="end_date"/>
+                                                        <field name="min_paxs"/>
+                                                        <field name="max_paxs"/>
+                                                        <field name="price"/>
+                                                        <field name="min_quantity" invisible="1"/>
+                                                    </tree>
+                                                </field>
+                                            </page>
+                                            <page string="Supplements">
+                                                <field name="supplement_ids">
+                                                    <tree string="Supplements" editable="bottom">
+                                                        <field name="start_date"/>
+                                                        <field name="end_date"/>
+                                                        <field name="supplement_id"/>
+                                                        <field name="price"/>
+                                                    </tree>
+                                                </field>
+                                            </page>
+                                        </notebook>
                                     </form>
                                 </field>
                                 <separator string="Description for Suppliers"/>
-                                <field name="description_purchase" placeholder="This note will be displayed on requests for quotation..."/>
+                                <field name="description_purchase"
+                                       placeholder="This note will be displayed on requests for quotation..."/>
                             </page>
                             <page string="Reservations">
                                 <field name="reservation_ids">
@@ -138,9 +150,12 @@
                                         <field name="end_date"/>
                                         <field name="supplier_id"/>
                                         <field name="state" invisible="1"/>
-                                        <button name="to_confirm" type="object" string="Confirm" states="draft,cancel" icon="gtk-apply"/>
-                                        <button name="to_cancel" type="object" string="Cancel" states="confirmed" icon="gtk-cancel"/>
-                                        <button name="go_to_order" type="object" string="Go to Order" icon="gtk-zoom-in"/>
+                                        <button name="to_confirm" type="object" string="Confirm" states="draft,cancel"
+                                                icon="gtk-apply"/>
+                                        <button name="to_cancel" type="object" string="Cancel" states="confirmed"
+                                                icon="gtk-cancel"/>
+                                        <button name="go_to_order" type="object" string="Go to Order"
+                                                icon="gtk-zoom-in"/>
                                     </tree>
                                 </field>
                             </page>
@@ -155,7 +170,7 @@
                 </form>
             </field>
         </record>
-        
+
         <record id="travel_product_package_action" model="ir.actions.act_window">
             <field name="name">Package</field>
             <field name="type">ir.actions.act_window</field>
@@ -171,9 +186,10 @@
                 </p>
             </field>
         </record>
-        
-        <menuitem action="travel_product_package_action" id="travel_product_package_menu" parent="base.menu_product" sequence="6"/>
-        
-        
+
+        <menuitem action="travel_product_package_action" id="travel_product_package_menu" parent="base.menu_product"
+                  sequence="6"/>
+
+
     </data>
 </openerp>

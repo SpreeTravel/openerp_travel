@@ -22,6 +22,7 @@
 import datetime as dt
 from openerp import fields, api
 from openerp.models import Model
+from openerp.tools.translate import _
 from openerp.tools import DEFAULT_SERVER_DATE_FORMAT as DF
 
 
@@ -30,10 +31,10 @@ class product_car(Model):
     _inherits = {'product.product': 'product_id'}
     _inherit = ['mail.thread']
 
-    product_id = fields.Many2one('product.product', 'Product', required=True, ondelete="cascade")
-    car_name = fields.Char(realted='product_id.name', string='Name', size=128, select=True, store=True)
-    transmission_id = fields.Many2one('option.value', 'Transmission', domain="[('option_type_id.code', '=', 'tm')]")
-    class_id = fields.Many2one('option.value', 'Class', domain="[('option_type_id.code', '=', 'cl')]")
+    product_id = fields.Many2one('product.product', _('Product'), required=True, ondelete="cascade")
+    car_name = fields.Char(realted='product_id.name', string=_('Name'), size=128, select=True, store=True)
+    transmission_id = fields.Many2one('option.value', _('Transmission'), domain="[('option_type_id.code', '=', 'tm')]")
+    class_id = fields.Many2one('option.value', _('Class'), domain="[('option_type_id.code', '=', 'cl')]")
     passengers = fields.Integer('Passengers')
 
     @api.multi

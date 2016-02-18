@@ -86,27 +86,27 @@ class sale_order(Model):
 
         return result
 
-    client_order_ref = fields.Char('Reference/Description', copy=False, readonly=True,
+    client_order_ref = fields.Char(_('Reference/Description'), copy=False, readonly=True,
                                    states={'draft': [('readonly', False)],
                                            'sent': [('readonly', False)]})
 
-    date_order = fields.Date('Start Date', required=True, readonly=True, default=get_today,
+    date_order = fields.Date(_('Start Date'), required=True, readonly=True, default=get_today,
                              select=True, states={'draft': [('readonly', False)], 'sent': [('readonly', False)]})
-    end_date = fields.Date('End Date', required=True, readonly=True, select=True,
+    end_date = fields.Date(_('End Date'), required=True, readonly=True, select=True,
                            states={'draft': [('readonly', False)],
                                    'sent': [('readonly', False)]})
-    flight_in = fields.Char('Flight In', size=64, readonly=True, states={'draft': [('readonly', False)],
+    flight_in = fields.Char(_('Flight In'), size=64, readonly=True, states={'draft': [('readonly', False)],
                                                                          'sent': [('readonly', False)]})
-    flight_out = fields.Char('Flight Out', size=64, readonly=True, states={'draft': [('readonly', False)],
+    flight_out = fields.Char(_('Flight Out'), size=64, readonly=True, states={'draft': [('readonly', False)],
                                                                            'sent': [('readonly', False)]})
-    order_line = fields.One2many('sale.order.line', 'order_id', 'Order Lines', readonly=True,
+    order_line = fields.One2many('sale.order.line', 'order_id', _('Order Lines'), readonly=True,
                                  states={'draft': [('readonly', False)],
                                          'sent': [('readonly', False)],
                                          })
-    pax_ids = fields.Many2many('res.partner', 'sale_order_res_partner_pax_rel', 'order_id', 'pax_id', 'Paxs',
+    pax_ids = fields.Many2many('res.partner', 'sale_order_res_partner_pax_rel', 'order_id', 'pax_id', _('Paxs'),
                                domain="[('pax', '=', True)]")
-    total_paxs = fields.Integer(compute=_get_total_paxs, string='Total paxs', store=True)
-    lead_name = fields.Char(compute=_get_lead_name, string='Lead Name', size=128,
+    total_paxs = fields.Integer(compute=_get_total_paxs, string=_('Total paxs'), store=True)
+    lead_name = fields.Char(compute=_get_lead_name, string=_('Lead Name'), size=128,
                             search=_lead_name_search)
 
     # _defaults = {
@@ -195,20 +195,20 @@ class sale_context(Model):
                 result[obj.id] = (dedate - dsdate).days
         return result
 
-    category_id = fields.Many2one('product.category', 'Category')
-    category = fields.Char('Category', size=64)
-    start_date = fields.Date('Start Date')
-    end_date = fields.Date('End Date')
-    duration = fields.Float(compute=_get_duration, method=True, type='float', string='Duration')
-    adults = fields.Integer('Adults')
-    children = fields.Integer('Children')
-    start_time = fields.Char('Start Time', size=64)
-    start_place = fields.Char('Start Place', size=255)
-    end_time = fields.Char('End Time', size=64)
-    end_place = fields.Char('End Place', size=255)
-    supplier_id = fields.Many2one('res.partner', 'Supplier', domain="[('supplier', '=', True)]")
-    reservation_number = fields.Char('Reservation', size=64)
-    paxs = fields.Integer(compute=_get_paxs, method=True, string='Paxs', store=True)
+    category_id = fields.Many2one('product.category', _('Category'))
+    category = fields.Char(_('Category'), size=64)
+    start_date = fields.Date(_('Start Date'))
+    end_date = fields.Date(_('End Date'))
+    duration = fields.Float(compute=_get_duration, method=True, type='float', string=_('Duration'))
+    adults = fields.Integer(_('Adults'))
+    children = fields.Integer(_('Children'))
+    start_time = fields.Char(_('Start Time'), size=64)
+    start_place = fields.Char(_('Start Place'), size=255)
+    end_time = fields.Char(_('End Time'), size=64)
+    end_place = fields.Char(_('End Place'), size=255)
+    supplier_id = fields.Many2one('res.partner', _('Supplier'), domain="[('supplier', '=', True)]")
+    reservation_number = fields.Char(_('Reservation'), size=64)
+    paxs = fields.Integer(compute=_get_paxs, method=True, string=_('Paxs'), store=True)
 
     def get_supplier(self, obj):
         if obj.supplier_id:
@@ -269,16 +269,7 @@ class sale_context(Model):
             for field in field_names:
                 ed = doc.xpath("//field[@name='" + field + "']")[0]
                 ed.set('context', ctx)
-            # ad = doc.xpath("//field[@name='adults']")[0]
-            # ad.set('context', ctx)
-            # ch = doc.xpath("//field[@name='children']")[0]
-            # ch.set('context', ctx)
-            # sp = doc.xpath("//field[@name='sale_line_supplement_ids']")[0]
-            # sp.set('context', ctx)
-            # sp = doc.xpath("//field[@name='supplier_id']")[0]
-            # sp.set('context', ctx)
-            # # sp = doc.xpath("//field[@name='product_uom_qty']")[0]
-            # sp.set('context', ctx)
+
             keys = new_fields.keys()
             keys.sort()
             for f in keys:
@@ -313,25 +304,25 @@ class sale_order_line(Model):
     _inherit = 'sale.order.line'
     _inherits = {'sale.context': 'sale_context_id'}
 
-    resume_table_price = fields.One2many('supplier.price', 'sale_order_line', string='Prices')
+    resume_table_price = fields.One2many('supplier.price', 'sale_order_line', string=_('Prices'))
 
-    description = fields.Text('Description')
+    description = fields.Text(_('Description'))
 
-    sale_context_id = fields.Many2one('sale.context', 'Sale Context', ondelete="cascade", select=True)
+    sale_context_id = fields.Many2one('sale.context', _('Sale Context'), ondelete="cascade", select=True)
 
     sale_line_supplement_ids = fields.Many2many('option.value', 'sale_line_option_value_rel', 'sale_line_id',
-                                                'option_value_id', 'Supplements',
+                                                'option_value_id', _('Supplements'),
                                                 domain="[('option_type_id.code', '=', 'sup')]")
 
-    price_unit_cost = fields.Float('Cost Price', digits_compute=dp.get_precision('Product Price'))
-    currency_cost_id = fields.Many2one('res.currency', 'Currency Cost')
+    price_unit_cost = fields.Float(_('Cost Price'), digits_compute=dp.get_precision('Product Price'))
+    currency_cost_id = fields.Many2one('res.currency', _('Currency Cost'))
     customer_id = fields.Many2one(related='order_id.partner_id', readonly=True,
-                                  string='Customer', store=True)
+                                  string=_('Customer'), store=True)
     # TODO: Ver pq no se puede poner required
-    order_start_date = fields.Date(related='order_id.date_order', string='In',
+    order_start_date = fields.Date(related='order_id.date_order', string=_('In'),
                                    store=True)
     # TODO: Ver pq no se puede poner required
-    order_end_date = fields.Date(related='order_id.end_date', string='Out', store=True)
+    order_end_date = fields.Date(related='order_id.end_date', string=_('Out'), store=True)
 
     # @api.model
     # def create(self, vals):

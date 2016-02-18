@@ -20,8 +20,9 @@
 ##############################################################################
 
 import datetime
-from openerp.osv import fields
-from openerp.osv.orm import Model
+from openerp import fields, api
+from openerp.models import Model
+from openerp.tools.translate import _
 
 
 class product_category(Model):
@@ -40,13 +41,10 @@ class product_category(Model):
         res = self.name_get(cr, uid, ids, context=context)
         return dict(res)
 
-    _columns = {
-        'complete_name': fields.function(_name_get_fnc, type="char",
-                                         string='Name'),
-        'voucher_name': fields.char('Voucher name', size=64),
-        'model_name': fields.char('Model name', size=64)
-    }    
-    
+    complete_name = fields.Char(compute=_name_get_fnc, string=_('Name'))
+    voucher_name = fields.Char(_('Voucher name'), size=64)
+    model_name = fields.Char(_('Model name'), size=64)
+
     _defaults = {
         'voucher_name': 'default_travel_voucher_report'
     }
@@ -56,23 +54,17 @@ class product_product(Model):
     _name = 'product.product'
     _inherit = 'product.product'
 
-    def _get_reservations(self, cr, uid, ids, fields, args, context=None):
-        result = {}
-        order_line = self.pool.get('sale.order.line')
-        for obj in self.browse(cr, uid, ids, context):
-            to_search = [
-                ('product_id', '=', obj.id),
-                ('start_date', '>=', datetime.datetime.today())
-            ]
-            l_ids = order_line.search(cr, uid, to_search, context=context)
-            result[obj.id] = l_ids
-        return result
+    @api.one
+    def _get_reservations(self):
+        order_line = self.env['sale.order.line']
+        to_search = [
+            ('product_id', '=', self.id),
+            ('start_date', '>=', datetime.datetime.today())
+        ]
+        self.reservation_ids = order_line.search(to_search)
 
-    _columns = {
-        'reservation_ids':
-            fields.function(_get_reservations, method=True, type='many2many',
-                            relation='sale.order.line', string='Reservations')
-    }
+    reservation_ids = fields.Many2many(compute='_get_reservations',
+                                       comodel_name='sale.order.line', string=_('Reservations'))
 
     def _get_category(self, cr, uid, context=None):
         context = context or {}
@@ -97,9 +89,9 @@ class product_product(Model):
             sdate = params['start_date']
             edate = params['end_date']
             to_srch += ['|', '|', '&', ('start_date', '>=', sdate), ('start_date', '<=', edate),
-                                  '&', ('end_date', '>=', sdate), ('end_date', '<=', edate),
-                             '|', '&', ('start_date', '<=', sdate), ('end_date', '>=', sdate),
-                                  '&',  ('start_date', '<=', edate), ('end_date', '>=', edate)]
+                        '&', ('end_date', '>=', sdate), ('end_date', '<=', edate),
+                        '|', '&', ('start_date', '<=', sdate), ('end_date', '>=', sdate),
+                        '&', ('start_date', '<=', edate), ('end_date', '>=', edate)]
         categ = self.browse(cr, uid, pid, context).categ_id.name.lower()
         for k, v in params.items():
             if k.startswith(categ) and k.endswith('_id') and params[k]:
@@ -112,13 +104,10 @@ class product_product(Model):
 class product_supplierinfo(Model):
     _name = 'product.supplierinfo'
     _inherit = 'product.supplierinfo'
-    _columns = {
-        'supplement_ids': fields.one2many('product.rate.supplement',
-                                          'suppinfo_id',
-                                          'Supplements'),
-                  'info': fields.text('Additional Information'),
-        'currency_cost_id': fields.many2one('res.currency', 'Currency Cost')
-    }
+
+    supplement_ids = fields.One2many('product.rate.supplement', 'suppinfo_id', _('Supplements'))
+    info = fields.Text(_('Additional Information'))
+    currency_cost_id = fields.Many2one('res.currency', _('Currency Cost'))
     _defaults = {
         'min_qty': 0.0
     }
@@ -133,14 +122,11 @@ class product_rate(Model):
             result[obj.id] = 'PR-' + str(obj.id)
         return result
 
-    _columns = {
-        'reference': fields.function(_get_ref, method=True, type='char',
-                                     size=256, string='Ref'),
-        'start_date': fields.date('Start'),
-        'end_date': fields.date('End'),
-        'child': fields.float('Child'),
-        'per_pax': fields.boolean('Per Pax')
-    }
+    reference = fields.Char(compute=_get_ref, method=True, size=256, string=_('Ref'))
+    start_date = fields.Date(_('Start'))
+    end_date = fields.Date(_('End'))
+    child = fields.Float(_('Child'))
+    per_pax = fields.Boolean(_('Per Pax'))
 
     _defaults = {
         'per_pax': 1
@@ -149,17 +135,14 @@ class product_rate(Model):
 
 class product_rate_supplement(Model):
     _name = 'product.rate.supplement'
-    _columns = {
-        'supplement_id': fields.many2one('option.value', 'Supplement',
-                            domain="[('option_type_id.code', '=', 'sup')]"),
-        'start_date': fields.date('Start date'),
-        'end_date': fields.date('End date'),
-        'price': fields.float('Price'),
-        'suppinfo_id': fields.many2one('product.supplierinfo',
-                                           'Supplier'),
-        'rate_ids': fields.many2many('product.rate', 'supplements_rates_rel',
-                                     'supplement_id', 'rate_id', 'Rates')
-    }
+    supplement_id = fields.Many2one('option.value', _('Supplement'),
+                                    domain="[('option_type_id.code', '=', 'sup')]")
+    start_date = fields.Date(_('Start date'))
+    end_date = fields.Date(_('End date'))
+    price = fields.Float(_('Price'))
+    suppinfo_id = fields.Many2one('product.supplierinfo', _('Supplier'))
+    rate_ids = fields.Many2many('product.rate', 'supplements_rates_rel',
+                                'supplement_id', 'rate_id', _('Rates'))
 
 
 class pricelist_partnerinfo(Model):
@@ -167,17 +150,15 @@ class pricelist_partnerinfo(Model):
     _rec_name = 'reference'
     _inherit = 'pricelist.partnerinfo'
     _inherits = {'product.rate': 'product_rate_id'}
-    _columns = {
-        'product_rate_id': fields.many2one('product.rate', 'Product Rate',
-                                           ondelete="cascade", select=True),
-        'rate_start_date': fields.related('product_rate_id', 'start_date',
-                                          string='Start Date', type='date',
-                                          store=True),
-        'product_id': fields.related('suppinfo_id', 'product_id',
-                                     string='Product', type='many2one',
-                                     relation='product.template'),
-        'sequence': fields.integer('Sequence')
-    }
+    product_rate_id = fields.Many2one('product.rate', _('Product Rate'),
+                                      ondelete="cascade", select=True)
+    rate_start_date = fields.Date('product_rate_id.start_date',
+                                  store=True)
+    product_id = fields.Many2one('suppinfo_id.product_id',
+                                 string=_('Product'),
+                                 relation='product.template')
+    sequence = fields.Integer(_('Sequence'))
+
     _defaults = {
         'min_quantity': 0.0,
         'sequence': 0

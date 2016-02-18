@@ -23,6 +23,7 @@ import datetime as dt
 from openerp import fields, api
 from openerp.models import Model
 from openerp.tools import DEFAULT_SERVER_DATE_FORMAT as DF
+from openerp.tools.translate import _
 
 ROOM = {1: 'simple', 2: 'price', 3: 'triple'}
 
@@ -32,12 +33,12 @@ class product_hotel(Model):
     _inherits = {'product.product': 'product_id'}
     _inherit = ['mail.thread']
 
-    product_id = fields.Many2one('product.product', 'Product', required=True, ondelete="cascade")
-    res_partner_id = fields.Many2one('res.partner', 'Contact')
-    chain_id = fields.Many2one('res.partner', 'Chain')
-    stars = fields.Selection([('1', '1'), ('2', '2'), ('3', '3'), ('4', '4'), ('5', '5')], 'Stars')
-    destination = fields.Many2one('destination', 'Destination')
-    hotel_name = fields.Char(related='product_id.name', string='Name', size=128, select=True, store=True)
+    product_id = fields.Many2one('product.product', _('Product'), required=True, ondelete="cascade")
+    res_partner_id = fields.Many2one('res.partner', _('Contact'))
+    chain_id = fields.Many2one('res.partner', _('Chain'))
+    stars = fields.Selection([('1', '1'), ('2', '2'), ('3', '3'), ('4', '4'), ('5', '5')], _('Stars'))
+    destination = fields.Many2one('destination', _('Destination'))
+    hotel_name = fields.Char(related='product_id.name', string=_('Name'), size=128, select=True, store=True)
 
     @api.multi
     def unlink(self):
@@ -129,9 +130,9 @@ class product_rate(Model):
     _name = 'product.rate'
     _inherit = 'product.rate'
 
-    room_type_id = fields.Many2one('option.value', 'Room', domain="[('option_type_id.code', '=', 'rt')]")
-    meal_plan_id = fields.Many2one('option.value', 'Plan', domain="[('option_type_id.code', '=', 'mp')]")
-    simple = fields.Float('Simple')
-    triple = fields.Float('Triple')
-    extra_adult = fields.Float('Extra Adult')
-    second_child = fields.Float('Second Child')
+    room_type_id = fields.Many2one('option.value', _('Room'), domain="[('option_type_id.code', '=', 'rt')]")
+    meal_plan_id = fields.Many2one('option.value', _('Plan'), domain="[('option_type_id.code', '=', 'mp')]")
+    simple = fields.Float(_('Simple'))
+    triple = fields.Float(_('Triple'))
+    extra_adult = fields.Float(_('Extra Adult'))
+    second_child = fields.Float(_('Second Child'))

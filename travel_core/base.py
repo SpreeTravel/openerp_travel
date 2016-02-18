@@ -93,26 +93,21 @@ class res_partner(Model):
         return self.with_context(signup_valid=True)._get_signup_url_for_action(action=action.id,
                                                                                menu_id=menu.id)[self.id]
 
-    def _get_reservations(self, cr, uid, ids, fields, args, context=None):
-        result = {}
-        order_line = self.pool.get('sale.order.line')
-        for obj in self.browse(cr, uid, ids, context):
-            result[obj.id] = []
-            to_search = [('start_date', '>=', dt.datetime.today())]
-            if obj.customer:
-                to_search.append(('customer_id', '=', obj.id))
-            elif obj.supplier:
-                to_search.append(('supplier_id', '=', obj.id))
-            else:
-                continue
-            l_ids = order_line.search(cr, uid, to_search, context=context)
-            result[obj.id] = l_ids
-        return result
+    @api.one
+    def _get_reservations(self):
+        order_line = self.env['sale.order.line']
 
-    reservation_ids = fields.Many2many(compute=_get_reservations, method=True,
-                                       relation='sale.order.line',
-                                       string='Reservations')
-    pax = fields.Boolean('Pax')
+        to_search = [('start_date', '>=', dt.datetime.today())]
+        if self.customer:
+            to_search.append(('customer_id', '=', self.id))
+        elif self.supplier:
+            to_search.append(('supplier_id', '=', self.id))
+        self.reservation_ids = order_line.search(to_search)
+
+    reservation_ids = fields.Many2many(compute='_get_reservations',
+                                       comodel_name='sale.order.line',
+                                       string=_('Reservations'))
+    pax = fields.Boolean(_('Pax'))
 
     # TODO: poner el campo pax tambien en el formulario de partner
 
@@ -134,7 +129,7 @@ class option_type(Model):
     name = fields.Char('Name', size=64, translate=True)
     code = fields.Char('Code', size=32)
     option_value_ids = fields.One2many('option.value', 'option_type_id',
-                                       'Option Values')
+                                       _('Option Values'))
 
     _sql_constraints = [
         ('code_uniq', 'unique (code)', 'The code of the option must be unique!')
@@ -164,11 +159,11 @@ class option_type(Model):
 class option_value(Model):
     _name = 'option.value'
 
-    name = fields.Char('Name', size=64, translate=True)
-    code = fields.Char('Code', size=32)
-    option_type_id = fields.Many2one('option.type', 'Option Type')
-    load_default = fields.Boolean('Load Default')
-    option_code = fields.Char(related='option_type_id.code', string='Potion Code', size=32)
+    name = fields.Char(_('Name'), size=64, translate=True)
+    code = fields.Char(_('Code'), size=32)
+    option_type_id = fields.Many2one('option.type', _('Option Type'))
+    load_default = fields.Boolean(_('Load Default'))
+    option_code = fields.Char(related='option_type_id.code', string=_('Option Code'), size=32)
 
     _defaults = {
         'load_default': False
@@ -202,15 +197,15 @@ class option_value(Model):
 
 class destination(Model):
     _name = 'destination'
-    code = fields.Char('Code', size=8)
-    name = fields.Char('Name', size=128, required=True)
-    description = fields.Text('Description')
-    parent_id = fields.Many2one('destination', 'Parent')
-    child_ids = fields.One2many('destination', 'parent_id', 'Children')
+    code = fields.Char(_('Code'), size=8)
+    name = fields.Char(_('Name'), size=128, required=True)
+    description = fields.Text(_('Description'))
+    parent_id = fields.Many2one('destination', _('Parent'))
+    child_ids = fields.One2many('destination', 'parent_id', _('Children'))
 
 
 class destination_distance(Model):
     _name = 'destination.distance'
-    origin = fields.Many2one('destinaon', 'Origin')
-    target = fields.Many2one('destination', 'Target')
-    distance = fields.Float('Distance')
+    origin = fields.Many2one('destination', _('Origin'))
+    target = fields.Many2one('destination', _('Target'))
+    distance = fields.Float(_('Distance'))

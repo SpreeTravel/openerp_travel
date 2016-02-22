@@ -96,9 +96,9 @@ class sale_order(Model):
                            states={'draft': [('readonly', False)],
                                    'sent': [('readonly', False)]})
     flight_in = fields.Char(_('Flight In'), size=64, readonly=True, states={'draft': [('readonly', False)],
-                                                                         'sent': [('readonly', False)]})
+                                                                            'sent': [('readonly', False)]})
     flight_out = fields.Char(_('Flight Out'), size=64, readonly=True, states={'draft': [('readonly', False)],
-                                                                           'sent': [('readonly', False)]})
+                                                                              'sent': [('readonly', False)]})
     order_line = fields.One2many('sale.order.line', 'order_id', _('Order Lines'), readonly=True,
                                  states={'draft': [('readonly', False)],
                                          'sent': [('readonly', False)],
@@ -253,7 +253,7 @@ class sale_context(Model):
                         context_params.update({f: value})
         return context_params
 
-    def update_view_with_context_fields(self, cr, uid, res, context=None):
+    def update_view_with_context_fields(self, cr, uid, res, context=None, flag=True):
         new_fields = self.get_context_fields(cr, uid, context)
         res['fields'].update(new_fields)
         doc = etree.XML(res['arch'])
@@ -264,12 +264,12 @@ class sale_context(Model):
             sd = doc.xpath("//field[@name='start_date']")[0]
             ocg = sd.get('on_change', False)
             ctx = sd.get('context', False)
-            ctx = self._build_ctx(ctx, new_fields)
+            if flag:
+                ctx = self._build_ctx(ctx, new_fields)
             sd.set('context', ctx)
             for field in field_names:
                 ed = doc.xpath("//field[@name='" + field + "']")[0]
                 ed.set('context', ctx)
-
             keys = new_fields.keys()
             keys.sort()
             for f in keys:

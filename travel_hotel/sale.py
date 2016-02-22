@@ -62,8 +62,8 @@ class sale_context(Model):
     hotel_2_meal_plan_id = fields.Many2one('option.value', 'Plan',
                                            domain="[('option_type_id.code', '=', 'mp')]")
 
-    def update_view_with_context_fields(self, cr, uid, res, context=None):
-        res = super(sale_context, self).update_view_with_context_fields(cr, uid, res, context)
+    def update_view_with_context_fields(self, cr, uid, res, context=None, flag=True):
+        res = super(sale_context, self).update_view_with_context_fields(cr, uid, res, context, flag)
         modifiers = {'invisible': [('category', '=', 'hotel')]}
         doc = etree.XML(res['arch'])
         try:

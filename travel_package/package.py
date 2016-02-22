@@ -208,9 +208,14 @@ class product_package_line(Model):
             'view_type': 'form',
             'view_mode': 'form',
             'target': 'new',
+            'flags': {'form': {'action_buttons': True}},
             'res_model': 'product.package.line.conf',
             'res_id': res_id.id
         }
+
+    @api.multi
+    def save(self):
+        pass
 
     _defaults = {
         'order': get_default
@@ -299,7 +304,7 @@ class product_package_line_conf(Model):
 
     category_id = fields.Many2one(related='product_package_line_id.category_id', string=_('Category'), store=True)
 
-    category = fields.Char(_('Category'))
+    category = fields.Char(related='category_id.name', string=_('Category'), store=True)
 
     supplier_id = fields.Many2one(related='product_package_line_id.supplier_id', string=_('Supplier'), store=True)
 

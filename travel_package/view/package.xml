@@ -192,9 +192,9 @@
             <field name="model">product.package.line.conf</field>
             <field name="priority">1</field>
             <field name="arch" type="xml">
-                <form string="Product Package Line Configuration" version="7.0">
+                <form string="Product Package Line Configuration" create="false" version="7.0">
                     <group>
-                        <group name="standard">
+                        <group name="standard" >
                             <field name="category_id"
                                    domain=""
                                    on_change="" readonly="True"/>
@@ -227,11 +227,13 @@
                                        context=""
                                        groups="base.group_user,base.group_portal"
                                        on_change=""
+                                       attrs="{'invisible':[('category', '=', 'Hotel')]}"
                                 />
                                 <field name="children"
                                        context=""
                                        groups="base.group_user,base.group_portal"
                                        on_change=""
+                                       attrs="{'invisible':[('category', '=', 'Hotel')]}"
                                 />
                             </group>
                             <group name="dynamic_fields" colspan="4">
@@ -250,6 +252,11 @@
 
 
                         </group>
+                        <!--<footer>-->
+                        <!--<button name="save" string="Save" type="object" class="oe_highlight"/>-->
+                        <!--or-->
+                        <!--<button string="Cancel" class="oe_link" special="cancel"/>-->
+                        <!--</footer>-->
                     </group>
                 </form>
             </field>

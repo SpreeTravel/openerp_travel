@@ -31,6 +31,95 @@ from openerp.tools.translate import _
 import openerp.addons.decimal_precision as dp
 
 
+class sale_order_line_package_line_conf(Model):
+    _name = 'sale.order.line.package.line.conf'
+    _inherits = {'sale.context': 'sale_context_id'}
+
+    sale_order_line_package_line_id = fields.Many2one('sale.order.line.package.line', _('Line'))
+
+    product_id = fields.Many2one('product.product', string=_('Product'), store=True)
+
+    category_id = fields.Many2one('product.category', string=_('Category'), store=True)
+
+    category = fields.Char(related='category_id.name', string=_('Category'), store=True)
+
+    supplier_id = fields.Many2one('res.partner', string=_('Supplier'), store=True)
+
+    name = fields.Text(_('Description'))
+
+    adults = fields.Integer(_('Adults'))
+
+    sale_line_supplement_ids = fields.Many2many('option.value', 'sale_line_option_value_rel', 'sale_line_id',
+                                                'option_value_id', _('Supplements'),
+                                                domain="[('option_type_id.code', '=', 'sup')]")
+
+    children = fields.Integer(_('Children'))
+
+    # sale_context_id = fields.Many2one('sale.context', _('Sale Context'), ondelete="cascade", select=True)#
+    start_date = fields.Date(_('In'), store=True)
+
+    end_date = fields.Date(_('Out'), store=True)
+
+    def fields_view_get(self, cr, uid, view_id=None, view_type='form',
+                        context=None, toolbar=False, submenu=False):
+        context = context or {}
+        res = super(sale_order_line_package_line_conf, self).fields_view_get(cr, uid, view_id,
+                                                                             view_type, context=context,
+                                                                             toolbar=toolbar, submenu=submenu)
+        if view_type == 'form':
+            sc = self.pool.get('sale.context')
+            res = sc.update_view_with_context_fields(cr, uid, res, context, flag=False)
+        return res
+
+
+class sale_order_line_package_line(Model):
+    _name = 'sale.order.line.package.line'
+    _order = 'order'
+
+    sale_order_line_package_line_conf_id = fields.Many2one('sale.order.line.package.line.conf', _('Conf'),
+                                                           readonly=True)
+    sale_order_line_id = fields.Many2one('sale.order.line', _('Sale Order Line'), ondelete="cascade", readonly=True)
+
+    product_id = fields.Many2one('product.product', _('Product'), required=True, ondelete="cascade", readonly=True)
+    category_id = fields.Many2one('product.category', _('Category'), required=True, ondelete='cascade', readonly=True)
+    supplier_id = fields.Many2one('res.partner', _('Supplier'), ondelete='cascade', readonly=True)
+    num_day = fields.Integer(_('Number of Days'), default=1, readonly=True)
+    order = fields.Integer(_('Order'), readonly=True)
+    product_package_line = fields.Integer(_('Product Package Line ID'), readonly=True)
+
+    @api.multi
+    def edit(self):
+        obj = self[0]
+        res_id = None
+        if obj.sale_order_line_package_line_conf_id.id:
+            res_id = obj.sale_order_line_package_line_conf_id
+        else:
+            product_package_conf_table = self.env['product.package.line.conf']
+            product_package_conf = product_package_conf_table.search(
+                [('product_package_line', '=', obj.product_package_line_id)])
+            element = obj.sale_order_line_package_line_conf_id.create({
+                'product_id': product_package_conf.product_id.id,
+                'category_id': product_package_conf.category_id.id,
+                'name': product_package_conf.name,
+                'adults': product_package_conf.adults,
+                'start_date': product_package_conf.start_date,
+                'end_date': product_package_conf.end_date,
+                'children': product_package_conf.children,
+                'sale_line_supplement_ids': product_package_conf.sale_line_supplement_ids,
+                'supplier_id': product_package_conf.supplier_id.id
+            })
+            res_id = obj.sale_order_line_package_line_conf_id = element
+        return {
+            'type': 'ir.actions.act_window',
+            'view_type': 'form',
+            'view_mode': 'form',
+            'target': 'new',
+            'flags': {'form': {'action_buttons': True}},
+            'res_model': 'sale.order.line.package.line.conf',
+            'res_id': res_id.id
+        }
+
+
 class supplier_price(Model):
     _name = 'supplier.price'
 
@@ -306,6 +395,9 @@ class sale_order_line(Model):
 
     resume_table_price = fields.One2many('supplier.price', 'sale_order_line', string=_('Prices'))
 
+    sale_order_line_package_line_id = fields.One2many('sale.order.line.package.line', 'sale_order_line_id',
+                                                      string=_('Sale Order Line Package'))
+
     description = fields.Text(_('Description'))
 
     sale_context_id = fields.Many2one('sale.context', _('Sale Context'), ondelete="cascade", select=True)
@@ -530,6 +622,7 @@ class sale_order_line(Model):
         domain = {}
 
         # Automatically load supplier field values
+        _category = None
         product_model = self.pool.get('product.product')
         try:
             _category = context['params']['category']
@@ -546,6 +639,26 @@ class sale_order_line(Model):
                     pass
         except KeyError:
             pass
+        lines = None
+        if product_id and _category.lower() == 'package':
+            product_package = self.pool.get('product.package')
+            package_ids = product_package.search(cr, uid, [('product_id', '=', product_id)], context=context)
+            package = product_package.browse(cr, uid, package_ids)
+            lines = []
+            for line in package.product_line_ids:
+                # product_package_line_table = self.pool.get('product.package.line')
+                # package_ids = product_package_line_table.search(cr, uid, [('id', '=', line_id.id)], context=context)
+                # line = product_package.browse(cr, uid, package_ids)
+                print line.id
+                lines.append((0, False, {
+                    'product_id': line.product_id.id,
+                    'category_id': line.category_id.id,
+                    'supplier_id': line.supplier_id.id,
+                    'order': line.order,
+                    'product_package_line': line.id,
+                    'num_day': line.num_day
+                }))
+
         product_obj = product_model.browse(cr, uid, product_id, context)
         product_tmpl_id = product_obj.product_tmpl_id.id
         suppinfo_model = self.pool.get('product.supplierinfo')
@@ -652,6 +765,8 @@ class sale_order_line(Model):
         # if len(tmp_list) == 1:
         #     result.update({'supplier_id': tmp_list[0]})
         domain.update({'supplier_id': [('id', 'in', tmp_list)]})
+        if lines:
+            result.update({'sale_order_line_package_line_id': lines})
         return {'value': result, 'domain': domain}
 
     def show_cost_price(self, cr, uid, result, product, qty, partner_id, uom,

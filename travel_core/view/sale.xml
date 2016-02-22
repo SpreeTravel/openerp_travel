@@ -136,13 +136,17 @@
                                 <field name="discount" groups="sale.group_discount_per_so_line"/>
                                 <field name="price_subtotal"/>
                                 <field name="supplier_id"/>
-                                <button name="to_confirm" type="object" invisible="context.get('portal', False)" string="Confirm" states="draft,cancel"
+                                <button name="to_confirm" type="object" invisible="context.get('portal', False)"
+                                        string="Confirm" states="draft,cancel"
                                         icon="gtk-apply"/>
-                                <button name="to_mail" type="object" invisible="context.get('portal', False)" string="Mail" icon="gtk-copy"
+                                <button name="to_mail" type="object" invisible="context.get('portal', False)"
+                                        string="Mail" icon="gtk-copy"
                                         attrs="{'invisible': [('supplier_id', '=', False)]}"/>
-                                <button name="to_cancel" type="object" invisible="context.get('portal', False)" string="Cancel" states="confirmed"
+                                <button name="to_cancel" type="object" invisible="context.get('portal', False)"
+                                        string="Cancel" states="confirmed"
                                         icon="gtk-cancel"/>
-                                <button name="print_voucher" type="object" invisible="context.get('portal', False)" string="Voucher" states="confirmed"
+                                <button name="print_voucher" type="object" invisible="context.get('portal', False)"
+                                        string="Voucher" states="confirmed"
                                         icon="gtk-file"/>
                             </tree>
                             <!-- End Tree -->
@@ -168,6 +172,91 @@
                 </page>
 
             </field>
+        </record>
+
+        <record id="sale_order_line_package_line_conf_form_view" model="ir.ui.view">
+            <field name="name">sale.order.line.package.line.conf.form.view</field>
+            <field name="model">sale.order.line.package.line.conf</field>
+            <field name="priority">1</field>
+            <field name="arch" type="xml">
+                <form string="Product Package Line Configuration" create="false" version="7.0">
+                    <group>
+                        <group name="standard">
+                            <field name="category_id"
+                                   domain=""
+                                   on_change="" readonly="True"/>
+                            <field name="category" invisible="1"/>
+                            <field name="product_id" domain=""
+                                   context=""
+                                   groups="base.group_user,base.group_portal"
+                                   on_change="" readonly="True"/>
+                            <field name="supplier_id"
+                                   context=""
+                                   groups="base.group_user,base.group_portal"
+                                   on_change=""
+                                   readonly="True"
+                            />
+                            <label for="start_date" string="Date"/>
+                            <div>
+                                <field name="start_date"
+                                       context=""
+                                       groups="base.group_user,base.group_portal" nolabel="1" class="oe_inline"
+                                       on_change=""
+                                />-
+                                <field name="end_date"
+                                       context=""
+                                       groups="base.group_user,base.group_portal" nolabel="1" class="oe_inline"
+                                       on_change=""
+                                />
+                            </div>
+                            <group name="paxs_fields" colspan="4">
+                                <field name="adults"
+                                       context=""
+                                       groups="base.group_user,base.group_portal"
+                                       on_change=""
+                                       attrs="{'invisible':[('category', '=', 'Hotel')]}"
+                                />
+                                <field name="children"
+                                       context=""
+                                       groups="base.group_user,base.group_portal"
+                                       on_change=""
+                                       attrs="{'invisible':[('category', '=', 'Hotel')]}"
+                                />
+                            </group>
+                            <group name="dynamic_fields" colspan="4">
+
+                            </group>
+                            <group name="info_fields" colspan="4">
+                                <field name="sale_line_supplement_ids" widget="many2many_tags"
+                                       groups="base.group_user,base.group_portal"
+                                       context=""
+                                       on_change=""
+                                />
+                            </group>
+
+                        </group>
+                        <group name="extended">
+
+
+                        </group>
+                        <!--<footer>-->
+                        <!--<button name="save" string="Save" type="object" class="oe_highlight"/>-->
+                        <!--or-->
+                        <!--<button string="Cancel" class="oe_link" special="cancel"/>-->
+                        <!--</footer>-->
+                    </group>
+                </form>
+            </field>
+        </record>
+
+        <record id="sale_order_line_package_line_conf_action" model="ir.actions.act_window">
+            <field name="name">sale.order.line.package.line.conf.action</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">sale.order.line.package.line.conf</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="sale_order_line_package_line_conf_form_view"/>
+            <!--<field name="search_view_id" ref="travel_sale_order_line_search_view"/>-->
         </record>
 
         <record id="travel_sale_order_line_form_view" model="ir.ui.view">
@@ -199,7 +288,8 @@
                             <div>
                                 <field name="start_date"
                                        context="{'partner_id':parent.partner_id, 'quantity':product_uom_qty, 'pricelist':parent.pricelist_id,  'uom':product_uom, 'supplier_id':supplier_id, 'params': {'category': category, 'start_date': start_date, 'end_date': end_date, 'adults': adults, 'children': children, 'supplement_ids': sale_line_supplement_ids} }"
-                                       groups="base.group_user,base.group_portal" nolabel="1" class="oe_inline" required="1"
+                                       groups="base.group_user,base.group_portal" nolabel="1" class="oe_inline"
+                                       required="1"
                                        on_change="product_id_change(parent.pricelist_id, product_id, product_uom_qty, product_uom, product_uos_qty, product_uos, name, parent.partner_id, False, True, parent.date_order, False, parent.fiscal_position, False, context)"
                                 />-
                                 <field name="end_date"
@@ -232,7 +322,8 @@
 
                             </group>
                             <group name="info_fields" colspan="4">
-                                <field name="sale_line_supplement_ids" widget="many2many_tags" groups="base.group_user,base.group_portal"
+                                <field name="sale_line_supplement_ids" widget="many2many_tags"
+                                       groups="base.group_user,base.group_portal"
                                        context="{'partner_id':parent.partner_id, 'quantity':product_uom_qty, 'pricelist':parent.pricelist_id,  'uom':product_uom, 'supplier_id':supplier_id, 'params': {'category': category, 'start_date': start_date, 'end_date': end_date, 'adults': adults, 'children': children, 'supplement_ids': sale_line_supplement_ids} }"
                                        on_change="product_id_change(parent.pricelist_id, product_id, product_uom_qty, product_uom, product_uos_qty, product_uos, name, parent.partner_id, False, True, parent.date_order, False, parent.fiscal_position, False, context)"
                                 />
@@ -281,6 +372,22 @@
                     </group>
                     <notebook>
                         <page string="Description">
+                            <group>
+                                <separator string="Packages Lines"
+                                           attrs="{'invisible': [('category', '!=', 'package')]}"/>
+                                <field name="sale_order_line_package_line_id"
+                                       attrs="{'invisible': [('category', '!=', 'package')]}">
+                                    <tree string="Products" create="false" delete="false">
+                                        <field name="order" readonly="1"/>
+                                        <field name="num_day" domain="[('category','=', 'Package')]" readonly="1"/>
+                                        <field name="category_id" readonly="1"
+                                               domain="[('type', '=', 'normal'), ('parent_id', '!=', False), ('name', '!=', 'Saleable')]"/>
+                                        <field name="product_id" readonly="1"/>
+                                        <field name="supplier_id" readonly="1"/>
+                                        <button name="edit" type="object" string="Edit" icon="gtk-edit"/>
+                                    </tree>
+                                </field>
+                            </group>
                             <field name="name" invisible="1"/>
                             <field name="description" nolabel="1" colspan="4"/>
                         </page>

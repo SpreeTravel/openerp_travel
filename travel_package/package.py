@@ -60,7 +60,7 @@ class product_package_line(Model):
     num_day = fields.Integer(_('Number of Days'), default=1)
     order = fields.Integer(_('Order'))
 
-    product_package_line_conf_id = fields.Many2one('product.package.line.conf', _('Conf'))
+    product_package_line_conf_id = fields.Many2one('product.package.line.conf', _('Configuration'))
 
     @api.onchange('category_id')
     def set_supplier_product(self):
@@ -213,9 +213,7 @@ class product_package_line(Model):
             'res_id': res_id.id
         }
 
-    @api.multi
-    def save(self):
-        pass
+
 
     _defaults = {
         'order': get_default
@@ -241,17 +239,13 @@ class product_package(Model):
 
         adults = params.get('adults', 0)
         children = params.get('children', 0)
-        single = params.get('package_1_single', 0)
-        double = params.get('package_2_double', 0)
         paxs = adults + children
         pp = False
         to_search += [('min_paxs', '<=', paxs), ('max_paxs', '>=', paxs)]
-        for room in [('single', 1, single), ('double', 2, double)]:
-            pp_ids = model.search(cr, uid, to_search + [('room', '=', room[0])], context=context)
-            if len(pp_ids) == 1:
-                pp = model.browse(cr, uid, pp_ids[0], context)
-                price += pp.price * room[1] * room[2]
-
+        pp_ids = model.search(cr, uid, to_search, context=context)
+        if len(pp_ids) == 1:
+            pp = model.browse(cr, uid, pp_ids[0], context)
+            price += pp.price
         if pp:
             price += self.price_get_partner_supp(cr, uid, pp, params, to_search_sup, context)
 

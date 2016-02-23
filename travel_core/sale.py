@@ -49,13 +49,13 @@ class sale_order_line_package_line_conf(Model):
 
     adults = fields.Integer(_('Adults'))
 
-    sale_line_supplement_ids = fields.Many2many('option.value', 'sale_line_option_value_rel', 'sale_line_id',
+    sale_line_supplement_ids = fields.Many2many('option.value', 'sale_product_package_option_value_rel',
+                                                'sale_product_package_id',
                                                 'option_value_id', _('Supplements'),
                                                 domain="[('option_type_id.code', '=', 'sup')]")
 
     children = fields.Integer(_('Children'))
 
-    # sale_context_id = fields.Many2one('sale.context', _('Sale Context'), ondelete="cascade", select=True)#
     start_date = fields.Date(_('In'), store=True)
 
     end_date = fields.Date(_('Out'), store=True)
@@ -79,13 +79,12 @@ class sale_order_line_package_line(Model):
     sale_order_line_package_line_conf_id = fields.Many2one('sale.order.line.package.line.conf', _('Conf'),
                                                            readonly=True)
     sale_order_line_id = fields.Many2one('sale.order.line', _('Sale Order Line'), ondelete="cascade", readonly=True)
-
     product_id = fields.Many2one('product.product', _('Product'), required=True, ondelete="cascade", readonly=True)
     category_id = fields.Many2one('product.category', _('Category'), required=True, ondelete='cascade', readonly=True)
     supplier_id = fields.Many2one('res.partner', _('Supplier'), ondelete='cascade', readonly=True)
     num_day = fields.Integer(_('Number of Days'), default=1, readonly=True)
     order = fields.Integer(_('Order'), readonly=True)
-    product_package_line = fields.Integer(_('Product Package Line ID'), readonly=True)
+    so_product_package_line_id = fields.Integer(_('Product Package Line ID'), readonly=True)
 
     @api.multi
     def edit(self):
@@ -96,7 +95,7 @@ class sale_order_line_package_line(Model):
         else:
             product_package_conf_table = self.env['product.package.line.conf']
             product_package_conf = product_package_conf_table.search(
-                [('product_package_line', '=', obj.product_package_line_id)])
+                [('product_package_line_id', '=', obj.so_product_package_line_id)])
             element = obj.sale_order_line_package_line_conf_id.create({
                 'product_id': product_package_conf.product_id.id,
                 'category_id': product_package_conf.category_id.id,
@@ -105,7 +104,9 @@ class sale_order_line_package_line(Model):
                 'start_date': product_package_conf.start_date,
                 'end_date': product_package_conf.end_date,
                 'children': product_package_conf.children,
-                'sale_line_supplement_ids': product_package_conf.sale_line_supplement_ids,
+                # ver pq crea un option value new????
+                'sale_line_supplement_ids': [(0, False, {'option_value_id': x.id}) for x in
+                                             product_package_conf.product_package_supplement_ids],
                 'supplier_id': product_package_conf.supplier_id.id
             })
             res_id = obj.sale_order_line_package_line_conf_id = element
@@ -357,8 +358,15 @@ class sale_context(Model):
                 ctx = self._build_ctx(ctx, new_fields)
             sd.set('context', ctx)
             for field in field_names:
+                if field == 'sale_line_supplement_ids':
+                    try:
+                        ed = doc.xpath("//field[@name='" + field + "']")[0]
+                        ed.set('context', ctx)
+                    except IndexError:
+                        field = 'product_package_supplement_ids'
                 ed = doc.xpath("//field[@name='" + field + "']")[0]
                 ed.set('context', ctx)
+
             keys = new_fields.keys()
             keys.sort()
             for f in keys:
@@ -646,16 +654,12 @@ class sale_order_line(Model):
             package = product_package.browse(cr, uid, package_ids)
             lines = []
             for line in package.product_line_ids:
-                # product_package_line_table = self.pool.get('product.package.line')
-                # package_ids = product_package_line_table.search(cr, uid, [('id', '=', line_id.id)], context=context)
-                # line = product_package.browse(cr, uid, package_ids)
-                print line.id
                 lines.append((0, False, {
                     'product_id': line.product_id.id,
                     'category_id': line.category_id.id,
+                    'so_product_package_line_id': line.id,
                     'supplier_id': line.supplier_id.id,
                     'order': line.order,
-                    'product_package_line': line.id,
                     'num_day': line.num_day
                 }))
 

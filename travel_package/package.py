@@ -47,18 +47,33 @@ class product_package_line(Model):
         except KeyError:
             _id = False
         lines = package_lines.search([('package_id', '=', _id)])
-        _max = max(lines, key=lambda x: x.order).order if len(lines) else 1
+        _max = max(lines, key=lambda y: y.order).order if len(lines) else 0
         if tmp_lines:
             return _max + len(tmp_lines) + 1
         else:
             return _max + 1
+
+    @api.multi
+    def compute_function(self):
+        package_lines = self.env['product.package.line']
+        try:
+            _id = self[0].package_id.id
+        except KeyError:
+            _id = False
+        lines = package_lines.search([('package_id', '=', _id)])
+        _max = max(lines, key=lambda y: y.order).order if len(lines) else 0
+        _max += 1
+        for x in self:
+            if not x.order:
+                x.order = _max
+                _max += 1
 
     product_id = fields.Many2one('product.product', _('Product'), required=True, ondelete="cascade")
     category_id = fields.Many2one('product.category', _('Category'), required=True, ondelete='cascade')
     supplier_id = fields.Many2one('res.partner', _('Supplier'), ondelete='cascade')
     package_id = fields.Many2one('product.package', _('Package'), required=True, ondelete="cascade")
     num_day = fields.Integer(_('Number of Days'), default=1)
-    order = fields.Integer(_('Order'))
+    order = fields.Integer(string=_('Order'), default=get_default, readonly=True)
 
     product_package_line_conf_id = fields.Many2one('product.package.line.conf', _('Configuration'))
 
@@ -160,7 +175,7 @@ class product_package_line(Model):
             lines_table = self.env['product.package.line']
             line = lines_table.search([('order', '=', obj.order - 1), ('package_id', '=', obj.package_id.id)])
             line.write({'order': line.order + 1})
-            ret = self.write({'order': obj.order - 1})
+            self.write({'order': obj.order - 1})
             return {
                 'type': 'ir.actions.act_window',
                 'view_type': 'form',
@@ -180,7 +195,6 @@ class product_package_line(Model):
             line = lines_table.search([('order', '=', obj.order + 1), ('package_id', '=', obj.package_id.id)])
             line.write({'order': line.order - 1})
             self.write({'order': obj.order + 1})
-
             return {
                 'type': 'ir.actions.act_window',
                 'view_type': 'form',
@@ -213,11 +227,9 @@ class product_package_line(Model):
             'res_id': res_id.id
         }
 
-
-
-    _defaults = {
-        'order': get_default
-    }
+        # _defaults = {
+        #     'order': get_default
+        # }
 
 
 class product_package(Model):
@@ -306,9 +318,10 @@ class product_package_line_conf(Model):
 
     adults = fields.Integer(_('Adults'))
 
-    sale_line_supplement_ids = fields.Many2many('option.value', 'sale_line_option_value_rel', 'sale_line_id',
-                                                'option_value_id', _('Supplements'),
-                                                domain="[('option_type_id.code', '=', 'sup')]")
+    product_package_supplement_ids = fields.Many2many('option.value', 'product_package_supplement_rel',
+                                                      'product_package_id', 'option_value_id',
+                                                      _('Supplements'),
+                                                      domain="[('option_type_id.code', '=', 'sup')]")
 
     children = fields.Integer(_('Children'))
 

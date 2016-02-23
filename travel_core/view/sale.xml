@@ -384,6 +384,7 @@
                                                domain="[('type', '=', 'normal'), ('parent_id', '!=', False), ('name', '!=', 'Saleable')]"/>
                                         <field name="product_id" readonly="1"/>
                                         <field name="supplier_id" readonly="1"/>
+                                        <field name="so_product_package_line_id" invisible="1"/>
                                         <button name="edit" type="object" string="Edit" icon="gtk-edit"/>
                                     </tree>
                                 </field>

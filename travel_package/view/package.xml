@@ -240,7 +240,7 @@
 
                             </group>
                             <group name="info_fields" colspan="4">
-                                <field name="sale_line_supplement_ids" widget="many2many_tags"
+                                <field name="product_package_supplement_ids" widget="many2many_tags"
                                        groups="base.group_user,base.group_portal"
                                        context=""
                                        on_change=""

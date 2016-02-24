@@ -73,7 +73,7 @@ class product_package_line(Model):
     supplier_id = fields.Many2one('res.partner', _('Supplier'), ondelete='cascade')
     package_id = fields.Many2one('product.package', _('Package'), required=True, ondelete="cascade")
     num_day = fields.Integer(_('Number of Days'), default=1)
-    order = fields.Integer(string=_('Order'), default=get_default, readonly=True)
+    order = fields.Integer(string=_('Order'), default=get_default)
 
     product_package_line_conf_id = fields.Many2one('product.package.line.conf', _('Configuration'))
 
@@ -230,6 +230,11 @@ class product_package_line(Model):
         # _defaults = {
         #     'order': get_default
         # }
+
+    @api.model
+    def create(self, vals):
+        print 'Pass here'
+        return super(product_package_line, self).create(vals)
 
 
 class product_package(Model):

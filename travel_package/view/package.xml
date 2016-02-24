@@ -61,7 +61,7 @@
                                 <separator string="Packages Lines"/>
                                 <field name="product_line_ids" context="{'package_id': id, 'lines': product_line_ids}">
                                     <tree string="Products" editable="bottom">
-                                        <field name="order" context="{'id': id}" readonly="True"/>
+                                        <field name="order" context="{'id': id}"/>
                                         <field name="num_day"/>
                                         <field name="category_id"
                                                domain="[('type', '=', 'normal'), ('parent_id', '!=', False), ('name', '!=', 'Saleable')]"/>

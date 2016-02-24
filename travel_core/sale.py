@@ -96,7 +96,7 @@ class sale_order_line_package_line(Model):
             product_package_conf_table = self.env['product.package.line.conf']
             product_package_conf = product_package_conf_table.search(
                 [('product_package_line_id', '=', obj.so_product_package_line_id)])
-            element = obj.sale_order_line_package_line_conf_id.create({
+            base_dict = {
                 'product_id': product_package_conf.product_id.id,
                 'category_id': product_package_conf.category_id.id,
                 'name': product_package_conf.name,
@@ -104,11 +104,28 @@ class sale_order_line_package_line(Model):
                 'start_date': product_package_conf.start_date,
                 'end_date': product_package_conf.end_date,
                 'children': product_package_conf.children,
-                # ver pq crea un option value new????
-                'sale_line_supplement_ids': [(0, False, {'option_value_id': x.id}) for x in
+                'sale_line_supplement_ids': [(4, x.id, None) for x in
                                              product_package_conf.product_package_supplement_ids],
                 'supplier_id': product_package_conf.supplier_id.id
-            })
+            }
+            if product_package_conf and product_package_conf.category_id and product_package_conf.category_id.name == 'Hotel':
+                hotel_rooming = [(0, False, {u'room_type_id': rooming.room_type_id.id,
+                                             u'quantity': rooming.quantity,
+                                             u'children': rooming.children, u'room': rooming.room,
+                                             u'adults': rooming.adults}) for rooming in
+                                 product_package_conf.hotel_1_rooming_ids]
+                plan = product_package_conf.hotel_2_meal_plan_id.id
+                base_dict.update({
+                    'hotel_1_rooming_ids': hotel_rooming,
+                    'hotel_2_meal_plan_id': plan
+                })
+            elif product_package_conf and product_package_conf.category_id and product_package_conf.category_id.name == 'Transfer':
+                base_dict.update({
+                    'transfer_1_vehicle_type_id': product_package_conf.transfer_1_vehicle_type_id.id,
+                    'transfer_2_guide_id': product_package_conf.transfer_2_guide_id.id,
+                    'transfer_3_confort_id': product_package_conf.transfer_3_confort_id.id
+                })
+            element = obj.sale_order_line_package_line_conf_id.create(base_dict)
             res_id = obj.sale_order_line_package_line_conf_id = element
         return {
             'type': 'ir.actions.act_window',

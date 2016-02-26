@@ -24,11 +24,32 @@ import simplejson
 import datetime as dt
 from lxml import etree
 from openerp import fields, api
-from openerp.models import Model
+from openerp.models import Model, TransientModel
 from openerp.exceptions import except_orm
 from openerp.tools import DEFAULT_SERVER_DATE_FORMAT as DF
 from openerp.tools.translate import _
 import openerp.addons.decimal_precision as dp
+
+
+class tmp_sale_order_line_package_line_conf(TransientModel):
+    _name = 'tmp.sale.order.line.package.line.conf'
+    _inherits = {'sale.context': 'sale_context_id'}
+
+    product_id = fields.Many2one('product.product', string=_('Product'), store=True)
+
+    category_id = fields.Many2one('product.category', string=_('Category'), store=True)
+
+    supplier_id = fields.Many2one('res.partner', string=_('Supplier'), store=True)
+
+    adults = fields.Integer(_('Adults'))
+
+    children = fields.Integer(_('Children'))
+
+    start_date = fields.Date(_('In'), store=True)
+
+    end_date = fields.Date(_('Out'), store=True)
+
+    order = fields.Integer(_('Order'))
 
 
 class sale_order_line_package_line_conf(Model):
@@ -36,6 +57,8 @@ class sale_order_line_package_line_conf(Model):
     _inherits = {'sale.context': 'sale_context_id'}
 
     sale_order_line_package_line_id = fields.Many2one('sale.order.line.package.line', _('Line'))
+
+    copied = fields.Boolean(_('Copied from package template'), default=False)
 
     product_id = fields.Many2one('product.product', string=_('Product'), store=True)
 
@@ -103,6 +126,7 @@ class sale_order_line_package_line(Model):
                 'adults': product_package_conf.adults,
                 'start_date': product_package_conf.start_date,
                 'end_date': product_package_conf.end_date,
+                'copied': True,
                 'children': product_package_conf.children,
                 'sale_line_supplement_ids': [(4, x.id, None) for x in
                                              product_package_conf.product_package_supplement_ids],
@@ -496,6 +520,27 @@ class sale_order_line(Model):
             }
             return {'warning': warning}
 
+    @api.model
+    def organize_pax(self, vals):
+        adults = vals['adults']
+        children = vals['children']
+        option_value_table = self.env['option.value']
+        option = option_value_table.search([('code', '=', 'std')])
+        res = []
+        for _ in range(0, adults / 2):
+            child = 0
+            if children:
+                child = 1
+                children -= 1
+            res.append((0, False,
+                        {'room': 'double', 'room_type_id': option.id, 'adults': 2, 'children': child, 'quantity': 1}))
+        if adults % 2:
+            return res
+        else:
+            res.append((0, False,
+                        {'room': 'simple', 'room_type_id': option.id, 'adults': 1, 'children': 0, 'quantity': 1}))
+            return res
+
     def product_id_change(self, cr, uid, ids, pricelist, product, qty=0,
                           uom=False, qty_uos=0, uos=False, name='', partner_id=False,
                           lang=False, update_tax=True, date_order=False, packaging=False,
@@ -656,16 +701,17 @@ class sale_order_line(Model):
                     elements = context['params']['hotel_1_rooming_ids']
                     if not len(elements):
                         result.update(
-                            {'hotel_1_rooming_ids': [[0, False,
+                            {'hotel_1_rooming_ids': [(0, False,
                                                       {u'room_type_id': self.get_room_type_id(cr, uid),
                                                        u'quantity': 1,
-                                                       u'children': 0, u'room': u'double', u'adults': 2}]]})
+                                                       u'children': 0, u'room': u'double', u'adults': 2})]})
                 except KeyError:
                     pass
         except KeyError:
             pass
         lines = None
         if product_id and _category.lower() == 'package':
+            tmp_table = self.pool.get('tmp.sale.order.line.package.line.conf')
             product_package = self.pool.get('product.package')
             package_ids = product_package.search(cr, uid, [('product_id', '=', product_id)], context=context)
             package = product_package.browse(cr, uid, package_ids)
@@ -679,6 +725,46 @@ class sale_order_line(Model):
                     'order': line.order,
                     'num_day': line.num_day
                 }))
+                tmp_solpl_ids = tmp_table.search(cr, uid, [('order', '=', line.order)])
+                if not len(tmp_solpl_ids):
+                    base_dict = {
+                        'order': line.order,
+                        'product_id': line.product_id.id,
+                        'supplier_id': line.supplier_id.id,
+                        'category_id': line.category_id.id,
+                        'start_date': context['params']['start_date'],
+                        'end_date': context['params']['end_date'],
+                    }
+                    vals = {
+                        'adults': context['params']['adults'],
+                        'children': context['params']['children'],
+                    }
+                    if line.category_id.name == 'Hotel':
+
+                        base_dict.update({
+                            'hotel_1_rooming_ids': self.organize_pax(cr, uid, vals)
+                        })
+                    else:
+                        base_dict.update(vals)
+                        # TODO: Preguntarle a cesar pq pasa esto!!!!!!!!!!!!!!!!!
+                        # tmp_table.create(cr, uid, base_dict)
+                else:
+                    base_dict = {
+                        'start_date': context['params']['start_date'],
+                        'end_date': context['params']['end_date'],
+                    }
+                    vals = {
+                        'adults': context['params']['adults'],
+                        'children': context['params']['children'],
+                    }
+                    if line.category_id.name == 'Hotel':
+                        base_dict.update({
+                            'hotel_1_rooming_ids': self.organize_pax(cr, uid, vals)
+                        })
+                    else:
+                        base_dict.update(vals)
+                    solpl = tmp_table.browse(cr, uid, tmp_solpl_ids, context)
+                    solpl.write(base_dict)
 
         product_obj = product_model.browse(cr, uid, product_id, context)
         product_tmpl_id = product_obj.product_tmpl_id.id
@@ -891,6 +977,14 @@ class sale_order_line(Model):
             'datas': datas,
             'nodestroy': True
         }
+
+    @api.model
+    def create(self, vals):
+        return super(sale_order_line, self).create(vals)
+
+    @api.multi
+    def write(self, vals):
+        return super(sale_order_line, self).write(vals)
 
     @api.multi
     def to_mail(self):

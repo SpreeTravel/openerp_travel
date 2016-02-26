@@ -231,11 +231,6 @@ class product_package_line(Model):
         #     'order': get_default
         # }
 
-    @api.model
-    def create(self, vals):
-        print 'Pass here'
-        return super(product_package_line, self).create(vals)
-
 
 class product_package(Model):
     _name = 'product.package'

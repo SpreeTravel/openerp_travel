@@ -109,6 +109,7 @@ class sale_order_line_package_line(Model):
     order = fields.Integer(_('Order'), readonly=True)
     so_product_package_line_id = fields.Integer(_('Product Package Line ID'), readonly=True)
 
+    # TODO: Ver q se hace con el edit
     @api.multi
     def edit(self):
         obj = self[0]
@@ -978,13 +979,49 @@ class sale_order_line(Model):
             'nodestroy': True
         }
 
+    def copy_model(self, transient_model):
+        for line in self.sale_order_line_package_line_id:
+            tmp = transient_model.search(['order', '=', line.order])
+            base_dict = {
+                'order': tmp.order,
+                'start_date': tmp.start_date,
+                'end_date': tmp.end_date,
+                'product_id': tmp.product_id.id,
+                'category_id': tmp.category_id.id,
+                'supplier_id': tmp.supplier_id.id,
+            }
+            if tmp.category_id.name == 'Hotel':
+                hotel_rooming = [(0, False, {u'room_type_id': rooming.room_type_id.id,
+                                             u'quantity': rooming.quantity,
+                                             u'children': rooming.children, u'room': rooming.room,
+                                             u'adults': rooming.adults}) for rooming in tmp.hotel_1_rooming_ids]
+                base_dict.update({
+                    'hotel_1_rooming_ids': hotel_rooming,
+                })
+            else:
+                base_dict.update({
+                    'adults': tmp.adults,
+                    'children': tmp.children,
+                })
+            if line.sale_order_line_package_line_conf_id.id:
+                line.sale_order_line_package_line_conf_id.write(base_dict)
+            else:
+                line.sale_order_line_package_line_conf_id.create(base_dict)
+            transient_model.unlink(tmp.id)
+
     @api.model
     def create(self, vals):
-        return super(sale_order_line, self).create(vals)
+        sol = super(sale_order_line, self).create(vals)
+        if self.category.lower() == 'package':
+            self.copy_model(self.env['tmp.sale.order.line.package.line.conf'])
+        return sol
 
     @api.multi
     def write(self, vals):
-        return super(sale_order_line, self).write(vals)
+        sol = super(sale_order_line, self).write(vals)
+        if self.category.lower() == 'package':
+            self.copy_model(self.env['tmp.sale.order.line.package.line.conf'])
+        return sol
 
     @api.multi
     def to_mail(self):

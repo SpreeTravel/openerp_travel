@@ -104,7 +104,7 @@ class sale_order_line_package_line(Model):
     sale_order_line_id = fields.Many2one('sale.order.line', _('Sale Order Line'), ondelete="cascade", readonly=True)
     product_id = fields.Many2one('product.product', _('Product'), required=True, ondelete="cascade", readonly=True)
     category_id = fields.Many2one('product.category', _('Category'), required=True, ondelete='cascade', readonly=True)
-    supplier_id = fields.Many2one('res.partner', _('Supplier'), ondelete='cascade', readonly=True)
+    supplier_id = fields.Many2one('res.partner', _('Supplier'), ondelete='cascade')
     num_day = fields.Integer(_('Number of Days'), default=1, readonly=True)
     order = fields.Integer(_('Order'), readonly=True)
     so_product_package_line_id = fields.Integer(_('Product Package Line ID'), readonly=True)
@@ -741,14 +741,12 @@ class sale_order_line(Model):
                         'children': context['params']['children'],
                     }
                     if line.category_id.name == 'Hotel':
-
                         base_dict.update({
                             'hotel_1_rooming_ids': self.organize_pax(cr, uid, vals)
                         })
                     else:
                         base_dict.update(vals)
-                        # TODO: Preguntarle a cesar pq pasa esto!!!!!!!!!!!!!!!!!
-                        # tmp_table.create(cr, uid, base_dict)
+                    tmp_table.create(cr, uid, base_dict)
                 else:
                     base_dict = {
                         'start_date': context['params']['start_date'],
@@ -981,7 +979,7 @@ class sale_order_line(Model):
 
     def copy_model(self, transient_model):
         for line in self.sale_order_line_package_line_id:
-            tmp = transient_model.search(['order', '=', line.order])
+            tmp = transient_model.search([('order', '=', line.order)])
             base_dict = {
                 'order': tmp.order,
                 'start_date': tmp.start_date,
@@ -1007,19 +1005,19 @@ class sale_order_line(Model):
                 line.sale_order_line_package_line_conf_id.write(base_dict)
             else:
                 line.sale_order_line_package_line_conf_id.create(base_dict)
-            transient_model.unlink(tmp.id)
+            tmp.unlink()
 
     @api.model
     def create(self, vals):
         sol = super(sale_order_line, self).create(vals)
-        if self.category.lower() == 'package':
+        if self.category and self.category.lower() == 'package':
             self.copy_model(self.env['tmp.sale.order.line.package.line.conf'])
         return sol
 
     @api.multi
     def write(self, vals):
         sol = super(sale_order_line, self).write(vals)
-        if self.category.lower() == 'package':
+        if self.category and self.category.lower() == 'package':
             self.copy_model(self.env['tmp.sale.order.line.package.line.conf'])
         return sol
 

@@ -136,8 +136,7 @@ class product_pricelist(Model):
         from_uom = context.get('uom') or product.uom_id.id
         seller_uom = seller.product_uom and seller.product_uom.id or False
         if seller_uom and from_uom and from_uom != seller_uom:
-            qty_in_seller_uom = product_uom_obj._compute_qty(cr, uid, from_uom, qty,
-                                                             to_uom_id=seller_uom)
+            qty_in_seller_uom = product_uom_obj._compute_qty(cr, uid, from_uom, qty, to_uom_id=seller_uom)
         else:
             uom_price_already_computed = True
         params = context.get('params', {})
@@ -250,33 +249,63 @@ class product_pricelist(Model):
                     sinfo = supplierinfo_obj.search(cr, uid,
                                                     [('product_tmpl_id', '=', product.product_tmpl_id.id)] + where)
                     price = 0.0
+                    product_package = self.pool.get('product.package')
+                    pp_id = product_package.search(cr, uid, [('product_id', '=', product.id)])
+                    product_package_elmt = None
+                    if len(pp_id):
+                        product_package_elmt = product_package.browse(cr, uid, pp_id)
 
-                    if len(sinfo) > 0:
-                        if len(product.seller_ids):
-                            for seller in product.seller_ids:
-                                # I dont get this condition, what they meant
-                                # if (not partner) or (seller.name.id != partner):
-                                #    continue
-                                if seller.id == sinfo[0]:
-                                    price, uom_price_already_computed = self._calculate_price_by_supplier(cr, uid,
-                                                                                                          seller,
-                                                                                                          qty,
-                                                                                                          product,
-                                                                                                          product_uom_obj,
-                                                                                                          context)
-                        elif product.category_id.name == 'Package':
-                            for line in product.product_line_ids:
-                                if line.supplier_id:
+                    if len(sinfo) > 0 and len(product.seller_ids):
+                        for seller in product.seller_ids:
+                            # I dont get this condition, what they meant
+                            # if (not partner) or (seller.name.id != partner):
+                            #    continue
+                            if seller.id == sinfo[0]:
+                                price, uom_price_already_computed = self._calculate_price_by_supplier(cr, uid,
+                                                                                                      seller,
+                                                                                                      qty,
+                                                                                                      product,
+                                                                                                      product_uom_obj,
+                                                                                                      context)
+                    elif product_package_elmt:
+                        try:
+                            package_lines = context['params']['package_lines']
+                        except KeyError:
+                            package_lines = None
+                        if package_lines:
+                            res = []
+                            solpl = self.pool.get('sale.order.line.package.line')
+                            for x in package_lines:
+                                _id = x[1]
+                                if _id:
+                                    ids = solpl.search(cr, uid, [('id', '=', _id)])
+                                    solpl_elemnt = solpl.browse(cr, uid, ids)
+                                    res.append((solpl_elemnt.order, solpl_elemnt.supplier_id.id))
+                                else:
+                                    try:
+                                        res.append((x[2]['order'], x[2]['supplier_id']))
+                                    except KeyError:
+                                        continue
+                            for sol_line in res:
+                                if sol_line:
+                                    for x in product_package_elmt.product_line_ids:
+                                        if x.order == sol_line[0]:
+                                            line = x
+                                    res_partner = self.pool.get('product.supplierinfo')
+                                    ids = res_partner.search(cr, uid, [('name', '=', sol_line[1]), (
+                                        'product_tmpl_id', '=', line.product_id.product_tmpl_id.id)])
+                                    supplier_id = res_partner.browse(cr, uid, ids)
                                     tmp, uom_price_already_computed = self._calculate_price_by_supplier(cr, uid,
-                                                                                                        line.supplier_id,
+                                                                                                        supplier_id,
                                                                                                         qty,
                                                                                                         line.product_id,
                                                                                                         product_uom_obj,
                                                                                                         context)
                                     price += tmp
                                 else:
-                                    # TODO: Q hacer en estos casos
-                                    pass
+                                    price = product.list_price
+                                    break
+                                print price
                     else:
                         price = product.list_price
 

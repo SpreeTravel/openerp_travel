@@ -281,19 +281,19 @@
                                    on_change="onchange_category(category_id)"/>
                             <field name="category" invisible="1"/>
                             <field name="product_id" domain="[('categ_id', '=', category_id)]"
-                                   context="{'partner_id':parent.partner_id, 'quantity':product_uom_qty, 'pricelist':parent.pricelist_id,  'uom':product_uom, 'supplier_id':supplier_id, 'params': {'category': category, 'start_date': start_date, 'end_date': end_date, 'adults': adults, 'children': children, 'supplement_ids': sale_line_supplement_ids} }"
+                                   context="{'partner_id':parent.partner_id, 'quantity':product_uom_qty, 'pricelist':parent.pricelist_id,  'uom':product_uom, 'supplier_id':supplier_id, 'params': {'category': category, 'start_date': start_date, 'end_date': end_date, 'adults': adults, 'children': children, 'supplement_ids': sale_line_supplement_ids, 'package_lines': sale_order_line_package_line_id} }"
                                    groups="base.group_user,base.group_portal"
                                    on_change="product_id_change(parent.pricelist_id, product_id, product_uom_qty, product_uom, product_uos_qty, product_uos, name, parent.partner_id, False, True, parent.date_order, False, parent.fiscal_position, False, context)"/>
                             <label for="start_date" string="Date"/>
                             <div>
                                 <field name="start_date"
-                                       context="{'partner_id':parent.partner_id, 'quantity':product_uom_qty, 'pricelist':parent.pricelist_id,  'uom':product_uom, 'supplier_id':supplier_id, 'params': {'category': category, 'start_date': start_date, 'end_date': end_date, 'adults': adults, 'children': children, 'supplement_ids': sale_line_supplement_ids} }"
+                                       context="{'partner_id':parent.partner_id, 'quantity':product_uom_qty, 'pricelist':parent.pricelist_id,  'uom':product_uom, 'supplier_id':supplier_id, 'params': {'category': category, 'start_date': start_date, 'end_date': end_date, 'adults': adults, 'children': children, 'supplement_ids': sale_line_supplement_ids, 'package_lines': sale_order_line_package_line_id} }"
                                        groups="base.group_user,base.group_portal" nolabel="1" class="oe_inline"
                                        required="1"
                                        on_change="product_id_change(parent.pricelist_id, product_id, product_uom_qty, product_uom, product_uos_qty, product_uos, name, parent.partner_id, False, True, parent.date_order, False, parent.fiscal_position, False, context)"
                                 />-
                                 <field name="end_date"
-                                       context="{'partner_id':parent.partner_id, 'quantity':product_uom_qty, 'pricelist':parent.pricelist_id,  'uom':product_uom, 'supplier_id':supplier_id, 'params': {'category': category, 'start_date': start_date, 'end_date': end_date, 'adults': adults, 'children': children, 'supplement_ids': sale_line_supplement_ids} }"
+                                       context="{'partner_id':parent.partner_id, 'quantity':product_uom_qty, 'pricelist':parent.pricelist_id,  'uom':product_uom, 'supplier_id':supplier_id, 'params': {'category': category, 'start_date': start_date, 'end_date': end_date, 'adults': adults, 'children': children, 'supplement_ids': sale_line_supplement_ids, 'package_lines': sale_order_line_package_line_id} }"
                                        groups="base.group_user,base.group_portal" nolabel="1" class="oe_inline"
                                        on_change="product_id_change(parent.pricelist_id, product_id, product_uom_qty, product_uom, product_uos_qty, product_uos, name, parent.partner_id, False, True, parent.date_order, False, parent.fiscal_position, False, context)"
                                 />
@@ -308,12 +308,12 @@
 
                             <group name="paxs_fields" colspan="4">
                                 <field name="adults"
-                                       context="{'partner_id':parent.partner_id, 'quantity':product_uom_qty, 'pricelist':parent.pricelist_id,  'uom':product_uom, 'supplier_id':supplier_id, 'params': {'category': category, 'start_date': start_date, 'end_date': end_date, 'adults': adults, 'children': children, 'supplement_ids': sale_line_supplement_ids} }"
+                                       context="{'partner_id':parent.partner_id, 'quantity':product_uom_qty, 'pricelist':parent.pricelist_id,  'uom':product_uom, 'supplier_id':supplier_id, 'params': {'category': category,'package_lines': sale_order_line_package_line_id, 'start_date': start_date, 'end_date': end_date, 'adults': adults, 'children': children, 'supplement_ids': sale_line_supplement_ids } }"
                                        groups="base.group_user,base.group_portal"
                                        on_change="product_id_change(parent.pricelist_id, product_id, product_uom_qty, product_uom, product_uos_qty, product_uos, name, parent.partner_id, False, True, parent.date_order, False, parent.fiscal_position, False, context)"
                                 />
                                 <field name="children"
-                                       context="{'partner_id':parent.partner_id, 'quantity':product_uom_qty, 'pricelist':parent.pricelist_id,  'uom':product_uom, 'supplier_id':supplier_id, 'params': {'category': category, 'start_date': start_date, 'end_date': end_date, 'adults': adults, 'children': children, 'supplement_ids': sale_line_supplement_ids} }"
+                                       context="{'partner_id':parent.partner_id, 'quantity':product_uom_qty, 'pricelist':parent.pricelist_id,  'uom':product_uom, 'supplier_id':supplier_id, 'params': {'category': category, 'start_date': start_date, 'end_date': end_date, 'adults': adults, 'children': children, 'supplement_ids': sale_line_supplement_ids, 'package_lines': sale_order_line_package_line_id} }"
                                        groups="base.group_user,base.group_portal"
                                        on_change="product_id_change(parent.pricelist_id, product_id, product_uom_qty, product_uom, product_uos_qty, product_uos, name, parent.partner_id, False, True, parent.date_order, False, parent.fiscal_position, False, context)"
                                 />
@@ -324,7 +324,7 @@
                             <group name="info_fields" colspan="4">
                                 <field name="sale_line_supplement_ids" widget="many2many_tags"
                                        groups="base.group_user,base.group_portal"
-                                       context="{'partner_id':parent.partner_id, 'quantity':product_uom_qty, 'pricelist':parent.pricelist_id,  'uom':product_uom, 'supplier_id':supplier_id, 'params': {'category': category, 'start_date': start_date, 'end_date': end_date, 'adults': adults, 'children': children, 'supplement_ids': sale_line_supplement_ids} }"
+                                       context="{'partner_id':parent.partner_id, 'quantity':product_uom_qty, 'pricelist':parent.pricelist_id,  'uom':product_uom, 'supplier_id':supplier_id, 'params': {'category': category, 'start_date': start_date, 'end_date': end_date, 'adults': adults, 'children': children, 'supplement_ids': sale_line_supplement_ids, 'package_lines': sale_order_line_package_line_id}}"
                                        on_change="product_id_change(parent.pricelist_id, product_id, product_uom_qty, product_uom, product_uos_qty, product_uos, name, parent.partner_id, False, True, parent.date_order, False, parent.fiscal_position, False, context)"
                                 />
                             </group>
@@ -339,14 +339,14 @@
                                 </tree>
                             </field>
                             <field name="supplier_id"
-                                   context="{'supplier': True, 'partner_id':parent.partner_id, 'quantity':product_uom_qty, 'pricelist':parent.pricelist_id,  'uom':product_uom, 'supplier_id':supplier_id, 'params': {'category': category, 'start_date': start_date, 'end_date': end_date, 'adults': adults, 'children': children, 'supplement_ids': sale_line_supplement_ids} }"
+                                   context="{'supplier': True, 'partner_id':parent.partner_id, 'quantity':product_uom_qty, 'pricelist':parent.pricelist_id,  'uom':product_uom, 'supplier_id':supplier_id, 'params': {'category': category, 'start_date': start_date, 'end_date': end_date, 'adults': adults, 'children': children, 'supplement_ids': sale_line_supplement_ids, 'package_lines': sale_order_line_package_line_id}}"
                                    groups="base.group_user,base.group_portal"
                                    on_change="product_id_change(parent.pricelist_id, product_id, product_uom_qty, product_uom, product_uos_qty, product_uos, name, parent.partner_id, False, True, parent.date_order, False, parent.fiscal_position, False, context)"
                             />
                             <label for="product_uom_qty"/>
                             <div>
                                 <field
-                                        context="{'partner_id':parent.partner_id, 'quantity':product_uom_qty, 'pricelist':parent.pricelist_id,  'uom':product_uom, 'supplier_id':supplier_id, 'params': {'category': category, 'start_date': start_date, 'end_date': end_date, 'adults': adults, 'children': children, 'supplement_ids': sale_line_supplement_ids} }"
+                                        context="{'partner_id':parent.partner_id, 'quantity':product_uom_qty, 'pricelist':parent.pricelist_id,  'uom':product_uom, 'supplier_id':supplier_id, 'params': {'category': category, 'start_date': start_date, 'end_date': end_date, 'adults': adults, 'children': children, 'supplement_ids': sale_line_supplement_ids, 'package_lines': sale_order_line_package_line_id}}"
                                         name="product_uom_qty" class="oe_inline"
                                         on_change="product_id_change(parent.pricelist_id,product_id,product_uom_qty,product_uom,product_uos_qty,product_uos,name,parent.partner_id, False, False, parent.date_order, False, parent.fiscal_position, True, context)"/>
                                 <field name="product_uom" groups="product.group_uom" class="oe_inline oe_no_button"

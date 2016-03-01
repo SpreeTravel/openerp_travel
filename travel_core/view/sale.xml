@@ -485,6 +485,7 @@
         </record>
 
         <menuitem id="travel_reservations_menu" name="Reservations" parent="base.menu_base_partner" sequence="2"/>
+
         <menuitem id="travel_sale_order_line_menu" action="travel_sale_order_line_action"
                   parent="travel_reservations_menu" sequence="1"/>
 

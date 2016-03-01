@@ -1,96 +1,107 @@
 <?xml version="1.0"?>
 <openerp>
     <data>
-    	
-		<!-- Reservations -->
-		
-		<record id="travel_reservations_hotel_search_view" model="ir.ui.view">
-            <field name="name">travel.reservations.hotel.search.view</field>
-            <field name="model">sale.order.line</field>
-            <field name="arch" type="xml">
-                <search string="Reservations">
-                    <field name="customer_id" string="Customer" filter_domain="['|', ('customer_id.name', 'ilike', self), ('name', 'ilike', self)]"/>
-					<field name="product_id" string="Product" filter_domain="[('product_id.name', 'ilike', self)]"/>
-                    <filter name="upcoming" string="Upcoming" domain="[('end_date', '&lt;=', (context_today() + datetime.timedelta(30)).strftime('%%Y-%%m-%%d')), ('end_date', '&gt;=', (context_today() + datetime.timedelta(1)).strftime('%%Y-%%m-%%d')), ('state', '!=', 'cancel')]"/>
-                    <filter name="now" string="Now" domain="[('start_date', '&lt;=', (context_today() - datetime.timedelta(1)).strftime('%%Y-%%m-%%d')), ('end_date', '&gt;=', (context_today() + datetime.timedelta(1)).strftime('%%Y-%%m-%%d')), ('state', '!=', 'cancel')]"/>
-                    <filter name="next" string="Next" domain="[('start_date', '&gt;=', (context_today() + datetime.timedelta(1)).strftime('%%Y-%%m-%%d')), ('state', '!=', 'cancel')]"/>
-                    <separator/>
-                    <filter string="Draft" domain="[('state','=','draft')]"/>
-                    <filter string="Confirmed" domain="[('state','=','confirmed')]"/>
-                    <filter string="Cancelled" domain="[('state','=','cancel')]"/>
-					<separator name="products" />
-                    <group expand="0" string="Group By...">
-                        <filter string="Customer" domain="[]" context="{'group_by':'customer_id'}"/>
-						<filter string="Supplier" domain="[]" context="{'group_by':'supplier_id'}"/>
-						<filter string="Category" domain="[]" context="{'group_by':'category_id'}"/>
-						<filter string="Product" domain="[]" context="{'group_by':'product_id'}"/>
-						<filter string="Sale" domain="[]" context="{'group_by':'order_id'}"/>
-                        <filter string="Date" domain="[]" context="{'group_by': 'start_date'}"/>
-						<filter string="Status" domain="[]" context="{'group_by':'state'}"/>
-                    </group>
-                </search>
-            </field>
-        </record>
-		
-		<record id="travel_reservations_hotel_tree_view" model="ir.ui.view">
+
+        <!-- Reservations -->
+
+        <!--<record id="travel_reservations_hotel_search_view" model="ir.ui.view">-->
+        <!--<field name="name">travel.reservations.hotel.search.view</field>-->
+        <!--<field name="model">sale.order.line</field>-->
+        <!--<field name="arch" type="xml">-->
+        <!--<search string="Reservations">-->
+        <!--<field name="customer_id" string="Customer"-->
+        <!--filter_domain="['|', ('customer_id.name', 'ilike', self), ('name', 'ilike', self)]"/>-->
+        <!--<field name="product_id" string="Product" filter_domain="[('product_id.name', 'ilike', self)]"/>-->
+        <!--<filter name="upcoming" string="Upcoming"-->
+        <!--domain="[('end_date', '&lt;=', (context_today() + datetime.timedelta(30)).strftime('%%Y-%%m-%%d')), ('end_date', '&gt;=', (context_today() + datetime.timedelta(1)).strftime('%%Y-%%m-%%d')), ('state', '!=', 'cancel')]"/>-->
+        <!--<filter name="now" string="Now"-->
+        <!--domain="[('start_date', '&lt;=', (context_today() - datetime.timedelta(1)).strftime('%%Y-%%m-%%d')), ('end_date', '&gt;=', (context_today() + datetime.timedelta(1)).strftime('%%Y-%%m-%%d')), ('state', '!=', 'cancel')]"/>-->
+        <!--<filter name="next" string="Next"-->
+        <!--domain="[('start_date', '&gt;=', (context_today() + datetime.timedelta(1)).strftime('%%Y-%%m-%%d')), ('state', '!=', 'cancel')]"/>-->
+        <!--<separator/>-->
+        <!--<filter string="Draft" domain="[('state','=','draft')]"/>-->
+        <!--<filter string="Confirmed" domain="[('state','=','confirmed')]"/>-->
+        <!--<filter string="Cancelled" domain="[('state','=','cancel')]"/>-->
+        <!--<separator name="products"/>-->
+        <!--<group expand="0" string="Group By...">-->
+        <!--<filter string="Customer" domain="[]" context="{'group_by':'customer_id'}"/>-->
+        <!--<filter string="Supplier" domain="[]" context="{'group_by':'supplier_id'}"/>-->
+        <!--<filter string="Category" domain="[]" context="{'group_by':'category_id'}"/>-->
+        <!--<filter string="Product" domain="[]" context="{'group_by':'product_id'}"/>-->
+        <!--<filter string="Sale" domain="[]" context="{'group_by':'order_id'}"/>-->
+        <!--<filter string="Date" domain="[]" context="{'group_by': 'start_date'}"/>-->
+        <!--<filter string="Status" domain="[]" context="{'group_by':'state'}"/>-->
+        <!--</group>-->
+        <!--</search>-->
+        <!--</field>-->
+        <!--</record>-->
+
+        <record id="travel_reservations_hotel_tree_view" model="ir.ui.view">
             <field name="name">travel.reservations.hotel.tree.view</field>
-            <field name="model">sale.order.line</field>
+            <field name="model">hotels.reservations</field>
             <field eval="7" name="priority"/>
             <field name="arch" type="xml">
                 <tree string="Products" create="false" delete="false">
-                	<field name="order_id" invisible="1" />
-                    <field name="category_id" invisible="1" />
-					<field name="product_id" invisible="1" />
-                    <field name="name" string="Product" />
-					<field name="customer_id" />
-					<field name="start_date" />
-					<field name="end_date" />
-					<field name="adults" />
-					<field name="children" />
-					<field name="price_unit" string="Price"/>
-					<field name="supplier_id"/>
-					<field name="state" />
-					<button name="to_confirm" type="object" string="Confirm" states="draft,cancel" icon="gtk-apply"/>
-                    <button name="to_cancel" type="object" string="Cancel" states="confirmed" icon="gtk-cancel"/>
-					<button name="print_voucher" type="object" string="Voucher" states="confirmed" icon="gtk-file"/>
-					<button name="go_to_order" type="object" string="Go to Order" icon="gtk-zoom-in"/>
+                    <field name="sale_order_line_id" invisible="1"/>
+                    <field name="name" string="Product"/>
+                    <field name="customer"/>
+                    <field name="start_date"/>
+                    <field name="end_date"/>
+                    <field name="original" invisible="1"/>
+                    <field name="adults"/>
+                    <field name="children"/>
+                    <field name="price" string="Price"/>
+                    <field name="supplier"/>
+                    <field name="state"/>
+                    <button name="to_confirm" type="object" string="Confirm" states="draft,cancel"
+                            attrs="{'invisible': [('original','=',False)]}"
+                            icon="gtk-apply"/>
+                    <button name="to_cancel" type="object" string="Cancel" states="confirmed"
+                            attrs="{'invisible': [('original','=',False)]}" icon="gtk-cancel"/>
+                    <button name="print_voucher" type="object" string="Voucher" states="confirmed"
+                            attrs="{'invisible': [('original','=',False)]}" icon="gtk-file"/>
+                    <button name="go_to_order" type="object" string="Go to Order"
+                            attrs="{'invisible': [('original','=',False)]}" icon="gtk-zoom-in"/>
                 </tree>
             </field>
         </record>
-		
-		<record id="travel_reservations_hotel_action" model="ir.actions.act_window">
+
+        <record id="travel_reservations_hotel_action" model="ir.actions.act_window">
             <field name="name">Hotels</field>
             <field name="type">ir.actions.act_window</field>
-            <field name="res_model">sale.order.line</field>
+            <field name="res_model">hotels.reservations</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree</field>
             <field name="view_id" ref="travel_reservations_hotel_tree_view"/>
-			<field name="search_view_id" ref="travel_reservations_hotel_search_view"/>
-			<field name="domain">[('category', '=', 'hotel')]</field>
+            <!--<field name="search_view_id" ref="travel_reservations_hotel_search_view"/>-->
         </record>
-        
-        <menuitem id="travel_reservations_hotel_menu" action="travel_reservations_hotel_action" parent="travel_core.travel_reservations_menu" sequence="2"/>
-    	
-		<!-- Allotment -->
-		
-		<record id="travel_allotment_state_search_view" model="ir.ui.view">
+
+        <menuitem id="travel_reservations_hotel_menu" action="travel_reservations_hotel_action"
+                  parent="travel_core.travel_reservations_menu" sequence="2"/>
+
+        <!-- Allotment -->
+
+        <record id="travel_allotment_state_search_view" model="ir.ui.view">
             <field name="name">travel.allotment_state.search.view</field>
             <field name="model">allotment.state</field>
             <field name="arch" type="xml">
                 <search string="Product">
                     <field name="hotel_id" string="Hotel" filter_domain="[('hotel_id.name','ilike', self)]"/>
-					<separator />
-					<filter string="Available" domain="[('available','>', 0)]"/>
-					<filter string="Not Available" domain="[('available','=', 0)]"/>
+                    <separator/>
+                    <filter string="Available" domain="[('available','>', 0)]"/>
+                    <filter string="Not Available" domain="[('available','=', 0)]"/>
                     <group expand='0' string='Group by...'>
-                        <filter string='Day' icon="terp-stock_symbol-selection" domain="[]" context="{'group_by' : 'day'}"/>
-						<filter string='Hotel' icon="terp-stock_symbol-selection" domain="[]" context="{'group_by' : 'hotel_id'}"/>
-						<filter string='Supplier' icon="terp-stock_symbol-selection" domain="[]" context="{'group_by' : 'supplier_id'}"/>
+                        <filter string='Day' icon="terp-stock_symbol-selection" domain="[]"
+                                context="{'group_by' : 'day'}"/>
+                        <filter string='Hotel' icon="terp-stock_symbol-selection" domain="[]"
+                                context="{'group_by' : 'hotel_id'}"/>
+                        <filter string='Supplier' icon="terp-stock_symbol-selection" domain="[]"
+                                context="{'group_by' : 'supplier_id'}"/>
                     </group>
                 </search>
             </field>
         </record>
-        
+
         <record id="travel_allotment_state_tree_view" model="ir.ui.view">
             <field name="name">travel.allotment.state.tree.view</field>
             <field name="model">allotment.state</field>
@@ -98,27 +109,28 @@
             <field name="arch" type="xml">
                 <tree string="Allotment" create="false" delete="false">
                     <field name="day"/>
-                    <field name="hotel_id" />
-                    <field name="room_id" />
-					<field name="supplier_id" />
+                    <field name="hotel_id"/>
+                    <field name="room_id"/>
+                    <field name="supplier_id"/>
                     <field name="allotment"/>
                     <field name="reserved"/>
-					<field name="available"/>                  
+                    <field name="available"/>
                 </tree>
             </field>
         </record>
-        
+
         <record id="travel_allotment_state_action" model="ir.actions.act_window">
             <field name="name">Allotment</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">allotment.state</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree</field>
-			<field name="search_view_id" ref="travel_allotment_state_search_view"/>
+            <field name="search_view_id" ref="travel_allotment_state_search_view"/>
         </record>
-        
-        <menuitem action="travel_allotment_state_action" id="travel_allotment_state_menu" parent="travel_core.travel_reservations_menu" sequence="5" />
-        
-        
+
+        <menuitem action="travel_allotment_state_action" id="travel_allotment_state_menu"
+                  parent="travel_core.travel_reservations_menu" sequence="5"/>
+
+
     </data>
 </openerp>

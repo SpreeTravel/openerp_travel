@@ -27,12 +27,14 @@
     "category": "Sales",
     "description": ("Travel Agency - Package"),
     "depends": ['travel_core'],
-    "init_xml": [
-        'data/categories.xml'
-    ],
-    "update_xml": [
+    "data": [
+        'data/categories.xml',
         'view/package.xml',
+        'view/sale.xml',
         'security/ir.model.access.csv',
+        'report/package_voucher_html.xml',
+        'report/package_report_view.xml',
+        'report/package_voucher.xml'
     ],
     "demo_xml": [],
     "application": False,

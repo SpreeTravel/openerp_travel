@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+<openerp>
+    <data>
+
+        <record id="package_travel_voucher_report_id" model="ir.actions.report.xml">
+            <field name="name">Package Travel Voucher Report</field>
+            <field name="type">ir.actions.report.xml</field>
+            <field name="model">sale.order.line</field>
+            <field name="report_name">travel_package.package_sale_order_line_report_id</field>
+            <field name="report_type">qweb-pdf</field>
+            <field name="report_flight">travel_package.package_sale_order_line_report_id</field>
+        </record>
+
+        <record id="action_binding2" model="ir.values">
+            <field eval="'action'" name="key"/>
+            <field eval="'client_print_multi'" name="key2"/>
+            <field name="model">sale.order.line</field>
+            <field name="name">Package Travel Voucher</field>
+            <field eval="'ir.actions.report.xml,'+str(package_travel_voucher_report_id)" name="value"/>
+        </record>
+
+    </data>
+</openerp>

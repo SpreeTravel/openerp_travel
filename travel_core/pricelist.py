@@ -301,11 +301,14 @@ class product_pricelist(Model):
                                                                                                         line.product_id,
                                                                                                         product_uom_obj,
                                                                                                         context)
-                                    price += tmp
+                                    if tmp:
+                                        price += tmp
+                                    else:
+                                        price = product.list_price
+                                        break
                                 else:
                                     price = product.list_price
                                     break
-                                print price
                     else:
                         price = product.list_price
 

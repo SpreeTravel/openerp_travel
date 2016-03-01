@@ -372,10 +372,10 @@
                     </group>
                     <notebook>
                         <page string="Description">
+                            <separator string="Packages Lines"
+                                       attrs="{'invisible': [('category', '!=', 'package')]}"/>
                             <group>
-                                <separator string="Packages Lines"
-                                           attrs="{'invisible': [('category', '!=', 'package')]}"/>
-                                <field name="sale_order_line_package_line_id"
+                                <field name="sale_order_line_package_line_id" nolabel="1" col="4"
                                        attrs="{'invisible': [('category', '!=', 'package')]}">
                                     <tree string="Products" create="false" delete="false">
                                         <field name="order" readonly="1"/>

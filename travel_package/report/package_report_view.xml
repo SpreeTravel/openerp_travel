@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+
+        <record id="travel_package_report_search_view" model="ir.ui.view">
+            <field name="name">travel.package.report.search.view</field>
+            <field name="model">package.report</field>
+            <field name="arch" type="xml">
+                <search string="Package Analysis">
+                    <group expand="1" string="Group By...">
+                        <filter string="Supplier" icon="terp-personal" name="Supplier"
+                                context="{'group_by':'supplier'}"/>
+                        <filter string="Start Date" icon="terp-partner" name="Start Date"
+                                context="{'group_by':'start_date'}"/>
+                        <filter string="End Date" icon="terp-partner" name="End Date"
+                                context="{'group_by':'end_date'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <record id="travel_package_report_tree" model="ir.ui.view">
+            <field name="name">travel.package.report.tree</field>
+            <field name="model">package.report</field>
+            <field name="arch" type="xml">
+                <tree string="Package Report" create="false">
+                    <field name="name"/>
+                    <field name="start_date"/>
+                    <field name="end_date"/>
+                    <field name="supplier"/>
+                    <field name="price"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="action_travel_package_report_all" model="ir.actions.act_window">
+            <field name="name">Package Report</field>
+            <field name="res_model">package.report</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree</field>
+            <field name="search_view_id" ref="travel_package_report_search_view"/>
+            <field name="view_id" ref="travel_package_report_tree"/>
+
+        </record>
+
+        <menuitem action="action_travel_package_report_all"
+                  id="menu_action_travel_package_report_all" parent="travel_core.pricelist_next_id_64" sequence="10"/>
+
+
+        <!--<record id="sale.action_order_report_all" model="ir.actions.act_window">-->
+        <!--<field name="search_view_id" ref="travel_package_report_search_view"/>-->
+        <!--</record>-->
+
+    </data>
+</openerp>

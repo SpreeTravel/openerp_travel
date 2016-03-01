@@ -101,6 +101,29 @@
        </table>
        % endif
 
+        % if x.category_id.name == 'Package':
+       <table>
+       <thead>
+        <caption style=text-align=center; align=top><h3>Package Lines</h3>
+        </caption>
+        <tr>
+            <th align="center"><strong>Días</strong></th>
+            <th align="center"><strong>Categoría</strong></th>
+            <th align="center"><strong>Producto</strong></th>
+        </tr>
+        </thead>
+        <tbody>
+        % for lines in x.sale_order_line_package_line_id:
+        <tr style="text-align=center;">
+            <td align="center">${lines.num_day}</td>
+            <td align="center">${lines.category_id.name}</td>
+            <td align="center"><span>${lines.product_id.name_template}</span></td>
+        </tr>
+        %endfor
+        </tbody>
+       </table>
+       % endif
+
     </p>
     %endfor
 

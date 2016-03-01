@@ -775,7 +775,7 @@ class customer_price(TransientModel):
                         except AttributeError:
                             continue
                     res.update({field: attr})
-            elif category in ['car', 'transfer', 'flight']:
+            elif category in ['car', 'transfer', 'flight', 'package']:
                 if field in ['price', 'child']:
                     value = getattr(partener_info, field)
 

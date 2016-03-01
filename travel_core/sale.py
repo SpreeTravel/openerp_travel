@@ -109,7 +109,27 @@ class sale_order_line_package_line(Model):
     order = fields.Integer(_('Order'), readonly=True)
     so_product_package_line_id = fields.Integer(_('Product Package Line ID'), readonly=True)
 
-    # TODO: Ver q se hace con el edit
+    @api.model
+    def organize_pax(self, vals):
+        adults = vals['adults']
+        children = vals['children']
+        option_value_table = self.env['option.value']
+        option = option_value_table.search([('code', '=', 'std')])
+        res = []
+        for _ in range(0, adults / 2):
+            child = 0
+            if children:
+                child = 1
+                children -= 1
+            res.append((0, False,
+                        {'room': 'double', 'room_type_id': option.id, 'adults': 2, 'children': child, 'quantity': 1}))
+        if not adults % 2:
+            return res
+        else:
+            res.append((0, False,
+                        {'room': 'simple', 'room_type_id': option.id, 'adults': 1, 'children': 0, 'quantity': 1}))
+            return res
+
     @api.multi
     def edit(self):
         obj = self[0]
@@ -120,19 +140,33 @@ class sale_order_line_package_line(Model):
             product_package_conf_table = self.env['product.package.line.conf']
             product_package_conf = product_package_conf_table.search(
                 [('product_package_line_id', '=', obj.so_product_package_line_id)])
-            base_dict = {
-                'product_id': product_package_conf.product_id.id,
-                'category_id': product_package_conf.category_id.id,
-                'name': product_package_conf.name,
-                'adults': product_package_conf.adults,
-                'start_date': product_package_conf.start_date,
-                'end_date': product_package_conf.end_date,
-                'copied': True,
-                'children': product_package_conf.children,
-                'sale_line_supplement_ids': [(4, x.id, None) for x in
-                                             product_package_conf.product_package_supplement_ids],
-                'supplier_id': product_package_conf.supplier_id.id
-            }
+            if product_package_conf.id:
+                if product_package_conf.start_date < self.sale_order_line_id.start_date or product_package_conf.end_date > self.sale_order_line_id.end_date:
+                    raise except_orm(_('Configuration Error'), _('Dates did not match'))
+                base_dict = {
+                    'product_id': product_package_conf.product_id.id,
+                    'category_id': product_package_conf.category_id.id,
+                    'name': product_package_conf.name,
+                    'adults': product_package_conf.adults,
+                    'start_date': product_package_conf.start_date,
+                    'end_date': product_package_conf.end_date,
+                    'copied': True,
+                    'children': product_package_conf.children,
+                    'sale_line_supplement_ids': [(4, x.id, None) for x in
+                                                 product_package_conf.product_package_supplement_ids],
+                    'supplier_id': product_package_conf.supplier_id.id
+                }
+            else:
+                base_dict = {
+                    'product_id': self.product_id.id,
+                    'category_id': self.category_id.id,
+                    'adults': self.sale_order_line_id.adults,
+                    'start_date': self.sale_order_line_id.start_date,
+                    'end_date': self.sale_order_line_id.end_date,
+                    'copied': False,
+                    'children': self.sale_order_line_id.children,
+                    'supplier_id': self.supplier_id.id
+                }
             if product_package_conf and product_package_conf.category_id and product_package_conf.category_id.name == 'Hotel':
                 hotel_rooming = [(0, False, {u'room_type_id': rooming.room_type_id.id,
                                              u'quantity': rooming.quantity,
@@ -144,6 +178,12 @@ class sale_order_line_package_line(Model):
                     'hotel_1_rooming_ids': hotel_rooming,
                     'hotel_2_meal_plan_id': plan
                 })
+            elif not product_package_conf.id and self.category_id.name == 'Hotel':
+                base_dict.update({
+                    'hotel_1_rooming_ids': self.organize_pax({
+                        'adults': self.sale_order_line_id.adults,
+                        'children': self.sale_order_line_id.children
+                    })})
             elif product_package_conf and product_package_conf.category_id and product_package_conf.category_id.name == 'Transfer':
                 base_dict.update({
                     'transfer_1_vehicle_type_id': product_package_conf.transfer_1_vehicle_type_id.id,
@@ -712,7 +752,7 @@ class sale_order_line(Model):
             pass
         lines = None
         if product_id and _category.lower() == 'package':
-            tmp_table = self.pool.get('tmp.sale.order.line.package.line.conf')
+            # tmp_table = self.pool.get('tmp.sale.order.line.package.line.conf')
             product_package = self.pool.get('product.package')
             package_ids = product_package.search(cr, uid, [('product_id', '=', product_id)], context=context)
             package = product_package.browse(cr, uid, package_ids)
@@ -726,45 +766,45 @@ class sale_order_line(Model):
                     'order': line.order,
                     'num_day': line.num_day
                 }))
-                tmp_solpl_ids = tmp_table.search(cr, uid, [('order', '=', line.order)])
-                if not len(tmp_solpl_ids):
-                    base_dict = {
-                        'order': line.order,
-                        'product_id': line.product_id.id,
-                        'supplier_id': line.supplier_id.id,
-                        'category_id': line.category_id.id,
-                        'start_date': context['params']['start_date'],
-                        'end_date': context['params']['end_date'],
-                    }
-                    vals = {
-                        'adults': context['params']['adults'],
-                        'children': context['params']['children'],
-                    }
-                    if line.category_id.name == 'Hotel':
-                        base_dict.update({
-                            'hotel_1_rooming_ids': self.organize_pax(cr, uid, vals)
-                        })
-                    else:
-                        base_dict.update(vals)
-                    tmp_table.create(cr, uid, base_dict)
-                else:
-                    base_dict = {
-                        'start_date': context['params']['start_date'],
-                        'end_date': context['params']['end_date'],
-                    }
-                    vals = {
-                        'adults': context['params']['adults'],
-                        'children': context['params']['children'],
-                    }
-                    if line.category_id.name == 'Hotel':
-                        base_dict.update({
-                            'hotel_1_rooming_ids': self.organize_pax(cr, uid, vals)
-                        })
-                    else:
-                        base_dict.update(vals)
-                    solpl = tmp_table.browse(cr, uid, tmp_solpl_ids, context)
-                    solpl.write(base_dict)
-
+                # tmp_solpl_ids = tmp_table.search(cr, uid, [('order', '=', line.order)])
+                # if not len(tmp_solpl_ids):
+                #     base_dict = {
+                #         'order': line.order,
+                #         'product_id': line.product_id.id,
+                #         'supplier_id': line.supplier_id.id,
+                #         'category_id': line.category_id.id,
+                #         'start_date': context['params']['start_date'],
+                #         'end_date': context['params']['end_date']
+                #     }
+                #     vals = {
+                #         'adults': context['params']['adults'],
+                #         'children': context['params']['children']
+                #     }
+                #     if line.category_id.name == 'Hotel':
+                #         base_dict.update({
+                #             'hotel_1_rooming_ids': self.organize_pax(cr, uid, vals)
+                #         })
+                #     else:
+                #         base_dict.update(vals)
+                #     TODO: Esta linea es la q da problemas!!!
+                #     tmp_table.create(cr, uid, base_dict)
+                # else:
+                #     base_dict = {
+                #         'start_date': context['params']['start_date'],
+                #         'end_date': context['params']['end_date'],
+                #     }
+                #     vals = {
+                #         'adults': context['params']['adults'],
+                #         'children': context['params']['children'],
+                #     }
+                #     if line.category_id.name == 'Hotel':
+                #         base_dict.update({
+                #             'hotel_1_rooming_ids': self.organize_pax(cr, uid, vals)
+                #         })
+                #     else:
+                #         base_dict.update(vals)
+                #     solpl = tmp_table.browse(cr, uid, tmp_solpl_ids, context)
+                #     solpl.write(base_dict)
         product_obj = product_model.browse(cr, uid, product_id, context)
         product_tmpl_id = product_obj.product_tmpl_id.id
         suppinfo_model = self.pool.get('product.supplierinfo')

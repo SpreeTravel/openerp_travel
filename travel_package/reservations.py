@@ -25,9 +25,9 @@ from openerp.tools.translate import _
 
 
 # TODO: Optimizar esto con sql
-class flights_reservations(Model):
-    _name = "flights.reservations"
-    _description = "Flights Reservations"
+class packages_reservations(Model):
+    _name = "packages.reservations"
+    _description = "Packages Reservations"
 
     sale_order_line_id = fields.Many2one('sale.order.line', _('Sale Order Line'), readonly=True)
     name = fields.Char(_('Name'), readonly=True)
@@ -50,10 +50,10 @@ class flights_reservations(Model):
     def fields_view_get(self, view_id=None, view_type='form', toolbar=False, submenu=False):
         if view_type == 'tree':
             self.env.cr.execute(
-                'DELETE FROM flights_reservations WHERE id IN ( SELECT id FROM flights_reservations)')
+                'DELETE FROM packages_reservations WHERE id IN ( SELECT id FROM packages_reservations)')
             sol = self.env['sale.order.line']
             for line in sol.search([]):
-                if line.category.lower() == 'flight':
+                if line.category.lower() == 'package' and line.supplier_id:
                     base_dict = {
                         'sale_order_line_id': line.id,
                         'name': line.product_id.name_template,
@@ -70,34 +70,9 @@ class flights_reservations(Model):
                         'state': line.state
                     }
                     self.create(base_dict)
-                elif line.category.lower() == 'package' and not line.supplier_id:
-                    for package_line in line.sale_order_line_package_line_id:
-                        if package_line.category_id.name.lower() == 'flight':
-                            base_dict = {
-                                'sale_order_line_id': line.id,
-                                'name': package_line.product_id.name_template,
-                                'supplier': package_line.supplier_id.name,
-                                'price': line.price_unit,
-                                'customer': line.customer_id.name,
-                                'original': False,
-
-                            }
-                            if package_line.sale_order_line_package_line_conf_id:
-                                tmp = package_line.sale_order_line_package_line_conf_id
-                                vals = {
-                                    'start_date': tmp.start_date,
-                                    'end_date': tmp.end_date,
-                                    'adults': tmp.adults,
-                                    'vehicle': tmp.transfer_1_vehicle_type_id.name,
-                                    'guide': tmp.transfer_2_guide_id.name,
-                                    'confort': tmp.transfer_3_confort_id.name,
-                                    'children': tmp.children
-                                }
-                                base_dict.update(vals)
-                            self.create(base_dict)
-        return super(flights_reservations, self).fields_view_get(view_id=view_id, view_type=view_type,
-                                                              toolbar=toolbar,
-                                                              submenu=submenu)
+        return super(packages_reservations, self).fields_view_get(view_id=view_id, view_type=view_type,
+                                                                  toolbar=toolbar,
+                                                                  submenu=submenu)
 
     @api.multi
     def to_confirm(self):

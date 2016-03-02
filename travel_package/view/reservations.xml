@@ -1,0 +1,78 @@
+<?xml version="1.0"?>
+<openerp>
+    <data>
+        <!-- Reservations -->
+
+       <record id="travel_reservations_package_search_view" model="ir.ui.view">
+            <field name="name">travel.reservations.package.search.view</field>
+            <field name="model">packages.reservations</field>
+            <field name="arch" type="xml">
+                <search string="Reservations">
+                    <field name="customer" string="Customer"
+                           filter_domain="['|', ('customer', 'ilike', self)]"/>
+                    <field name="name" string="Product" filter_domain="[('name', 'ilike', self)]"/>
+                    <filter name="upcoming" string="Upcoming"
+                            domain="[('end_date', '&lt;=', (context_today() + datetime.timedelta(30)).strftime('%%Y-%%m-%%d')), ('end_date', '&gt;=', (context_today() + datetime.timedelta(1)).strftime('%%Y-%%m-%%d')), ('state', '!=', 'cancel')]"/>
+                    <filter name="now" string="Now"
+                            domain="[('start_date', '&lt;=', (context_today() - datetime.timedelta(1)).strftime('%%Y-%%m-%%d')), ('end_date', '&gt;=', (context_today() + datetime.timedelta(1)).strftime('%%Y-%%m-%%d')), ('state', '!=', 'cancel')]"/>
+                    <filter name="next" string="Next"
+                            domain="[('start_date', '&gt;=', (context_today() + datetime.timedelta(1)).strftime('%%Y-%%m-%%d')), ('state', '!=', 'cancel')]"/>
+                    <separator/>
+                    <filter string="Draft" domain="[('state','=','draft')]"/>
+                    <filter string="Confirmed" domain="[('state','=','confirmed')]"/>
+                    <filter string="Cancelled" domain="[('state','=','cancel')]"/>
+                    <separator name="products"/>
+                    <group expand="0" string="Group By...">
+                        <filter string="Customer" domain="[]" context="{'group_by':'customer'}"/>
+                        <filter string="Supplier" domain="[]" context="{'group_by':'supplier'}"/>
+                        <filter string="Product" domain="[]" context="{'group_by':'name'}"/>
+                        <filter string="Date" domain="[]" context="{'group_by': 'start_date'}"/>
+                        <filter string="Status" domain="[]" context="{'group_by':'state'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <record id="travel_reservations_package_tree_view" model="ir.ui.view">
+            <field name="name">travel.reservations.package.tree.view</field>
+            <field name="model">packages.reservations</field>
+            <field eval="7" name="priority"/>
+            <field name="arch" type="xml">
+                <tree string="Products" create="false" delete="false" colors="green:original == False">
+                    <field name="sale_order_line_id" invisible="1"/>
+                    <field name="name" string="Product"/>
+                    <field name="customer"/>
+                    <field name="start_date"/>
+                    <field name="end_date"/>
+                    <field name="original" invisible="1"/>
+                    <field name="adults"/>
+                    <field name="children"/>
+                    <field name="price" string="Price"/>
+                    <field name="supplier"/>
+                    <field name="state"/>
+                    <button name="to_confirm" type="object" string="Confirm" states="draft,cancel"
+                            icon="gtk-apply"/>
+                    <button name="to_cancel" type="object" string="Cancel" states="confirmed"
+                            icon="gtk-cancel"/>
+                    <button name="print_voucher" type="object" string="Voucher" states="confirmed"
+                            icon="gtk-file"/>
+                    <button name="go_to_order" type="object" string="Go to Order"
+                            attrs="{'invisible': [('original','=',False)]}" icon="gtk-zoom-in"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="travel_reservations_package_action" model="ir.actions.act_window">
+            <field name="name">Packages</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">packages.reservations</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="travel_reservations_package_tree_view"/>
+            <field name="search_view_id" ref="travel_reservations_package_search_view"/>
+        </record>
+
+        <menuitem id="travel_reservations_package_menu" action="travel_reservations_package_action"
+                  parent="travel_core.travel_reservations_menu" sequence="2"/>
+    </data>
+</openerp>

@@ -39,9 +39,6 @@ class cars_reservations(Model):
     price = fields.Float(_('Price'), readonly=True)
     original = fields.Boolean(_('Original'), default=True, readonly=True)
     supplier = fields.Char(_('Supplier'), readonly=True)
-    vehicle = fields.Char(_('Vehicle'), readonly=True)
-    guide = fields.Char(_('Guide'), readonly=True)
-    confort = fields.Char(_('Confort'), readonly=True)
     state = fields.Selection(
         [('cancel', 'Cancelled'), ('draft', 'Draft'), ('confirmed', 'Confirmed'), ('exception', 'Exception'),
          ('done', 'Done')],

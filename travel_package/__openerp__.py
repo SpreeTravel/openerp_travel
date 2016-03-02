@@ -31,6 +31,7 @@
         'data/categories.xml',
         'view/package.xml',
         'view/sale.xml',
+        'view/reservations.xml',
         'security/ir.model.access.csv',
         'report/package_voucher_html.xml',
         'report/package_report_view.xml',

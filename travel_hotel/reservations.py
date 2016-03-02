@@ -38,7 +38,10 @@ class hotels_reservations(Model):
     price = fields.Float(_('Price'), readonly=True)
     original = fields.Boolean(_('Original'), default=True, readonly=True)
     supplier = fields.Char(_('Supplier'), readonly=True)
-    state = fields.Char(_('State'), readonly=True)
+    state = fields.Selection(
+        [('cancel', 'Cancelled'), ('draft', 'Draft'), ('confirmed', 'Confirmed'), ('exception', 'Exception'),
+         ('done', 'Done')],
+        _('Status'), readonly=True, copy=False)
 
     _order = 'start_date asc'
 
@@ -64,7 +67,7 @@ class hotels_reservations(Model):
                     self.create(base_dict)
                 elif line.category.lower() == 'package':
                     for package_line in line.sale_order_line_package_line_id:
-                        if package_line.category_id.name == 'Hotel':
+                        if package_line.category_id.name.lower() == 'hotel':
                             base_dict = {
                                 'sale_order_line_id': line.id,
                                 'name': package_line.product_id.name_template,
@@ -86,5 +89,27 @@ class hotels_reservations(Model):
                             self.create(base_dict)
         return super(hotels_reservations, self).fields_view_get(view_id=view_id, view_type=view_type, toolbar=toolbar,
                                                                 submenu=submenu)
+
+    @api.multi
+    def to_confirm(self):
+        obj = self[0]
+        obj.write({'state': 'confirmed'})
+        return obj.sale_order_line_id.to_confirm()
+
+    @api.multi
+    def to_cancel(self):
+        obj = self[0]
+        obj.write({'state': 'cancel'})
+        return obj.sale_order_line_id.to_cancel()
+
+    @api.multi
+    def print_voucher(self):
+        obj = self[0]
+        return obj.sale_order_line_id.print_voucher()
+
+    @api.multi
+    def go_to_order(self):
+        obj = self[0]
+        return obj.sale_order_line_id.go_to_order()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

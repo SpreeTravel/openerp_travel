@@ -41,7 +41,7 @@
             <field name="model">hotels.reservations</field>
             <field eval="7" name="priority"/>
             <field name="arch" type="xml">
-                <tree string="Products" create="false" delete="false">
+                <tree string="Products" create="false" delete="false" colors="gray:original == False">
                     <field name="sale_order_line_id" invisible="1"/>
                     <field name="name" string="Product"/>
                     <field name="customer"/>
@@ -54,12 +54,11 @@
                     <field name="supplier"/>
                     <field name="state"/>
                     <button name="to_confirm" type="object" string="Confirm" states="draft,cancel"
-                            attrs="{'invisible': [('original','=',False)]}"
                             icon="gtk-apply"/>
                     <button name="to_cancel" type="object" string="Cancel" states="confirmed"
-                            attrs="{'invisible': [('original','=',False)]}" icon="gtk-cancel"/>
+                            icon="gtk-cancel"/>
                     <button name="print_voucher" type="object" string="Voucher" states="confirmed"
-                            attrs="{'invisible': [('original','=',False)]}" icon="gtk-file"/>
+                            icon="gtk-file"/>
                     <button name="go_to_order" type="object" string="Go to Order"
                             attrs="{'invisible': [('original','=',False)]}" icon="gtk-zoom-in"/>
                 </tree>

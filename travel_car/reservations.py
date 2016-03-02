@@ -25,9 +25,9 @@ from openerp.tools.translate import _
 
 
 # TODO: Optimizar esto con sql
-class hotels_reservations(Model):
-    _name = "hotels.reservations"
-    _description = "Hotels Reservations"
+class cars_reservations(Model):
+    _name = "cars.reservations"
+    _description = "Cars Reservations"
 
     sale_order_line_id = fields.Many2one('sale.order.line', _('Sale Order Line'), readonly=True)
     name = fields.Char(_('Name'), readonly=True)
@@ -39,7 +39,9 @@ class hotels_reservations(Model):
     price = fields.Float(_('Price'), readonly=True)
     original = fields.Boolean(_('Original'), default=True, readonly=True)
     supplier = fields.Char(_('Supplier'), readonly=True)
-    plan = fields.Char(_('Plan'), readonly=True)
+    vehicle = fields.Char(_('Vehicle'), readonly=True)
+    guide = fields.Char(_('Guide'), readonly=True)
+    confort = fields.Char(_('Confort'), readonly=True)
     state = fields.Selection(
         [('cancel', 'Cancelled'), ('draft', 'Draft'), ('confirmed', 'Confirmed'), ('exception', 'Exception'),
          ('done', 'Done')],
@@ -50,10 +52,11 @@ class hotels_reservations(Model):
     @api.model
     def fields_view_get(self, view_id=None, view_type='form', toolbar=False, submenu=False):
         if view_type == 'tree':
-            self.env.cr.execute('DELETE FROM hotels_reservations WHERE id IN ( SELECT id FROM hotels_reservations)')
+            self.env.cr.execute(
+                'DELETE FROM cars_reservations WHERE id IN ( SELECT id FROM cars_reservations)')
             sol = self.env['sale.order.line']
             for line in sol.search([]):
-                if line.category.lower() == 'hotel':
+                if line.category.lower() == 'car':
                     base_dict = {
                         'sale_order_line_id': line.id,
                         'name': line.product_id.name_template,
@@ -61,7 +64,9 @@ class hotels_reservations(Model):
                         'end_date': line.end_date,
                         'adults': line.adults,
                         'children': line.children,
-                        'plan': line.hotel_2_meal_plan_id.name,
+                        'vehicle': line.transfer_1_vehicle_type_id.name,
+                        'guide': line.transfer_2_guide_id.name,
+                        'confort': line.transfer_3_confort_id.name,
                         'supplier': line.supplier_id.name,
                         'price': line.price_unit,
                         'customer': line.customer_id.name,
@@ -70,7 +75,7 @@ class hotels_reservations(Model):
                     self.create(base_dict)
                 elif line.category.lower() == 'package' and not line.supplier_id:
                     for package_line in line.sale_order_line_package_line_id:
-                        if package_line.category_id.name.lower() == 'hotel':
+                        if package_line.category_id.name.lower() == 'car':
                             base_dict = {
                                 'sale_order_line_id': line.id,
                                 'name': package_line.product_id.name_template,
@@ -86,13 +91,16 @@ class hotels_reservations(Model):
                                     'start_date': tmp.start_date,
                                     'end_date': tmp.end_date,
                                     'adults': tmp.adults,
-                                    'plan': tmp.hotel_2_meal_plan_id.name,
+                                    'vehicle': tmp.transfer_1_vehicle_type_id.name,
+                                    'guide': tmp.transfer_2_guide_id.name,
+                                    'confort': tmp.transfer_3_confort_id.name,
                                     'children': tmp.children
                                 }
                                 base_dict.update(vals)
                             self.create(base_dict)
-        return super(hotels_reservations, self).fields_view_get(view_id=view_id, view_type=view_type, toolbar=toolbar,
-                                                                submenu=submenu)
+        return super(cars_reservations, self).fields_view_get(view_id=view_id, view_type=view_type,
+                                                              toolbar=toolbar,
+                                                              submenu=submenu)
 
     @api.multi
     def to_confirm(self):

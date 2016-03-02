@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <openerp>
 	<data>
-        
+
         <record id="travel_sale_report_transfer_search_view" model="ir.ui.view">
             <field name="name">travel.sale.report.transfer.search.view</field>
             <field name="model">sale.report</field>
@@ -12,7 +12,7 @@
 				</separator>
             </field>
         </record>
-		
+
 		<record id="travel_sale_order_line_transfer_search_view" model="ir.ui.view">
             <field name="name">travel.sale.order.line.tranfer.search.view</field>
             <field name="model">sale.order.line</field>
@@ -23,6 +23,6 @@
 				</separator>
             </field>
         </record>
-		
+
 	</data>
 </openerp>

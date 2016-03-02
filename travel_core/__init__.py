@@ -25,3 +25,4 @@ import sale
 import pricelist
 import invoice
 import report
+import reservations

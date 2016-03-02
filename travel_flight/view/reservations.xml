@@ -3,9 +3,9 @@
     <data>
         <!-- Reservations -->
 
-       <record id="travel_reservations_transfer_search_view" model="ir.ui.view">
-            <field name="name">travel.reservations.transfer.search.view</field>
-            <field name="model">transfers.reservations</field>
+       <record id="travel_reservations_flight_search_view" model="ir.ui.view">
+            <field name="name">travel.reservations.flight.search.view</field>
+            <field name="model">flights.reservations</field>
             <field name="arch" type="xml">
                 <search string="Reservations">
                     <field name="customer" string="Customer"
@@ -27,18 +27,15 @@
                         <filter string="Supplier" domain="[]" context="{'group_by':'supplier'}"/>
                         <filter string="Product" domain="[]" context="{'group_by':'name'}"/>
                         <filter string="Date" domain="[]" context="{'group_by': 'start_date'}"/>
-                        <filter string="Vehicle" domain="[]" context="{'group_by': 'vehicle'}"/>
-                        <filter string="Guide" domain="[]" context="{'group_by': 'guide'}"/>
-                        <filter string="Confort" domain="[]" context="{'group_by': 'confort'}"/>
                         <filter string="Status" domain="[]" context="{'group_by':'state'}"/>
                     </group>
                 </search>
             </field>
         </record>
 
-        <record id="travel_reservations_transfer_tree_view" model="ir.ui.view">
-            <field name="name">travel.reservations.transfer.tree.view</field>
-            <field name="model">transfers.reservations</field>
+        <record id="travel_reservations_flight_tree_view" model="ir.ui.view">
+            <field name="name">travel.reservations.flight.tree.view</field>
+            <field name="model">flights.reservations</field>
             <field eval="7" name="priority"/>
             <field name="arch" type="xml">
                 <tree string="Products" create="false" delete="false" colors="green:original == False">
@@ -50,9 +47,6 @@
                     <field name="original" invisible="1"/>
                     <field name="adults"/>
                     <field name="children"/>
-                    <field name="vehicle"/>
-                    <field name="guide"/>
-                    <field name="confort"/>
                     <field name="price" string="Price"/>
                     <field name="supplier"/>
                     <field name="state"/>
@@ -68,17 +62,17 @@
             </field>
         </record>
 
-        <record id="travel_reservations_transfer_action" model="ir.actions.act_window">
-            <field name="name">Transfers</field>
+        <record id="travel_reservations_flight_action" model="ir.actions.act_window">
+            <field name="name">Flights</field>
             <field name="type">ir.actions.act_window</field>
-            <field name="res_model">transfers.reservations</field>
+            <field name="res_model">flights.reservations</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree</field>
-            <field name="view_id" ref="travel_reservations_transfer_tree_view"/>
-            <field name="search_view_id" ref="travel_reservations_transfer_search_view"/>
+            <field name="view_id" ref="travel_reservations_flight_tree_view"/>
+            <field name="search_view_id" ref="travel_reservations_flight_search_view"/>
         </record>
 
-        <menuitem id="travel_reservations_transfer_menu" action="travel_reservations_transfer_action"
+        <menuitem id="travel_reservations_flight_menu" action="travel_reservations_flight_action"
                   parent="travel_core.travel_reservations_menu" sequence="2"/>
     </data>
 </openerp>

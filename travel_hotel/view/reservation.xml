@@ -4,44 +4,43 @@
 
         <!-- Reservations -->
 
-        <!--<record id="travel_reservations_hotel_search_view" model="ir.ui.view">-->
-        <!--<field name="name">travel.reservations.hotel.search.view</field>-->
-        <!--<field name="model">sale.order.line</field>-->
-        <!--<field name="arch" type="xml">-->
-        <!--<search string="Reservations">-->
-        <!--<field name="customer_id" string="Customer"-->
-        <!--filter_domain="['|', ('customer_id.name', 'ilike', self), ('name', 'ilike', self)]"/>-->
-        <!--<field name="product_id" string="Product" filter_domain="[('product_id.name', 'ilike', self)]"/>-->
-        <!--<filter name="upcoming" string="Upcoming"-->
-        <!--domain="[('end_date', '&lt;=', (context_today() + datetime.timedelta(30)).strftime('%%Y-%%m-%%d')), ('end_date', '&gt;=', (context_today() + datetime.timedelta(1)).strftime('%%Y-%%m-%%d')), ('state', '!=', 'cancel')]"/>-->
-        <!--<filter name="now" string="Now"-->
-        <!--domain="[('start_date', '&lt;=', (context_today() - datetime.timedelta(1)).strftime('%%Y-%%m-%%d')), ('end_date', '&gt;=', (context_today() + datetime.timedelta(1)).strftime('%%Y-%%m-%%d')), ('state', '!=', 'cancel')]"/>-->
-        <!--<filter name="next" string="Next"-->
-        <!--domain="[('start_date', '&gt;=', (context_today() + datetime.timedelta(1)).strftime('%%Y-%%m-%%d')), ('state', '!=', 'cancel')]"/>-->
-        <!--<separator/>-->
-        <!--<filter string="Draft" domain="[('state','=','draft')]"/>-->
-        <!--<filter string="Confirmed" domain="[('state','=','confirmed')]"/>-->
-        <!--<filter string="Cancelled" domain="[('state','=','cancel')]"/>-->
-        <!--<separator name="products"/>-->
-        <!--<group expand="0" string="Group By...">-->
-        <!--<filter string="Customer" domain="[]" context="{'group_by':'customer_id'}"/>-->
-        <!--<filter string="Supplier" domain="[]" context="{'group_by':'supplier_id'}"/>-->
-        <!--<filter string="Category" domain="[]" context="{'group_by':'category_id'}"/>-->
-        <!--<filter string="Product" domain="[]" context="{'group_by':'product_id'}"/>-->
-        <!--<filter string="Sale" domain="[]" context="{'group_by':'order_id'}"/>-->
-        <!--<filter string="Date" domain="[]" context="{'group_by': 'start_date'}"/>-->
-        <!--<filter string="Status" domain="[]" context="{'group_by':'state'}"/>-->
-        <!--</group>-->
-        <!--</search>-->
-        <!--</field>-->
-        <!--</record>-->
+        <record id="travel_reservations_hotel_search_view" model="ir.ui.view">
+            <field name="name">travel.reservations.hotel.search.view</field>
+            <field name="model">hotels.reservations</field>
+            <field name="arch" type="xml">
+                <search string="Reservations">
+                    <field name="customer" string="Customer"
+                           filter_domain="['|', ('customer', 'ilike', self)]"/>
+                    <field name="name" string="Product" filter_domain="[('name', 'ilike', self)]"/>
+                    <filter name="upcoming" string="Upcoming"
+                            domain="[('end_date', '&lt;=', (context_today() + datetime.timedelta(30)).strftime('%%Y-%%m-%%d')), ('end_date', '&gt;=', (context_today() + datetime.timedelta(1)).strftime('%%Y-%%m-%%d')), ('state', '!=', 'cancel')]"/>
+                    <filter name="now" string="Now"
+                            domain="[('start_date', '&lt;=', (context_today() - datetime.timedelta(1)).strftime('%%Y-%%m-%%d')), ('end_date', '&gt;=', (context_today() + datetime.timedelta(1)).strftime('%%Y-%%m-%%d')), ('state', '!=', 'cancel')]"/>
+                    <filter name="next" string="Next"
+                            domain="[('start_date', '&gt;=', (context_today() + datetime.timedelta(1)).strftime('%%Y-%%m-%%d')), ('state', '!=', 'cancel')]"/>
+                    <separator/>
+                    <filter string="Draft" domain="[('state','=','draft')]"/>
+                    <filter string="Confirmed" domain="[('state','=','confirmed')]"/>
+                    <filter string="Cancelled" domain="[('state','=','cancel')]"/>
+                    <separator name="products"/>
+                    <group expand="0" string="Group By...">
+                        <filter string="Customer" domain="[]" context="{'group_by':'customer'}"/>
+                        <filter string="Supplier" domain="[]" context="{'group_by':'supplier'}"/>
+                        <filter string="Product" domain="[]" context="{'group_by':'name'}"/>
+                        <filter string="Date" domain="[]" context="{'group_by': 'start_date'}"/>
+                        <filter string="Plan" domain="[]" context="{'group_by': 'plan'}"/>
+                        <filter string="Status" domain="[]" context="{'group_by':'state'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
 
         <record id="travel_reservations_hotel_tree_view" model="ir.ui.view">
             <field name="name">travel.reservations.hotel.tree.view</field>
             <field name="model">hotels.reservations</field>
             <field eval="7" name="priority"/>
             <field name="arch" type="xml">
-                <tree string="Products" create="false" delete="false" colors="gray:original == False">
+                <tree string="Products" create="false" delete="false" colors="green:original == False">
                     <field name="sale_order_line_id" invisible="1"/>
                     <field name="name" string="Product"/>
                     <field name="customer"/>
@@ -50,6 +49,7 @@
                     <field name="original" invisible="1"/>
                     <field name="adults"/>
                     <field name="children"/>
+                    <field name="plan"/>
                     <field name="price" string="Price"/>
                     <field name="supplier"/>
                     <field name="state"/>
@@ -72,7 +72,7 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree</field>
             <field name="view_id" ref="travel_reservations_hotel_tree_view"/>
-            <!--<field name="search_view_id" ref="travel_reservations_hotel_search_view"/>-->
+            <field name="search_view_id" ref="travel_reservations_hotel_search_view"/>
         </record>
 
         <menuitem id="travel_reservations_hotel_menu" action="travel_reservations_hotel_action"

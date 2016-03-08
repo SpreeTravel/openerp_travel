@@ -116,11 +116,9 @@ class product_supplierinfo(Model):
 class product_rate(Model):
     _name = 'product.rate'
 
-    def _get_ref(self, cr, uid, ids, fields, args, context=None):
-        result = {}
-        for obj in self.browse(cr, uid, ids, context):
-            result[obj.id] = 'PR-' + str(obj.id)
-        return result
+    @api.one
+    def _get_ref(self):
+        self.reference = 'PR-' + str(self.id)
 
     reference = fields.Char(compute=_get_ref, method=True, size=256, string=_('Ref'))
     start_date = fields.Date(_('Start'))

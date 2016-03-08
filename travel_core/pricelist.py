@@ -67,43 +67,44 @@ class product_pricelist(Model):
     _name = 'product.pricelist'
     _inherit = 'product.pricelist'
 
-    def _get_items(self, cr, uid, ids, fields, arg, context=None):
-        res = {}
-        for obj in self.browse(cr, uid, ids, context):
-            res[obj.id] = [i.id for v in obj.version_id for i in v.items_id]
-        return res
+    @api.one
+    def _get_items(self):
+        result = False
+        for v in self.version_id:
+            result += v.items_id
+        self.pricelist_item_ids = result
 
-    def _get_version_id(self, cr, uid, oid, context=None):
-        version_id = False
-        version_obj = self.pool.get('product.pricelist.version')
-        obj = self.browse(cr, uid, oid, context)
-        if obj.version_id:
-            version_id = obj.version_id[0].id
+    @api.model
+    def _get_version_id(self):
+        version_obj = self.env['product.pricelist.version']
+
+        if self.version_id:
+            version_id = self.version_id[0].id
         else:
             version_vals = {
                 'name': 'Default Version',
-                'pricelist_id': obj.id,
+                'pricelist_id': self.id,
                 'active': True
             }
-            version_id = version_obj.create(cr, uid, version_vals, context)
+            version_id = version_obj.create(version_vals)
         return version_id
 
-    def _set_items(self, cr, uid, oid, field, value, arg, context=None):
-        ppi_obj = self.pool.get('product.pricelist.item')
-        value = value or []
-        for v in value:
+    @api.one
+    def _set_items(self):
+        ppi_obj = self.env['product.pricelist.item']
+        for v in self.pricelist_item_ids:
             if v[0] == 0:
-                version_id = self._get_version_id(cr, uid, oid, context)
+                version_id = self._get_version_id()
                 v[2].update({'price_version_id': version_id})
-                ppi_obj.create(cr, uid, v[2], context)
+                ppi_obj.create(v[2])
             elif v[0] == 1:
-                ppi_obj.write(cr, uid, v[1], v[2], context)
+                ppi_obj.write(v[1], v[2])
             elif v[0] == 2:
-                ppi_obj.unlink(cr, uid, v[1], context)
+                ppi_obj.unlink(v[1])
         return True
 
     pricelist_item_ids = fields.One2many(compute=_get_items, method=True,
-                                         fnct_inv=_set_items,
+                                         inverse=_set_items,
                                          string='Items',
                                          relation='product.pricelist.item')
 

@@ -386,7 +386,7 @@ msgstr "Esta nota será mostrada en la solicitud de presupuesto..."
 #: model:product.attribute,name:travel_car.8transmission
 #: field:product.car,transmission_id:0
 msgid "Transmission"
-msgstr "Transmición"
+msgstr "Transmisión"
 
 #. module: travel_car
 #: field:product.car,message_unread:0

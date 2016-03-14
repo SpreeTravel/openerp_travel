@@ -1,0 +1,1326 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<robot generated="20160314 15:47:27.461" generator="Robot 3.0 (Python 2.7.11 on win32)">
+<suite source="E:\Work\openerp_travel\robot\openerp_travel\create_product.robot" id="s1" name="Create Product">
+<test id="s1-t1" name="Valid Login">
+<kw name="Sleep" library="BuiltIn">
+<doc>Pauses the test executed for the given time.</doc>
+<arguments>
+<arg>3</arg>
+</arguments>
+<msg timestamp="20160314 15:47:30.657" level="INFO">Slept 3 seconds</msg>
+<status status="PASS" endtime="20160314 15:47:30.657" starttime="20160314 15:47:27.657"></status>
+</kw>
+<kw name="Login" library="keywords_8_0">
+<kw name="Open Browser" library="Selenium2Library">
+<doc>Opens a new browser instance to given URL.</doc>
+<arguments>
+<arg>${url}</arg>
+<arg>${BROWSER}</arg>
+<arg>${ALIAS}</arg>
+</arguments>
+<msg timestamp="20160314 15:47:30.659" level="INFO">Opening browser 'chrome' to base url 'http://localhost:8069'</msg>
+<status status="PASS" endtime="20160314 15:47:40.904" starttime="20160314 15:47:30.659"></status>
+</kw>
+<kw name="Maximize Browser Window" library="Selenium2Library">
+<doc>Maximizes current browser window.</doc>
+<status status="PASS" endtime="20160314 15:47:41.061" starttime="20160314 15:47:40.905"></status>
+</kw>
+<kw name="Go To" library="Selenium2Library">
+<doc>Navigates the active browser instance to the provided URL.</doc>
+<arguments>
+<arg>${url}</arg>
+</arguments>
+<msg timestamp="20160314 15:47:41.061" level="INFO">Opening url 'http://localhost:8069'</msg>
+<status status="PASS" endtime="20160314 15:47:41.559" starttime="20160314 15:47:41.061"></status>
+</kw>
+<kw name="Set Selenium Speed" library="Selenium2Library">
+<doc>Sets the delay in seconds that is waited after each Selenium command.</doc>
+<arguments>
+<arg>${SELENIUM_DELAY}</arg>
+</arguments>
+<status status="PASS" endtime="20160314 15:47:41.560" starttime="20160314 15:47:41.559"></status>
+</kw>
+<kw name="Set Selenium Timeout" library="Selenium2Library">
+<doc>Sets the timeout in seconds used by various keywords.</doc>
+<arguments>
+<arg>${SELENIUM_TIMEOUT}</arg>
+</arguments>
+<status status="PASS" endtime="20160314 15:47:41.563" starttime="20160314 15:47:41.560"></status>
+</kw>
+<kw name="Set Selenium Implicit Wait" library="Selenium2Library">
+<doc>Sets Selenium 2's default implicit wait in seconds and</doc>
+<arguments>
+<arg>${SELENIUM_TIMEOUT}</arg>
+</arguments>
+<status status="PASS" endtime="20160314 15:47:41.565" starttime="20160314 15:47:41.563"></status>
+</kw>
+<kw name="Sleep" library="BuiltIn">
+<doc>Pauses the test executed for the given time.</doc>
+<arguments>
+<arg>2</arg>
+</arguments>
+<msg timestamp="20160314 15:47:43.566" level="INFO">Slept 2 seconds</msg>
+<status status="PASS" endtime="20160314 15:47:43.566" starttime="20160314 15:47:41.565"></status>
+</kw>
+<kw name="Input Text" library="Selenium2Library">
+<doc>Types the given `text` into text field identified by `locator`.</doc>
+<arguments>
+<arg>name=login</arg>
+<arg>${user}</arg>
+</arguments>
+<msg timestamp="20160314 15:47:43.567" level="INFO">Typing text 'salesmanager@gmail.com' into text field 'name=login'</msg>
+<status status="PASS" endtime="20160314 15:47:43.675" starttime="20160314 15:47:43.567"></status>
+</kw>
+<kw name="Input Password" library="Selenium2Library">
+<doc>Types the given password into text field identified by `locator`.</doc>
+<arguments>
+<arg>name=password</arg>
+<arg>${password}</arg>
+</arguments>
+<msg timestamp="20160314 15:47:43.676" level="INFO">Typing password into text field 'name=password'</msg>
+<status status="PASS" endtime="20160314 15:47:43.776" starttime="20160314 15:47:43.676"></status>
+</kw>
+<kw name="Sleep" library="BuiltIn">
+<doc>Pauses the test executed for the given time.</doc>
+<arguments>
+<arg>1</arg>
+</arguments>
+<msg timestamp="20160314 15:47:44.777" level="INFO">Slept 1 second</msg>
+<status status="PASS" endtime="20160314 15:47:44.777" starttime="20160314 15:47:43.776"></status>
+</kw>
+<kw name="Click Button" library="Selenium2Library">
+<doc>Clicks a button identified by `locator`.</doc>
+<arguments>
+<arg>xpath=//div[contains(@class,'oe_login_buttons')]/button[@type='submit']</arg>
+</arguments>
+<msg timestamp="20160314 15:47:44.777" level="INFO">Clicking button 'xpath=//div[contains(@class,'oe_login_buttons')]/button[@type='submit']'.</msg>
+<status status="PASS" endtime="20160314 15:47:44.851" starttime="20160314 15:47:44.777"></status>
+</kw>
+<kw name="Wait Until Page Contains Element" library="Selenium2Library">
+<doc>Waits until element specified with `locator` appears on current page.</doc>
+<arguments>
+<arg>xpath=//div[@id='oe_main_menu_placeholder']/ul/li/a/span</arg>
+</arguments>
+<kw name="Capture Page Screenshot" library="Selenium2Library">
+<doc>Takes a screenshot of the current page and embeds it into the log.</doc>
+<msg timestamp="20160314 15:47:46.833" html="yes" level="INFO">&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td colspan="3"&gt;&lt;a href="selenium-screenshot-1.png"&gt;&lt;img src="selenium-screenshot-1.png" width="800px"&gt;&lt;/a&gt;</msg>
+<status status="PASS" endtime="20160314 15:47:46.833" starttime="20160314 15:47:46.667"></status>
+</kw>
+<msg timestamp="20160314 15:47:47.259" level="FAIL">InvalidSelectorException: Message: invalid selector: Unable to locate an element with the xpath expression //div[@id='oe_main_menu_placeholder']/ul/li/a/span because of the following error:
+TypeError: Failed to execute 'createNSResolver' on 'Document': parameter 1 is not of type 'Node'.
+  (Session info: chrome=48.0.2564.116)
+  (Driver info: chromedriver=2.9.248315,platform=Windows NT 6.3 x86_64)
+</msg>
+<status status="FAIL" endtime="20160314 15:47:47.259" starttime="20160314 15:47:44.851"></status>
+</kw>
+<status status="FAIL" endtime="20160314 15:47:47.260" starttime="20160314 15:47:30.658"></status>
+</kw>
+<status status="FAIL" endtime="20160314 15:47:47.260" critical="yes" starttime="20160314 15:47:27.656">InvalidSelectorException: Message: invalid selector: Unable to locate an element with the xpath expression //div[@id='oe_main_menu_placeholder']/ul/li/a/span because of the following error:
+TypeError: Failed to execute 'createNSResolver' on 'Document': parameter 1 is not of type 'Node'.
+  (Session info: chrome=48.0.2564.116)
+  (Driver info: chromedriver=2.9.248315,platform=Windows NT 6.3 x86_64)
+</status>
+</test>
+<test id="s1-t2" name="Create Product Hotel">
+<kw name="Sleep" library="BuiltIn">
+<doc>Pauses the test executed for the given time.</doc>
+<arguments>
+<arg>4</arg>
+</arguments>
+<msg timestamp="20160314 15:47:51.283" level="INFO">Slept 4 seconds</msg>
+<status status="PASS" endtime="20160314 15:47:51.283" starttime="20160314 15:47:47.282"></status>
+</kw>
+<kw name="MainMenu" library="keywords_8_0">
+<arguments>
+<arg>Ventas</arg>
+</arguments>
+<kw name="Wait Until Element Is Visible" library="Selenium2Library">
+<doc>Waits until element specified with `locator` is visible.</doc>
+<arguments>
+<arg>xpath=//div[@id='oe_main_menu_placeholder']/ul/li/a[descendant::span/text()[normalize-space()='${menu}']]</arg>
+<arg>${SELENIUM_TIMEOUT}</arg>
+</arguments>
+<status status="PASS" endtime="20160314 15:47:51.324" starttime="20160314 15:47:51.284"></status>
+</kw>
+<kw name="Click Link" library="Selenium2Library">
+<doc>Clicks a link identified by locator.</doc>
+<arguments>
+<arg>xpath=//div[@id='oe_main_menu_placeholder']/ul/li/a[descendant::span/text()[normalize-space()='${menu}']]</arg>
+</arguments>
+<msg timestamp="20160314 15:47:51.325" level="INFO">Clicking link 'xpath=//div[@id='oe_main_menu_placeholder']/ul/li/a[descendant::span/text()[normalize-space()='Ventas']]'.</msg>
+<status status="PASS" endtime="20160314 15:47:51.377" starttime="20160314 15:47:51.325"></status>
+</kw>
+<kw name="Wait Until Page Contains Element" library="Selenium2Library">
+<doc>Waits until element specified with `locator` appears on current page.</doc>
+<arguments>
+<arg>xpath=//div[contains(@class, 'oe_secondary_menus_container')]/div[contains(@class, 'oe_secondary_menu') and not(contains(@style, 'display: none'))]</arg>
+</arguments>
+<status status="PASS" endtime="20160314 15:47:51.450" starttime="20160314 15:47:51.377"></status>
+</kw>
+<kw name="ElementPostCheck" library="keywords_8_0">
+<kw name="Wait Until Page Contains Element" library="Selenium2Library">
+<doc>Waits until element specified with `locator` appears on current page.</doc>
+<arguments>
+<arg>xpath=//body[not(contains(@class, 'oe_wait'))]</arg>
+</arguments>
+<status status="PASS" endtime="20160314 15:47:52.848" starttime="20160314 15:47:51.451"></status>
+</kw>
+<status status="PASS" endtime="20160314 15:47:52.849" starttime="20160314 15:47:51.451"></status>
+</kw>
+<status status="PASS" endtime="20160314 15:47:52.849" starttime="20160314 15:47:51.284"></status>
+</kw>
+<kw name="Sleep" library="BuiltIn">
+<doc>Pauses the test executed for the given time.</doc>
+<arguments>
+<arg>1</arg>
+</arguments>
+<msg timestamp="20160314 15:47:53.850" level="INFO">Slept 1 second</msg>
+<status status="PASS" endtime="20160314 15:47:53.850" starttime="20160314 15:47:52.850"></status>
+</kw>
+<kw name="SubMenu" library="keywords_8_0">
+<arguments>
+<arg>Hoteles</arg>
+<arg>2</arg>
+</arguments>
+<kw name="Wait Until Element Is Visible" library="Selenium2Library">
+<doc>Waits until element specified with `locator` is visible.</doc>
+<arguments>
+<arg>xpath=//td[contains(@class,'oe_leftbar')]//ul/li/a[descendant::span/text()[normalize-space()='${menu}']]</arg>
+<arg>${SELENIUM_TIMEOUT}</arg>
+</arguments>
+<status status="PASS" endtime="20160314 15:47:53.885" starttime="20160314 15:47:53.851"></status>
+</kw>
+<kw name="Click Link" library="Selenium2Library">
+<doc>Clicks a link identified by locator.</doc>
+<arguments>
+<arg>xpath=(//td[contains(@class,'oe_leftbar')]//ul/li/a[descendant::span/text()[normalize-space()='${menu}']])[${pos}]</arg>
+</arguments>
+<msg timestamp="20160314 15:47:53.885" level="INFO">Clicking link 'xpath=(//td[contains(@class,'oe_leftbar')]//ul/li/a[descendant::span/text()[normalize-space()='Hoteles']])[2]'.</msg>
+<status status="PASS" endtime="20160314 15:47:53.939" starttime="20160314 15:47:53.885"></status>
+</kw>
+<kw name="Wait Until Page Contains Element" library="Selenium2Library">
+<doc>Waits until element specified with `locator` appears on current page.</doc>
+<arguments>
+<arg>xpath=//div[contains(@class,'oe_view_manager_current')]</arg>
+</arguments>
+<status status="PASS" endtime="20160314 15:47:53.980" starttime="20160314 15:47:53.939"></status>
+</kw>
+<status status="PASS" endtime="20160314 15:47:53.980" starttime="20160314 15:47:53.850"></status>
+</kw>
+<kw name="Sleep" library="BuiltIn">
+<doc>Pauses the test executed for the given time.</doc>
+<arguments>
+<arg>2</arg>
+</arguments>
+<msg timestamp="20160314 15:47:55.981" level="INFO">Slept 2 seconds</msg>
+<status status="PASS" endtime="20160314 15:47:55.981" starttime="20160314 15:47:53.981"></status>
+</kw>
+<kw name="Button" library="keywords_8_0">
+<arguments>
+<arg>product.hotel</arg>
+<arg>oe_list_add</arg>
+</arguments>
+<kw name="Wait Until Page Contains Element" library="Selenium2Library">
+<doc>Waits until element specified with `locator` appears on current page.</doc>
+<arguments>
+<arg>xpath=//div[contains(@class,'openerp')][last()]//*[not(contains(@style,'display:none'))]//button[@data-bt-testing-name='${button_name}']</arg>
+</arguments>
+<status status="PASS" endtime="20160314 15:47:56.000" starttime="20160314 15:47:55.982"></status>
+</kw>
+<kw name="Wait Until Element Is Visible" library="Selenium2Library">
+<doc>Waits until element specified with `locator` is visible.</doc>
+<arguments>
+<arg>xpath=//div[contains(@class,'openerp')][last()]//*[not(contains(@style,'display:none'))]//button[@data-bt-testing-name='${button_name}']</arg>
+<arg>${SELENIUM_TIMEOUT}</arg>
+</arguments>
+<status status="PASS" endtime="20160314 15:47:56.035" starttime="20160314 15:47:56.001"></status>
+</kw>
+<kw name="Click Button" library="Selenium2Library">
+<doc>Clicks a button identified by `locator`.</doc>
+<arguments>
+<arg>xpath=//div[contains(@class,'openerp')][last()]//*[not(contains(@style,'display:none'))]//button[@data-bt-testing-name='${button_name}']</arg>
+</arguments>
+<msg timestamp="20160314 15:47:56.035" level="INFO">Clicking button 'xpath=//div[contains(@class,'openerp')][last()]//*[not(contains(@style,'display:none'))]//button[@data-bt-testing-name='oe_list_add']'.</msg>
+<status status="PASS" endtime="20160314 15:47:56.152" starttime="20160314 15:47:56.035"></status>
+</kw>
+<kw name="Wait For Condition" library="Selenium2Library">
+<doc>Waits until the given `condition` is true or `timeout` expires.</doc>
+<arguments>
+<arg>return true;</arg>
+<arg>20.0</arg>
+</arguments>
+<status status="PASS" endtime="20160314 15:47:56.166" starttime="20160314 15:47:56.152"></status>
+</kw>
+<kw name="ElementPostCheck" library="keywords_8_0">
+<kw name="Wait Until Page Contains Element" library="Selenium2Library">
+<doc>Waits until element specified with `locator` appears on current page.</doc>
+<arguments>
+<arg>xpath=//body[not(contains(@class, 'oe_wait'))]</arg>
+</arguments>
+<status status="PASS" endtime="20160314 15:47:57.511" starttime="20160314 15:47:56.166"></status>
+</kw>
+<status status="PASS" endtime="20160314 15:47:57.511" starttime="20160314 15:47:56.166"></status>
+</kw>
+<status status="PASS" endtime="20160314 15:47:57.511" starttime="20160314 15:47:55.981"></status>
+</kw>
+<kw name="Sleep" library="BuiltIn">
+<doc>Pauses the test executed for the given time.</doc>
+<arguments>
+<arg>1</arg>
+</arguments>
+<msg timestamp="20160314 15:47:58.512" level="INFO">Slept 1 second</msg>
+<status status="PASS" endtime="20160314 15:47:58.512" starttime="20160314 15:47:57.512"></status>
+</kw>
+<kw name="Char" library="keywords_8_0">
+<arguments>
+<arg>product.hotel</arg>
+<arg>name</arg>
+<arg>Hotel Nacional de Cuba</arg>
+</arguments>
+<kw name="ElementPreCheck" library="keywords_8_0">
+<arguments>
+<arg>xpath=//div[contains(@class,'openerp')][last()]//input[@data-bt-testing-model_name='${model}' and @data-bt-testing-name='${field}']</arg>
+</arguments>
+<kw name="Execute Javascript" library="Selenium2Library">
+<doc>Executes the given JavaScript code.</doc>
+<arguments>
+<arg>console.log("${element}");</arg>
+</arguments>
+<msg timestamp="20160314 15:47:58.514" level="INFO">Executing JavaScript:
+console.log("xpath=//div[contains(@class,'openerp')][last()]//input[@data-bt-testing-model_name='product.hotel' and @data-bt-testing-name='name']");</msg>
+<status status="PASS" endtime="20160314 15:47:58.519" starttime="20160314 15:47:58.514"></status>
+</kw>
+<kw name="Execute Javascript" library="Selenium2Library">
+<doc>Executes the given JavaScript code.</doc>
+<arguments>
+<arg>var path="${element}".replace('xpath=','');var id=document.evaluate("("+path+")/ancestor::div[contains(@class,'oe_notebook_page')]/@id",document,null,XPathResult.STRING_TYPE,null).stringValue; if(id != ''){ window.location = "#"+id; $("a[href='#"+id+"']").click(); console.log("Clicked at #" + id); } return true;</arg>
+</arguments>
+<msg timestamp="20160314 15:47:58.519" level="INFO">Executing JavaScript:
+var path="xpath=//div[contains(@class,'openerp')][last()]//input[@data-bt-testing-model_name='product.hotel' and @data-bt-testing-name='name']".replace('xpath=','');var id=document.evaluate("("+path+")/ancestor::div[contains(@class,'oe_notebook_page')]/@id",document,null,XPathResult.STRING_TYPE,null).stringValue; if(id != ''){ window.location = "#"+id; $("a[href='#"+id+"']").click(); console.log("Clicked at #" + id); } return true;</msg>
+<status status="PASS" endtime="20160314 15:47:58.525" starttime="20160314 15:47:58.519"></status>
+</kw>
+<status status="PASS" endtime="20160314 15:47:58.525" starttime="20160314 15:47:58.514"></status>
+</kw>
+<kw name="Execute Javascript" library="Selenium2Library">
+<doc>Executes the given JavaScript code.</doc>
+<arguments>
+<arg>$("div.openerp:last input[data-bt-testing-model_name='${model}'][data-bt-testing-name='${field}']").val(''); return true;</arg>
+</arguments>
+<msg timestamp="20160314 15:47:58.525" level="INFO">Executing JavaScript:
+$("div.openerp:last input[data-bt-testing-model_name='product.hotel'][data-bt-testing-name='name']").val(''); return true;</msg>
+<status status="PASS" endtime="20160314 15:47:58.530" starttime="20160314 15:47:58.525"></status>
+</kw>
+<kw name="Input Text" library="Selenium2Library">
+<doc>Types the given `text` into text field identified by `locator`.</doc>
+<arguments>
+<arg>xpath=//div[contains(@class,'openerp')][last()]//input[@data-bt-testing-model_name='${model}' and @data-bt-testing-name='${field}']</arg>
+<arg>${value}</arg>
+</arguments>
+<msg timestamp="20160314 15:47:58.531" level="INFO">Typing text 'Hotel Nacional de Cuba' into text field 'xpath=//div[contains(@class,'openerp')][last()]//input[@data-bt-testing-model_name='product.hotel' and @data-bt-testing-name='name']'</msg>
+<status status="PASS" endtime="20160314 15:47:58.630" starttime="20160314 15:47:58.530"></status>
+</kw>
+<kw name="ElementPostCheck" library="keywords_8_0">
+<kw name="Wait Until Page Contains Element" library="Selenium2Library">
+<doc>Waits until element specified with `locator` appears on current page.</doc>
+<arguments>
+<arg>xpath=//body[not(contains(@class, 'oe_wait'))]</arg>
+</arguments>
+<status status="PASS" endtime="20160314 15:47:58.657" starttime="20160314 15:47:58.631"></status>
+</kw>
+<status status="PASS" endtime="20160314 15:47:58.657" starttime="20160314 15:47:58.630"></status>
+</kw>
+<status status="PASS" endtime="20160314 15:47:58.657" starttime="20160314 15:47:58.513"></status>
+</kw>
+<kw name="Sleep" library="BuiltIn">
+<doc>Pauses the test executed for the given time.</doc>
+<arguments>
+<arg>1</arg>
+</arguments>
+<msg timestamp="20160314 15:47:59.658" level="INFO">Slept 1 second</msg>
+<status status="PASS" endtime="20160314 15:47:59.658" starttime="20160314 15:47:58.658"></status>
+</kw>
+<kw name="Select-Option" library="keywords_8_0">
+<arguments>
+<arg>product.hotel</arg>
+<arg>stars</arg>
+<arg>4</arg>
+</arguments>
+<kw name="ElementPreCheck" library="keywords_8_0">
+<arguments>
+<arg>xpath=//div[contains(@class,'openerp')][last()]//select[@data-bt-testing-model_name='${model}' and @data-bt-testing-name='${field}']</arg>
+</arguments>
+<kw name="Execute Javascript" library="Selenium2Library">
+<doc>Executes the given JavaScript code.</doc>
+<arguments>
+<arg>console.log("${element}");</arg>
+</arguments>
+<msg timestamp="20160314 15:47:59.661" level="INFO">Executing JavaScript:
+console.log("xpath=//div[contains(@class,'openerp')][last()]//select[@data-bt-testing-model_name='product.hotel' and @data-bt-testing-name='stars']");</msg>
+<status status="PASS" endtime="20160314 15:47:59.666" starttime="20160314 15:47:59.661"></status>
+</kw>
+<kw name="Execute Javascript" library="Selenium2Library">
+<doc>Executes the given JavaScript code.</doc>
+<arguments>
+<arg>var path="${element}".replace('xpath=','');var id=document.evaluate("("+path+")/ancestor::div[contains(@class,'oe_notebook_page')]/@id",document,null,XPathResult.STRING_TYPE,null).stringValue; if(id != ''){ window.location = "#"+id; $("a[href='#"+id+"']").click(); console.log("Clicked at #" + id); } return true;</arg>
+</arguments>
+<msg timestamp="20160314 15:47:59.666" level="INFO">Executing JavaScript:
+var path="xpath=//div[contains(@class,'openerp')][last()]//select[@data-bt-testing-model_name='product.hotel' and @data-bt-testing-name='stars']".replace('xpath=','');var id=document.evaluate("("+path+")/ancestor::div[contains(@class,'oe_notebook_page')]/@id",document,null,XPathResult.STRING_TYPE,null).stringValue; if(id != ''){ window.location = "#"+id; $("a[href='#"+id+"']").click(); console.log("Clicked at #" + id); } return true;</msg>
+<status status="PASS" endtime="20160314 15:47:59.671" starttime="20160314 15:47:59.666"></status>
+</kw>
+<status status="PASS" endtime="20160314 15:47:59.671" starttime="20160314 15:47:59.660"></status>
+</kw>
+<kw name="Select From List By Label" library="Selenium2Library">
+<doc>Selects `*labels` from list identified by `locator`</doc>
+<arguments>
+<arg>xpath=//div[contains(@class,'openerp')][last()]//select[@data-bt-testing-model_name='${model}' and @data-bt-testing-name='${field}']</arg>
+<arg>${value}</arg>
+</arguments>
+<msg timestamp="20160314 15:47:59.671" level="INFO">Selecting label(s) '4' from list 'xpath=//div[contains(@class,'openerp')][last()]//select[@data-bt-testing-model_name='product.hotel' and @data-bt-testing-name='stars']'.</msg>
+<status status="PASS" endtime="20160314 15:47:59.827" starttime="20160314 15:47:59.671"></status>
+</kw>
+<kw name="ElementPostCheck" library="keywords_8_0">
+<kw name="Wait Until Page Contains Element" library="Selenium2Library">
+<doc>Waits until element specified with `locator` appears on current page.</doc>
+<arguments>
+<arg>xpath=//body[not(contains(@class, 'oe_wait'))]</arg>
+</arguments>
+<status status="PASS" endtime="20160314 15:47:59.835" starttime="20160314 15:47:59.828"></status>
+</kw>
+<status status="PASS" endtime="20160314 15:47:59.836" starttime="20160314 15:47:59.827"></status>
+</kw>
+<status status="PASS" endtime="20160314 15:47:59.836" starttime="20160314 15:47:59.659"></status>
+</kw>
+<kw name="Sleep" library="BuiltIn">
+<doc>Pauses the test executed for the given time.</doc>
+<arguments>
+<arg>1</arg>
+</arguments>
+<msg timestamp="20160314 15:48:00.836" level="INFO">Slept 1 second</msg>
+<status status="PASS" endtime="20160314 15:48:00.836" starttime="20160314 15:47:59.836"></status>
+</kw>
+<kw name="Many2OneSelect" library="keywords_8_0">
+<arguments>
+<arg>product.hotel</arg>
+<arg>destination</arg>
+<arg>HAVANA</arg>
+</arguments>
+<kw name="ElementPreCheck" library="keywords_8_0">
+<arguments>
+<arg>xpath=//div[contains(@class,'openerp')][last()]//input[@data-bt-testing-model_name='${model}' and @data-bt-testing-name='${field}']</arg>
+</arguments>
+<kw name="Execute Javascript" library="Selenium2Library">
+<doc>Executes the given JavaScript code.</doc>
+<arguments>
+<arg>console.log("${element}");</arg>
+</arguments>
+<msg timestamp="20160314 15:48:00.838" level="INFO">Executing JavaScript:
+console.log("xpath=//div[contains(@class,'openerp')][last()]//input[@data-bt-testing-model_name='product.hotel' and @data-bt-testing-name='destination']");</msg>
+<status status="PASS" endtime="20160314 15:48:00.843" starttime="20160314 15:48:00.837"></status>
+</kw>
+<kw name="Execute Javascript" library="Selenium2Library">
+<doc>Executes the given JavaScript code.</doc>
+<arguments>
+<arg>var path="${element}".replace('xpath=','');var id=document.evaluate("("+path+")/ancestor::div[contains(@class,'oe_notebook_page')]/@id",document,null,XPathResult.STRING_TYPE,null).stringValue; if(id != ''){ window.location = "#"+id; $("a[href='#"+id+"']").click(); console.log("Clicked at #" + id); } return true;</arg>
+</arguments>
+<msg timestamp="20160314 15:48:00.844" level="INFO">Executing JavaScript:
+var path="xpath=//div[contains(@class,'openerp')][last()]//input[@data-bt-testing-model_name='product.hotel' and @data-bt-testing-name='destination']".replace('xpath=','');var id=document.evaluate("("+path+")/ancestor::div[contains(@class,'oe_notebook_page')]/@id",document,null,XPathResult.STRING_TYPE,null).stringValue; if(id != ''){ window.location = "#"+id; $("a[href='#"+id+"']").click(); console.log("Clicked at #" + id); } return true;</msg>
+<status status="PASS" endtime="20160314 15:48:00.848" starttime="20160314 15:48:00.843"></status>
+</kw>
+<status status="PASS" endtime="20160314 15:48:00.849" starttime="20160314 15:48:00.837"></status>
+</kw>
+<kw name="Input Text" library="Selenium2Library">
+<doc>Types the given `text` into text field identified by `locator`.</doc>
+<arguments>
+<arg>xpath=//div[contains(@class,'openerp')][last()]//input[@data-bt-testing-model_name='${model}' and @data-bt-testing-name='${field}']</arg>
+<arg>${value}</arg>
+</arguments>
+<msg timestamp="20160314 15:48:00.850" level="INFO">Typing text 'HAVANA' into text field 'xpath=//div[contains(@class,'openerp')][last()]//input[@data-bt-testing-model_name='product.hotel' and @data-bt-testing-name='destination']'</msg>
+<status status="PASS" endtime="20160314 15:48:00.975" starttime="20160314 15:48:00.849"></status>
+</kw>
+<kw name="Sleep" library="BuiltIn">
+<doc>Pauses the test executed for the given time.</doc>
+<arguments>
+<arg>1</arg>
+</arguments>
+<msg timestamp="20160314 15:48:01.975" level="INFO">Slept 1 second</msg>
+<status status="PASS" endtime="20160314 15:48:01.975" starttime="20160314 15:48:00.975"></status>
+</kw>
+<kw name="Click Link" library="Selenium2Library">
+<doc>Clicks a link identified by locator.</doc>
+<arguments>
+<arg>xpath=//ul[contains(@class,'ui-autocomplete') and not(contains(@style,'display: none'))]/li[1]/a</arg>
+</arguments>
+<msg timestamp="20160314 15:48:01.975" level="INFO">Clicking link 'xpath=//ul[contains(@class,'ui-autocomplete') and not(contains(@style,'display: none'))]/li[1]/a'.</msg>
+<status status="PASS" endtime="20160314 15:48:02.030" starttime="20160314 15:48:01.975"></status>
+</kw>
+<kw name="Textfield Should Contain" library="Selenium2Library">
+<doc>Verifies text field identified by `locator` contains text `expected`.</doc>
+<arguments>
+<arg>xpath=//div[contains(@class,'openerp')][last()]//input[@data-bt-testing-model_name='${model}' and @data-bt-testing-name='${field}']</arg>
+<arg>${value}</arg>
+</arguments>
+<msg timestamp="20160314 15:48:02.097" level="INFO">Text field 'xpath=//div[contains(@class,'openerp')][last()]//input[@data-bt-testing-model_name='product.hotel' and @data-bt-testing-name='destination']' contains text 'HAVANA'.</msg>
+<status status="PASS" endtime="20160314 15:48:02.098" starttime="20160314 15:48:02.031"></status>
+</kw>
+<kw name="ElementPostCheck" library="keywords_8_0">
+<kw name="Wait Until Page Contains Element" library="Selenium2Library">
+<doc>Waits until element specified with `locator` appears on current page.</doc>
+<arguments>
+<arg>xpath=//body[not(contains(@class, 'oe_wait'))]</arg>
+</arguments>
+<status status="PASS" endtime="20160314 15:48:02.106" starttime="20160314 15:48:02.098"></status>
+</kw>
+<status status="PASS" endtime="20160314 15:48:02.107" starttime="20160314 15:48:02.098"></status>
+</kw>
+<status status="PASS" endtime="20160314 15:48:02.107" starttime="20160314 15:48:00.836"></status>
+</kw>
+<kw name="Sleep" library="BuiltIn">
+<doc>Pauses the test executed for the given time.</doc>
+<arguments>
+<arg>2</arg>
+</arguments>
+<msg timestamp="20160314 15:48:04.107" level="INFO">Slept 2 seconds</msg>
+<status status="PASS" endtime="20160314 15:48:04.107" starttime="20160314 15:48:02.107"></status>
+</kw>
+<kw name="Many2OneSelect" library="keywords_8_0">
+<arguments>
+<arg>product.hotel</arg>
+<arg>chain_id</arg>
+<arg>GRAN CARIBE</arg>
+</arguments>
+<kw name="ElementPreCheck" library="keywords_8_0">
+<arguments>
+<arg>xpath=//div[contains(@class,'openerp')][last()]//input[@data-bt-testing-model_name='${model}' and @data-bt-testing-name='${field}']</arg>
+</arguments>
+<kw name="Execute Javascript" library="Selenium2Library">
+<doc>Executes the given JavaScript code.</doc>
+<arguments>
+<arg>console.log("${element}");</arg>
+</arguments>
+<msg timestamp="20160314 15:48:04.109" level="INFO">Executing JavaScript:
+console.log("xpath=//div[contains(@class,'openerp')][last()]//input[@data-bt-testing-model_name='product.hotel' and @data-bt-testing-name='chain_id']");</msg>
+<status status="PASS" endtime="20160314 15:48:04.113" starttime="20160314 15:48:04.108"></status>
+</kw>
+<kw name="Execute Javascript" library="Selenium2Library">
+<doc>Executes the given JavaScript code.</doc>
+<arguments>
+<arg>var path="${element}".replace('xpath=','');var id=document.evaluate("("+path+")/ancestor::div[contains(@class,'oe_notebook_page')]/@id",document,null,XPathResult.STRING_TYPE,null).stringValue; if(id != ''){ window.location = "#"+id; $("a[href='#"+id+"']").click(); console.log("Clicked at #" + id); } return true;</arg>
+</arguments>
+<msg timestamp="20160314 15:48:04.113" level="INFO">Executing JavaScript:
+var path="xpath=//div[contains(@class,'openerp')][last()]//input[@data-bt-testing-model_name='product.hotel' and @data-bt-testing-name='chain_id']".replace('xpath=','');var id=document.evaluate("("+path+")/ancestor::div[contains(@class,'oe_notebook_page')]/@id",document,null,XPathResult.STRING_TYPE,null).stringValue; if(id != ''){ window.location = "#"+id; $("a[href='#"+id+"']").click(); console.log("Clicked at #" + id); } return true;</msg>
+<status status="PASS" endtime="20160314 15:48:04.118" starttime="20160314 15:48:04.113"></status>
+</kw>
+<status status="PASS" endtime="20160314 15:48:04.118" starttime="20160314 15:48:04.108"></status>
+</kw>
+<kw name="Input Text" library="Selenium2Library">
+<doc>Types the given `text` into text field identified by `locator`.</doc>
+<arguments>
+<arg>xpath=//div[contains(@class,'openerp')][last()]//input[@data-bt-testing-model_name='${model}' and @data-bt-testing-name='${field}']</arg>
+<arg>${value}</arg>
+</arguments>
+<msg timestamp="20160314 15:48:04.119" level="INFO">Typing text 'GRAN CARIBE' into text field 'xpath=//div[contains(@class,'openerp')][last()]//input[@data-bt-testing-model_name='product.hotel' and @data-bt-testing-name='chain_id']'</msg>
+<status status="PASS" endtime="20160314 15:48:04.224" starttime="20160314 15:48:04.118"></status>
+</kw>
+<kw name="Sleep" library="BuiltIn">
+<doc>Pauses the test executed for the given time.</doc>
+<arguments>
+<arg>1</arg>
+</arguments>
+<msg timestamp="20160314 15:48:05.224" level="INFO">Slept 1 second</msg>
+<status status="PASS" endtime="20160314 15:48:05.224" starttime="20160314 15:48:04.224"></status>
+</kw>
+<kw name="Click Link" library="Selenium2Library">
+<doc>Clicks a link identified by locator.</doc>
+<arguments>
+<arg>xpath=//ul[contains(@class,'ui-autocomplete') and not(contains(@style,'display: none'))]/li[1]/a</arg>
+</arguments>
+<msg timestamp="20160314 15:48:05.225" level="INFO">Clicking link 'xpath=//ul[contains(@class,'ui-autocomplete') and not(contains(@style,'display: none'))]/li[1]/a'.</msg>
+<status status="PASS" endtime="20160314 15:48:05.278" starttime="20160314 15:48:05.225"></status>
+</kw>
+<kw name="Textfield Should Contain" library="Selenium2Library">
+<doc>Verifies text field identified by `locator` contains text `expected`.</doc>
+<arguments>
+<arg>xpath=//div[contains(@class,'openerp')][last()]//input[@data-bt-testing-model_name='${model}' and @data-bt-testing-name='${field}']</arg>
+<arg>${value}</arg>
+</arguments>
+<msg timestamp="20160314 15:48:05.340" level="INFO">Text field 'xpath=//div[contains(@class,'openerp')][last()]//input[@data-bt-testing-model_name='product.hotel' and @data-bt-testing-name='chain_id']' contains text 'GRAN CARIBE'.</msg>
+<status status="PASS" endtime="20160314 15:48:05.340" starttime="20160314 15:48:05.278"></status>
+</kw>
+<kw name="ElementPostCheck" library="keywords_8_0">
+<kw name="Wait Until Page Contains Element" library="Selenium2Library">
+<doc>Waits until element specified with `locator` appears on current page.</doc>
+<arguments>
+<arg>xpath=//body[not(contains(@class, 'oe_wait'))]</arg>
+</arguments>
+<status status="PASS" endtime="20160314 15:48:05.348" starttime="20160314 15:48:05.341"></status>
+</kw>
+<status status="PASS" endtime="20160314 15:48:05.348" starttime="20160314 15:48:05.340"></status>
+</kw>
+<status status="PASS" endtime="20160314 15:48:05.348" starttime="20160314 15:48:04.107"></status>
+</kw>
+<kw name="Sleep" library="BuiltIn">
+<doc>Pauses the test executed for the given time.</doc>
+<arguments>
+<arg>1</arg>
+</arguments>
+<msg timestamp="20160314 15:48:06.349" level="INFO">Slept 1 second</msg>
+<status status="PASS" endtime="20160314 15:48:06.349" starttime="20160314 15:48:05.349"></status>
+</kw>
+<kw name="Many2OneSelect" library="keywords_8_0">
+<arguments>
+<arg>product.hotel</arg>
+<arg>res_partner_id</arg>
+<arg>AGENCIA DE VIAJES COMELY</arg>
+</arguments>
+<kw name="ElementPreCheck" library="keywords_8_0">
+<arguments>
+<arg>xpath=//div[contains(@class,'openerp')][last()]//input[@data-bt-testing-model_name='${model}' and @data-bt-testing-name='${field}']</arg>
+</arguments>
+<kw name="Execute Javascript" library="Selenium2Library">
+<doc>Executes the given JavaScript code.</doc>
+<arguments>
+<arg>console.log("${element}");</arg>
+</arguments>
+<msg timestamp="20160314 15:48:06.351" level="INFO">Executing JavaScript:
+console.log("xpath=//div[contains(@class,'openerp')][last()]//input[@data-bt-testing-model_name='product.hotel' and @data-bt-testing-name='res_partner_id']");</msg>
+<status status="PASS" endtime="20160314 15:48:06.355" starttime="20160314 15:48:06.350"></status>
+</kw>
+<kw name="Execute Javascript" library="Selenium2Library">
+<doc>Executes the given JavaScript code.</doc>
+<arguments>
+<arg>var path="${element}".replace('xpath=','');var id=document.evaluate("("+path+")/ancestor::div[contains(@class,'oe_notebook_page')]/@id",document,null,XPathResult.STRING_TYPE,null).stringValue; if(id != ''){ window.location = "#"+id; $("a[href='#"+id+"']").click(); console.log("Clicked at #" + id); } return true;</arg>
+</arguments>
+<msg timestamp="20160314 15:48:06.355" level="INFO">Executing JavaScript:
+var path="xpath=//div[contains(@class,'openerp')][last()]//input[@data-bt-testing-model_name='product.hotel' and @data-bt-testing-name='res_partner_id']".replace('xpath=','');var id=document.evaluate("("+path+")/ancestor::div[contains(@class,'oe_notebook_page')]/@id",document,null,XPathResult.STRING_TYPE,null).stringValue; if(id != ''){ window.location = "#"+id; $("a[href='#"+id+"']").click(); console.log("Clicked at #" + id); } return true;</msg>
+<status status="PASS" endtime="20160314 15:48:06.360" starttime="20160314 15:48:06.355"></status>
+</kw>
+<status status="PASS" endtime="20160314 15:48:06.360" starttime="20160314 15:48:06.350"></status>
+</kw>
+<kw name="Input Text" library="Selenium2Library">
+<doc>Types the given `text` into text field identified by `locator`.</doc>
+<arguments>
+<arg>xpath=//div[contains(@class,'openerp')][last()]//input[@data-bt-testing-model_name='${model}' and @data-bt-testing-name='${field}']</arg>
+<arg>${value}</arg>
+</arguments>
+<msg timestamp="20160314 15:48:06.361" level="INFO">Typing text 'AGENCIA DE VIAJES COMELY' into text field 'xpath=//div[contains(@class,'openerp')][last()]//input[@data-bt-testing-model_name='product.hotel' and @data-bt-testing-name='res_partner_id']'</msg>
+<status status="PASS" endtime="20160314 15:48:06.474" starttime="20160314 15:48:06.360"></status>
+</kw>
+<kw name="Sleep" library="BuiltIn">
+<doc>Pauses the test executed for the given time.</doc>
+<arguments>
+<arg>1</arg>
+</arguments>
+<msg timestamp="20160314 15:48:07.475" level="INFO">Slept 1 second</msg>
+<status status="PASS" endtime="20160314 15:48:07.475" starttime="20160314 15:48:06.475"></status>
+</kw>
+<kw name="Click Link" library="Selenium2Library">
+<doc>Clicks a link identified by locator.</doc>
+<arguments>
+<arg>xpath=//ul[contains(@class,'ui-autocomplete') and not(contains(@style,'display: none'))]/li[1]/a</arg>
+</arguments>
+<msg timestamp="20160314 15:48:07.475" level="INFO">Clicking link 'xpath=//ul[contains(@class,'ui-autocomplete') and not(contains(@style,'display: none'))]/li[1]/a'.</msg>
+<status status="PASS" endtime="20160314 15:48:07.519" starttime="20160314 15:48:07.475"></status>
+</kw>
+<kw name="Textfield Should Contain" library="Selenium2Library">
+<doc>Verifies text field identified by `locator` contains text `expected`.</doc>
+<arguments>
+<arg>xpath=//div[contains(@class,'openerp')][last()]//input[@data-bt-testing-model_name='${model}' and @data-bt-testing-name='${field}']</arg>
+<arg>${value}</arg>
+</arguments>
+<msg timestamp="20160314 15:48:07.576" level="INFO">Text field 'xpath=//div[contains(@class,'openerp')][last()]//input[@data-bt-testing-model_name='product.hotel' and @data-bt-testing-name='res_partner_id']' contains text 'AGENCIA DE VIAJES COMELY'.</msg>
+<status status="PASS" endtime="20160314 15:48:07.576" starttime="20160314 15:48:07.519"></status>
+</kw>
+<kw name="ElementPostCheck" library="keywords_8_0">
+<kw name="Wait Until Page Contains Element" library="Selenium2Library">
+<doc>Waits until element specified with `locator` appears on current page.</doc>
+<arguments>
+<arg>xpath=//body[not(contains(@class, 'oe_wait'))]</arg>
+</arguments>
+<status status="PASS" endtime="20160314 15:48:07.583" starttime="20160314 15:48:07.577"></status>
+</kw>
+<status status="PASS" endtime="20160314 15:48:07.584" starttime="20160314 15:48:07.576"></status>
+</kw>
+<status status="PASS" endtime="20160314 15:48:07.584" starttime="20160314 15:48:06.349"></status>
+</kw>
+<kw name="Sleep" library="BuiltIn">
+<doc>Pauses the test executed for the given time.</doc>
+<arguments>
+<arg>1</arg>
+</arguments>
+<msg timestamp="20160314 15:48:08.585" level="INFO">Slept 1 second</msg>
+<status status="PASS" endtime="20160314 15:48:08.585" starttime="20160314 15:48:07.585"></status>
+</kw>
+<kw name="Click Link" library="Selenium2Library">
+<doc>Clicks a link identified by locator.</doc>
+<arguments>
+<arg>xpath=//a[@id='ui-id-2']</arg>
+</arguments>
+<msg timestamp="20160314 15:48:08.588" level="INFO">Clicking link 'xpath=//a[@id='ui-id-2']'.</msg>
+<status status="PASS" endtime="20160314 15:48:08.644" starttime="20160314 15:48:08.588"></status>
+</kw>
+<kw name="Sleep" library="BuiltIn">
+<doc>Pauses the test executed for the given time.</doc>
+<arguments>
+<arg>1</arg>
+</arguments>
+<msg timestamp="20160314 15:48:09.644" level="INFO">Slept 1 second</msg>
+<status status="PASS" endtime="20160314 15:48:09.644" starttime="20160314 15:48:08.644"></status>
+</kw>
+<kw name="NewOne2Many" library="keywords_8_0">
+<arguments>
+<arg>product.hotel</arg>
+<arg>seller_ids</arg>
+</arguments>
+<kw name="ElementPreCheck" library="keywords_8_0">
+<arguments>
+<arg>xpath=//div[contains(@class,'openerp')][last()]//div[contains(@class,'oe_form_field_one2many')]//div[@data-bt-testing-model_name='${model}' and @data-bt-testing-name='${field}']//tr/td[contains(@class,'oe_form_field_one2many_list_row_add')]/a</arg>
+</arguments>
+<kw name="Execute Javascript" library="Selenium2Library">
+<doc>Executes the given JavaScript code.</doc>
+<arguments>
+<arg>console.log("${element}");</arg>
+</arguments>
+<msg timestamp="20160314 15:48:09.645" level="INFO">Executing JavaScript:
+console.log("xpath=//div[contains(@class,'openerp')][last()]//div[contains(@class,'oe_form_field_one2many')]//div[@data-bt-testing-model_name='product.hotel' and @data-bt-testing-name='seller_ids']//tr/td[contains(@class,'oe_form_field_one2many_list_row_add')]/a");</msg>
+<status status="PASS" endtime="20160314 15:48:09.650" starttime="20160314 15:48:09.645"></status>
+</kw>
+<kw name="Execute Javascript" library="Selenium2Library">
+<doc>Executes the given JavaScript code.</doc>
+<arguments>
+<arg>var path="${element}".replace('xpath=','');var id=document.evaluate("("+path+")/ancestor::div[contains(@class,'oe_notebook_page')]/@id",document,null,XPathResult.STRING_TYPE,null).stringValue; if(id != ''){ window.location = "#"+id; $("a[href='#"+id+"']").click(); console.log("Clicked at #" + id); } return true;</arg>
+</arguments>
+<msg timestamp="20160314 15:48:09.651" level="INFO">Executing JavaScript:
+var path="xpath=//div[contains(@class,'openerp')][last()]//div[contains(@class,'oe_form_field_one2many')]//div[@data-bt-testing-model_name='product.hotel' and @data-bt-testing-name='seller_ids']//tr/td[contains(@class,'oe_form_field_one2many_list_row_add')]/a".replace('xpath=','');var id=document.evaluate("("+path+")/ancestor::div[contains(@class,'oe_notebook_page')]/@id",document,null,XPathResult.STRING_TYPE,null).stringValue; if(id != ''){ window.location = "#"+id; $("a[href='#"+id+"']").click(); console.log("Clicked at #" + id); } return true;</msg>
+<status status="PASS" endtime="20160314 15:48:09.667" starttime="20160314 15:48:09.650"></status>
+</kw>
+<status status="PASS" endtime="20160314 15:48:09.667" starttime="20160314 15:48:09.645"></status>
+</kw>
+<kw name="Click Link" library="Selenium2Library">
+<doc>Clicks a link identified by locator.</doc>
+<arguments>
+<arg>xpath=//div[contains(@class,'openerp')][last()]//div[contains(@class,'oe_form_field_one2many')]//div[@data-bt-testing-model_name='${model}' and @data-bt-testing-name='${field}']//tr/td[contains(@class,'oe_form_field_one2many_list_row_add')]/a</arg>
+</arguments>
+<msg timestamp="20160314 15:48:09.669" level="INFO">Clicking link 'xpath=//div[contains(@class,'openerp')][last()]//div[contains(@class,'oe_form_field_one2many')]//div[@data-bt-testing-model_name='product.hotel' and @data-bt-testing-name='seller_ids']//tr/td[contains(@class,'oe_form_field_one2many_list_row_add')]/a'.</msg>
+<status status="PASS" endtime="20160314 15:48:09.731" starttime="20160314 15:48:09.668"></status>
+</kw>
+<kw name="ElementPostCheck" library="keywords_8_0">
+<kw name="Wait Until Page Contains Element" library="Selenium2Library">
+<doc>Waits until element specified with `locator` appears on current page.</doc>
+<arguments>
+<arg>xpath=//body[not(contains(@class, 'oe_wait'))]</arg>
+</arguments>
+<status status="PASS" endtime="20160314 15:48:09.758" starttime="20160314 15:48:09.731"></status>
+</kw>
+<status status="PASS" endtime="20160314 15:48:09.758" starttime="20160314 15:48:09.731"></status>
+</kw>
+<status status="PASS" endtime="20160314 15:48:09.758" starttime="20160314 15:48:09.645"></status>
+</kw>
+<kw name="Sleep" library="BuiltIn">
+<doc>Pauses the test executed for the given time.</doc>
+<arguments>
+<arg>1</arg>
+</arguments>
+<msg timestamp="20160314 15:48:10.759" level="INFO">Slept 1 second</msg>
+<status status="PASS" endtime="20160314 15:48:10.759" starttime="20160314 15:48:09.759"></status>
+</kw>
+<status status="PASS" endtime="20160314 15:48:10.760" critical="yes" starttime="20160314 15:47:47.276"></status>
+</test>
+<test id="s1-t3" name="Create Product SupplierInfo">
+<kw name="Many2OneSelect" library="keywords_8_0">
+<arguments>
+<arg>product.supplierinfo</arg>
+<arg>name</arg>
+<arg>CUBANACAN HOTELES</arg>
+</arguments>
+<kw name="ElementPreCheck" library="keywords_8_0">
+<arguments>
+<arg>xpath=//div[contains(@class,'openerp')][last()]//input[@data-bt-testing-model_name='${model}' and @data-bt-testing-name='${field}']</arg>
+</arguments>
+<kw name="Execute Javascript" library="Selenium2Library">
+<doc>Executes the given JavaScript code.</doc>
+<arguments>
+<arg>console.log("${element}");</arg>
+</arguments>
+<msg timestamp="20160314 15:48:10.769" level="INFO">Executing JavaScript:
+console.log("xpath=//div[contains(@class,'openerp')][last()]//input[@data-bt-testing-model_name='product.supplierinfo' and @data-bt-testing-name='name']");</msg>
+<status status="PASS" endtime="20160314 15:48:10.773" starttime="20160314 15:48:10.768"></status>
+</kw>
+<kw name="Execute Javascript" library="Selenium2Library">
+<doc>Executes the given JavaScript code.</doc>
+<arguments>
+<arg>var path="${element}".replace('xpath=','');var id=document.evaluate("("+path+")/ancestor::div[contains(@class,'oe_notebook_page')]/@id",document,null,XPathResult.STRING_TYPE,null).stringValue; if(id != ''){ window.location = "#"+id; $("a[href='#"+id+"']").click(); console.log("Clicked at #" + id); } return true;</arg>
+</arguments>
+<msg timestamp="20160314 15:48:10.774" level="INFO">Executing JavaScript:
+var path="xpath=//div[contains(@class,'openerp')][last()]//input[@data-bt-testing-model_name='product.supplierinfo' and @data-bt-testing-name='name']".replace('xpath=','');var id=document.evaluate("("+path+")/ancestor::div[contains(@class,'oe_notebook_page')]/@id",document,null,XPathResult.STRING_TYPE,null).stringValue; if(id != ''){ window.location = "#"+id; $("a[href='#"+id+"']").click(); console.log("Clicked at #" + id); } return true;</msg>
+<status status="PASS" endtime="20160314 15:48:10.779" starttime="20160314 15:48:10.774"></status>
+</kw>
+<status status="PASS" endtime="20160314 15:48:10.779" starttime="20160314 15:48:10.768"></status>
+</kw>
+<kw name="Input Text" library="Selenium2Library">
+<doc>Types the given `text` into text field identified by `locator`.</doc>
+<arguments>
+<arg>xpath=//div[contains(@class,'openerp')][last()]//input[@data-bt-testing-model_name='${model}' and @data-bt-testing-name='${field}']</arg>
+<arg>${value}</arg>
+</arguments>
+<msg timestamp="20160314 15:48:10.780" level="INFO">Typing text 'CUBANACAN HOTELES' into text field 'xpath=//div[contains(@class,'openerp')][last()]//input[@data-bt-testing-model_name='product.supplierinfo' and @data-bt-testing-name='name']'</msg>
+<status status="PASS" endtime="20160314 15:48:10.922" starttime="20160314 15:48:10.780"></status>
+</kw>
+<kw name="Sleep" library="BuiltIn">
+<doc>Pauses the test executed for the given time.</doc>
+<arguments>
+<arg>1</arg>
+</arguments>
+<msg timestamp="20160314 15:48:11.923" level="INFO">Slept 1 second</msg>
+<status status="PASS" endtime="20160314 15:48:11.923" starttime="20160314 15:48:10.922"></status>
+</kw>
+<kw name="Click Link" library="Selenium2Library">
+<doc>Clicks a link identified by locator.</doc>
+<arguments>
+<arg>xpath=//ul[contains(@class,'ui-autocomplete') and not(contains(@style,'display: none'))]/li[1]/a</arg>
+</arguments>
+<msg timestamp="20160314 15:48:11.923" level="INFO">Clicking link 'xpath=//ul[contains(@class,'ui-autocomplete') and not(contains(@style,'display: none'))]/li[1]/a'.</msg>
+<status status="PASS" endtime="20160314 15:48:11.968" starttime="20160314 15:48:11.923"></status>
+</kw>
+<kw name="Textfield Should Contain" library="Selenium2Library">
+<doc>Verifies text field identified by `locator` contains text `expected`.</doc>
+<arguments>
+<arg>xpath=//div[contains(@class,'openerp')][last()]//input[@data-bt-testing-model_name='${model}' and @data-bt-testing-name='${field}']</arg>
+<arg>${value}</arg>
+</arguments>
+<msg timestamp="20160314 15:48:12.026" level="INFO">Text field 'xpath=//div[contains(@class,'openerp')][last()]//input[@data-bt-testing-model_name='product.supplierinfo' and @data-bt-testing-name='name']' contains text 'CUBANACAN HOTELES'.</msg>
+<status status="PASS" endtime="20160314 15:48:12.026" starttime="20160314 15:48:11.968"></status>
+</kw>
+<kw name="ElementPostCheck" library="keywords_8_0">
+<kw name="Wait Until Page Contains Element" library="Selenium2Library">
+<doc>Waits until element specified with `locator` appears on current page.</doc>
+<arguments>
+<arg>xpath=//body[not(contains(@class, 'oe_wait'))]</arg>
+</arguments>
+<status status="PASS" endtime="20160314 15:48:12.034" starttime="20160314 15:48:12.027"></status>
+</kw>
+<status status="PASS" endtime="20160314 15:48:12.035" starttime="20160314 15:48:12.027"></status>
+</kw>
+<status status="PASS" endtime="20160314 15:48:12.035" starttime="20160314 15:48:10.767"></status>
+</kw>
+<kw name="Sleep" library="BuiltIn">
+<doc>Pauses the test executed for the given time.</doc>
+<arguments>
+<arg>1</arg>
+</arguments>
+<msg timestamp="20160314 15:48:13.035" level="INFO">Slept 1 second</msg>
+<status status="PASS" endtime="20160314 15:48:13.035" starttime="20160314 15:48:12.035"></status>
+</kw>
+<kw name="ElementPreCheck" library="keywords_8_0">
+<arguments>
+<arg>xpath=//div[contains(@class,'openerp')][last()]//div[contains(@class,'oe_form_field_one2many')]//div[@data-bt-testing-submodel_name='pricelist.partnerinfo' and @data-bt-testing-name='pricelist_ids']//tr/td[contains(@class,'oe_form_field_one2many_list_row_add')]/a</arg>
+</arguments>
+<kw name="Execute Javascript" library="Selenium2Library">
+<doc>Executes the given JavaScript code.</doc>
+<arguments>
+<arg>console.log("${element}");</arg>
+</arguments>
+<msg timestamp="20160314 15:48:13.037" level="INFO">Executing JavaScript:
+console.log("xpath=//div[contains(@class,'openerp')][last()]//div[contains(@class,'oe_form_field_one2many')]//div[@data-bt-testing-submodel_name='pricelist.partnerinfo' and @data-bt-testing-name='pricelist_ids']//tr/td[contains(@class,'oe_form_field_one2many_list_row_add')]/a");</msg>
+<status status="PASS" endtime="20160314 15:48:13.042" starttime="20160314 15:48:13.036"></status>
+</kw>
+<kw name="Execute Javascript" library="Selenium2Library">
+<doc>Executes the given JavaScript code.</doc>
+<arguments>
+<arg>var path="${element}".replace('xpath=','');var id=document.evaluate("("+path+")/ancestor::div[contains(@class,'oe_notebook_page')]/@id",document,null,XPathResult.STRING_TYPE,null).stringValue; if(id != ''){ window.location = "#"+id; $("a[href='#"+id+"']").click(); console.log("Clicked at #" + id); } return true;</arg>
+</arguments>
+<msg timestamp="20160314 15:48:13.042" level="INFO">Executing JavaScript:
+var path="xpath=//div[contains(@class,'openerp')][last()]//div[contains(@class,'oe_form_field_one2many')]//div[@data-bt-testing-submodel_name='pricelist.partnerinfo' and @data-bt-testing-name='pricelist_ids']//tr/td[contains(@class,'oe_form_field_one2many_list_row_add')]/a".replace('xpath=','');var id=document.evaluate("("+path+")/ancestor::div[contains(@class,'oe_notebook_page')]/@id",document,null,XPathResult.STRING_TYPE,null).stringValue; if(id != ''){ window.location = "#"+id; $("a[href='#"+id+"']").click(); console.log("Clicked at #" + id); } return true;</msg>
+<status status="PASS" endtime="20160314 15:48:13.061" starttime="20160314 15:48:13.042"></status>
+</kw>
+<status status="PASS" endtime="20160314 15:48:13.061" starttime="20160314 15:48:13.036"></status>
+</kw>
+<kw name="Click Link" library="Selenium2Library">
+<doc>Clicks a link identified by locator.</doc>
+<arguments>
+<arg>xpath=//div[contains(@class,'openerp')][last()]//div[contains(@class,'oe_form_field_one2many')]//div[@data-bt-testing-submodel_name='pricelist.partnerinfo' and @data-bt-testing-name='pricelist_ids']//tr/td[contains(@class,'oe_form_field_one2many_list_row_add')]/a</arg>
+</arguments>
+<msg timestamp="20160314 15:48:13.062" level="INFO">Clicking link 'xpath=//div[contains(@class,'openerp')][last()]//div[contains(@class,'oe_form_field_one2many')]//div[@data-bt-testing-submodel_name='pricelist.partnerinfo' and @data-bt-testing-name='pricelist_ids']//tr/td[contains(@class,'oe_form_field_one2many_list_row_add')]/a'.</msg>
+<status status="PASS" endtime="20160314 15:48:13.120" starttime="20160314 15:48:13.062"></status>
+</kw>
+<kw name="Sleep" library="BuiltIn">
+<doc>Pauses the test executed for the given time.</doc>
+<arguments>
+<arg>1</arg>
+</arguments>
+<msg timestamp="20160314 15:48:14.121" level="INFO">Slept 1 second</msg>
+<status status="PASS" endtime="20160314 15:48:14.121" starttime="20160314 15:48:13.121"></status>
+</kw>
+<status status="PASS" endtime="20160314 15:48:14.122" critical="yes" starttime="20160314 15:48:10.764"></status>
+</test>
+<test id="s1-t4" name="Create Pricelist Partnerinfo">
+<kw name="Input Text" library="Selenium2Library">
+<doc>Types the given `text` into text field identified by `locator`.</doc>
+<arguments>
+<arg>xpath=//div[contains(@class,'openerp')][last()]//input[@data-bt-testing-model_name='pricelist.partnerinfo' and @data-bt-testing-name='start_date']</arg>
+<arg>08/03/2016</arg>
+</arguments>
+<msg timestamp="20160314 15:48:14.129" level="INFO">Typing text '08/03/2016' into text field 'xpath=//div[contains(@class,'openerp')][last()]//input[@data-bt-testing-model_name='pricelist.partnerinfo' and @data-bt-testing-name='start_date']'</msg>
+<status status="PASS" endtime="20160314 15:48:14.224" starttime="20160314 15:48:14.129"></status>
+</kw>
+<kw name="Sleep" library="BuiltIn">
+<doc>Pauses the test executed for the given time.</doc>
+<arguments>
+<arg>1</arg>
+</arguments>
+<msg timestamp="20160314 15:48:15.225" level="INFO">Slept 1 second</msg>
+<status status="PASS" endtime="20160314 15:48:15.225" starttime="20160314 15:48:14.224"></status>
+</kw>
+<kw name="Input Text" library="Selenium2Library">
+<doc>Types the given `text` into text field identified by `locator`.</doc>
+<arguments>
+<arg>xpath=//div[contains(@class,'openerp')][last()]//input[@data-bt-testing-model_name='pricelist.partnerinfo' and @data-bt-testing-name='end_date']</arg>
+<arg>18/03/2016</arg>
+</arguments>
+<msg timestamp="20160314 15:48:15.226" level="INFO">Typing text '18/03/2016' into text field 'xpath=//div[contains(@class,'openerp')][last()]//input[@data-bt-testing-model_name='pricelist.partnerinfo' and @data-bt-testing-name='end_date']'</msg>
+<status status="PASS" endtime="20160314 15:48:15.325" starttime="20160314 15:48:15.225"></status>
+</kw>
+<kw name="Sleep" library="BuiltIn">
+<doc>Pauses the test executed for the given time.</doc>
+<arguments>
+<arg>1</arg>
+</arguments>
+<msg timestamp="20160314 15:48:16.326" level="INFO">Slept 1 second</msg>
+<status status="PASS" endtime="20160314 15:48:16.326" starttime="20160314 15:48:15.326"></status>
+</kw>
+<kw name="Input Text" library="Selenium2Library">
+<doc>Types the given `text` into text field identified by `locator`.</doc>
+<arguments>
+<arg>xpath=//div[contains(@class,'openerp')][last()]//input[@data-bt-testing-model_name='pricelist.partnerinfo' and @data-bt-testing-name='room_type_id']</arg>
+<arg>STANDARD</arg>
+</arguments>
+<msg timestamp="20160314 15:48:16.327" level="INFO">Typing text 'STANDARD' into text field 'xpath=//div[contains(@class,'openerp')][last()]//input[@data-bt-testing-model_name='pricelist.partnerinfo' and @data-bt-testing-name='room_type_id']'</msg>
+<status status="PASS" endtime="20160314 15:48:16.423" starttime="20160314 15:48:16.327"></status>
+</kw>
+<kw name="Sleep" library="BuiltIn">
+<doc>Pauses the test executed for the given time.</doc>
+<arguments>
+<arg>1</arg>
+</arguments>
+<msg timestamp="20160314 15:48:17.424" level="INFO">Slept 1 second</msg>
+<status status="PASS" endtime="20160314 15:48:17.424" starttime="20160314 15:48:16.424"></status>
+</kw>
+<kw name="Click Link" library="Selenium2Library">
+<doc>Clicks a link identified by locator.</doc>
+<arguments>
+<arg>xpath=//ul[contains(@class,'ui-autocomplete') and not(contains(@style,'display: none'))]/li[1]/a</arg>
+</arguments>
+<msg timestamp="20160314 15:48:17.425" level="INFO">Clicking link 'xpath=//ul[contains(@class,'ui-autocomplete') and not(contains(@style,'display: none'))]/li[1]/a'.</msg>
+<status status="PASS" endtime="20160314 15:48:17.469" starttime="20160314 15:48:17.425"></status>
+</kw>
+<kw name="Sleep" library="BuiltIn">
+<doc>Pauses the test executed for the given time.</doc>
+<arguments>
+<arg>1</arg>
+</arguments>
+<msg timestamp="20160314 15:48:18.470" level="INFO">Slept 1 second</msg>
+<status status="PASS" endtime="20160314 15:48:18.470" starttime="20160314 15:48:17.470"></status>
+</kw>
+<kw name="Input Text" library="Selenium2Library">
+<doc>Types the given `text` into text field identified by `locator`.</doc>
+<arguments>
+<arg>xpath=//div[contains(@class,'openerp')][last()]//input[@data-bt-testing-model_name='pricelist.partnerinfo' and @data-bt-testing-name='meal_plan_id']</arg>
+<arg>AP</arg>
+</arguments>
+<msg timestamp="20160314 15:48:18.471" level="INFO">Typing text 'AP' into text field 'xpath=//div[contains(@class,'openerp')][last()]//input[@data-bt-testing-model_name='pricelist.partnerinfo' and @data-bt-testing-name='meal_plan_id']'</msg>
+<status status="PASS" endtime="20160314 15:48:18.563" starttime="20160314 15:48:18.471"></status>
+</kw>
+<kw name="Sleep" library="BuiltIn">
+<doc>Pauses the test executed for the given time.</doc>
+<arguments>
+<arg>1</arg>
+</arguments>
+<msg timestamp="20160314 15:48:19.566" level="INFO">Slept 1 second</msg>
+<status status="PASS" endtime="20160314 15:48:19.566" starttime="20160314 15:48:18.565"></status>
+</kw>
+<kw name="Click Link" library="Selenium2Library">
+<doc>Clicks a link identified by locator.</doc>
+<arguments>
+<arg>xpath=//ul[contains(@class,'ui-autocomplete') and not(contains(@style,'display: none'))]/li[1]/a</arg>
+</arguments>
+<msg timestamp="20160314 15:48:19.567" level="INFO">Clicking link 'xpath=//ul[contains(@class,'ui-autocomplete') and not(contains(@style,'display: none'))]/li[1]/a'.</msg>
+<status status="PASS" endtime="20160314 15:48:19.612" starttime="20160314 15:48:19.567"></status>
+</kw>
+<kw name="Sleep" library="BuiltIn">
+<doc>Pauses the test executed for the given time.</doc>
+<arguments>
+<arg>1</arg>
+</arguments>
+<msg timestamp="20160314 15:48:20.612" level="INFO">Slept 1 second</msg>
+<status status="PASS" endtime="20160314 15:48:20.612" starttime="20160314 15:48:19.612"></status>
+</kw>
+<kw name="Input Text" library="Selenium2Library">
+<doc>Types the given `text` into text field identified by `locator`.</doc>
+<arguments>
+<arg>xpath=//div[contains(@class,'openerp')][last()]//input[@data-bt-testing-model_name='pricelist.partnerinfo' and @data-bt-testing-name='simple']</arg>
+<arg>90.00</arg>
+</arguments>
+<msg timestamp="20160314 15:48:20.613" level="INFO">Typing text '90.00' into text field 'xpath=//div[contains(@class,'openerp')][last()]//input[@data-bt-testing-model_name='pricelist.partnerinfo' and @data-bt-testing-name='simple']'</msg>
+<status status="PASS" endtime="20160314 15:48:20.708" starttime="20160314 15:48:20.613"></status>
+</kw>
+<kw name="Sleep" library="BuiltIn">
+<doc>Pauses the test executed for the given time.</doc>
+<arguments>
+<arg>1</arg>
+</arguments>
+<msg timestamp="20160314 15:48:21.710" level="INFO">Slept 1 second</msg>
+<status status="PASS" endtime="20160314 15:48:21.710" starttime="20160314 15:48:20.710"></status>
+</kw>
+<kw name="Input Text" library="Selenium2Library">
+<doc>Types the given `text` into text field identified by `locator`.</doc>
+<arguments>
+<arg>xpath=//div[contains(@class,'openerp')][last()]//input[@data-bt-testing-model_name='pricelist.partnerinfo' and @data-bt-testing-name='price']</arg>
+<arg>70.00</arg>
+</arguments>
+<msg timestamp="20160314 15:48:21.711" level="INFO">Typing text '70.00' into text field 'xpath=//div[contains(@class,'openerp')][last()]//input[@data-bt-testing-model_name='pricelist.partnerinfo' and @data-bt-testing-name='price']'</msg>
+<status status="PASS" endtime="20160314 15:48:21.804" starttime="20160314 15:48:21.711"></status>
+</kw>
+<kw name="Sleep" library="BuiltIn">
+<doc>Pauses the test executed for the given time.</doc>
+<arguments>
+<arg>1</arg>
+</arguments>
+<msg timestamp="20160314 15:48:22.805" level="INFO">Slept 1 second</msg>
+<status status="PASS" endtime="20160314 15:48:22.805" starttime="20160314 15:48:21.804"></status>
+</kw>
+<kw name="Input Text" library="Selenium2Library">
+<doc>Types the given `text` into text field identified by `locator`.</doc>
+<arguments>
+<arg>xpath=//div[contains(@class,'openerp')][last()]//input[@data-bt-testing-model_name='pricelist.partnerinfo' and @data-bt-testing-name='triple']</arg>
+<arg>60.00</arg>
+</arguments>
+<msg timestamp="20160314 15:48:22.806" level="INFO">Typing text '60.00' into text field 'xpath=//div[contains(@class,'openerp')][last()]//input[@data-bt-testing-model_name='pricelist.partnerinfo' and @data-bt-testing-name='triple']'</msg>
+<status status="PASS" endtime="20160314 15:48:22.903" starttime="20160314 15:48:22.806"></status>
+</kw>
+<kw name="Sleep" library="BuiltIn">
+<doc>Pauses the test executed for the given time.</doc>
+<arguments>
+<arg>1</arg>
+</arguments>
+<msg timestamp="20160314 15:48:23.905" level="INFO">Slept 1 second</msg>
+<status status="PASS" endtime="20160314 15:48:23.905" starttime="20160314 15:48:22.905"></status>
+</kw>
+<kw name="Input Text" library="Selenium2Library">
+<doc>Types the given `text` into text field identified by `locator`.</doc>
+<arguments>
+<arg>xpath=//div[contains(@class,'openerp')][last()]//input[@data-bt-testing-model_name='pricelist.partnerinfo' and @data-bt-testing-name='extra_adult']</arg>
+<arg>10.0</arg>
+</arguments>
+<msg timestamp="20160314 15:48:23.906" level="INFO">Typing text '10.0' into text field 'xpath=//div[contains(@class,'openerp')][last()]//input[@data-bt-testing-model_name='pricelist.partnerinfo' and @data-bt-testing-name='extra_adult']'</msg>
+<status status="PASS" endtime="20160314 15:48:23.998" starttime="20160314 15:48:23.905"></status>
+</kw>
+<kw name="Sleep" library="BuiltIn">
+<doc>Pauses the test executed for the given time.</doc>
+<arguments>
+<arg>1</arg>
+</arguments>
+<msg timestamp="20160314 15:48:25.000" level="INFO">Slept 1 second</msg>
+<status status="PASS" endtime="20160314 15:48:25.000" starttime="20160314 15:48:23.999"></status>
+</kw>
+<kw name="Input Text" library="Selenium2Library">
+<doc>Types the given `text` into text field identified by `locator`.</doc>
+<arguments>
+<arg>xpath=//div[contains(@class,'openerp')][last()]//input[@data-bt-testing-model_name='pricelist.partnerinfo' and @data-bt-testing-name='child']</arg>
+<arg>5.0</arg>
+</arguments>
+<msg timestamp="20160314 15:48:25.001" level="INFO">Typing text '5.0' into text field 'xpath=//div[contains(@class,'openerp')][last()]//input[@data-bt-testing-model_name='pricelist.partnerinfo' and @data-bt-testing-name='child']'</msg>
+<status status="PASS" endtime="20160314 15:48:25.091" starttime="20160314 15:48:25.000"></status>
+</kw>
+<kw name="Sleep" library="BuiltIn">
+<doc>Pauses the test executed for the given time.</doc>
+<arguments>
+<arg>1</arg>
+</arguments>
+<msg timestamp="20160314 15:48:26.092" level="INFO">Slept 1 second</msg>
+<status status="PASS" endtime="20160314 15:48:26.092" starttime="20160314 15:48:25.092"></status>
+</kw>
+<kw name="Input Text" library="Selenium2Library">
+<doc>Types the given `text` into text field identified by `locator`.</doc>
+<arguments>
+<arg>xpath=//div[contains(@class,'openerp')][last()]//input[@data-bt-testing-model_name='pricelist.partnerinfo' and @data-bt-testing-name='second_child']</arg>
+<arg>3.0</arg>
+</arguments>
+<msg timestamp="20160314 15:48:26.093" level="INFO">Typing text '3.0' into text field 'xpath=//div[contains(@class,'openerp')][last()]//input[@data-bt-testing-model_name='pricelist.partnerinfo' and @data-bt-testing-name='second_child']'</msg>
+<status status="PASS" endtime="20160314 15:48:26.183" starttime="20160314 15:48:26.092"></status>
+</kw>
+<kw name="Sleep" library="BuiltIn">
+<doc>Pauses the test executed for the given time.</doc>
+<arguments>
+<arg>1</arg>
+</arguments>
+<msg timestamp="20160314 15:48:27.184" level="INFO">Slept 1 second</msg>
+<status status="PASS" endtime="20160314 15:48:27.184" starttime="20160314 15:48:26.184"></status>
+</kw>
+<kw name="ElementPreCheck" library="keywords_8_0">
+<arguments>
+<arg>xpath=//div[contains(@class,'openerp')][last()]//div[contains(@class,'oe_form_field_one2many')]//div[@data-bt-testing-submodel_name='product.rate.supplement' and @data-bt-testing-name='supplement_ids']//tr/td[contains(@class,'oe_form_field_one2many_list_row_add')]/a</arg>
+</arguments>
+<kw name="Execute Javascript" library="Selenium2Library">
+<doc>Executes the given JavaScript code.</doc>
+<arguments>
+<arg>console.log("${element}");</arg>
+</arguments>
+<msg timestamp="20160314 15:48:27.186" level="INFO">Executing JavaScript:
+console.log("xpath=//div[contains(@class,'openerp')][last()]//div[contains(@class,'oe_form_field_one2many')]//div[@data-bt-testing-submodel_name='product.rate.supplement' and @data-bt-testing-name='supplement_ids']//tr/td[contains(@class,'oe_form_field_one2many_list_row_add')]/a");</msg>
+<status status="PASS" endtime="20160314 15:48:27.190" starttime="20160314 15:48:27.185"></status>
+</kw>
+<kw name="Execute Javascript" library="Selenium2Library">
+<doc>Executes the given JavaScript code.</doc>
+<arguments>
+<arg>var path="${element}".replace('xpath=','');var id=document.evaluate("("+path+")/ancestor::div[contains(@class,'oe_notebook_page')]/@id",document,null,XPathResult.STRING_TYPE,null).stringValue; if(id != ''){ window.location = "#"+id; $("a[href='#"+id+"']").click(); console.log("Clicked at #" + id); } return true;</arg>
+</arguments>
+<msg timestamp="20160314 15:48:27.191" level="INFO">Executing JavaScript:
+var path="xpath=//div[contains(@class,'openerp')][last()]//div[contains(@class,'oe_form_field_one2many')]//div[@data-bt-testing-submodel_name='product.rate.supplement' and @data-bt-testing-name='supplement_ids']//tr/td[contains(@class,'oe_form_field_one2many_list_row_add')]/a".replace('xpath=','');var id=document.evaluate("("+path+")/ancestor::div[contains(@class,'oe_notebook_page')]/@id",document,null,XPathResult.STRING_TYPE,null).stringValue; if(id != ''){ window.location = "#"+id; $("a[href='#"+id+"']").click(); console.log("Clicked at #" + id); } return true;</msg>
+<status status="PASS" endtime="20160314 15:48:27.213" starttime="20160314 15:48:27.190"></status>
+</kw>
+<status status="PASS" endtime="20160314 15:48:27.213" starttime="20160314 15:48:27.185"></status>
+</kw>
+<kw name="Click Link" library="Selenium2Library">
+<doc>Clicks a link identified by locator.</doc>
+<arguments>
+<arg>xpath=//div[contains(@class,'openerp')][last()]//div[contains(@class,'oe_form_field_one2many')]//div[@data-bt-testing-submodel_name='product.rate.supplement' and @data-bt-testing-name='supplement_ids']//tr/td[contains(@class,'oe_form_field_one2many_list_row_add')]/a</arg>
+</arguments>
+<msg timestamp="20160314 15:48:27.216" level="INFO">Clicking link 'xpath=//div[contains(@class,'openerp')][last()]//div[contains(@class,'oe_form_field_one2many')]//div[@data-bt-testing-submodel_name='product.rate.supplement' and @data-bt-testing-name='supplement_ids']//tr/td[contains(@class,'oe_form_field_one2many_list_row_add')]/a'.</msg>
+<status status="PASS" endtime="20160314 15:48:27.318" starttime="20160314 15:48:27.216"></status>
+</kw>
+<status status="PASS" endtime="20160314 15:48:27.319" critical="yes" starttime="20160314 15:48:14.126"></status>
+</test>
+<test id="s1-t5" name="Create Product Rate Supplement">
+<kw name="LineDate" library="keywords_8_0">
+<arguments>
+<arg>product.rate.supplement</arg>
+<arg>start_date</arg>
+<arg>08/03/2016</arg>
+</arguments>
+<kw name="Input Text" library="Selenium2Library">
+<doc>Types the given `text` into text field identified by `locator`.</doc>
+<arguments>
+<arg>xpath=//div[contains(@class,'openerp')][last()]//input[@data-bt-testing-model_name='${model}' and @data-bt-testing-name='${field}']</arg>
+<arg>${value}</arg>
+</arguments>
+<msg timestamp="20160314 15:48:27.327" level="INFO">Typing text '08/03/2016' into text field 'xpath=//div[contains(@class,'openerp')][last()]//input[@data-bt-testing-model_name='product.rate.supplement' and @data-bt-testing-name='start_date']'</msg>
+<status status="PASS" endtime="20160314 15:48:27.784" starttime="20160314 15:48:27.327"></status>
+</kw>
+<status status="PASS" endtime="20160314 15:48:27.784" starttime="20160314 15:48:27.326"></status>
+</kw>
+<kw name="Sleep" library="BuiltIn">
+<doc>Pauses the test executed for the given time.</doc>
+<arguments>
+<arg>1</arg>
+</arguments>
+<msg timestamp="20160314 15:48:28.786" level="INFO">Slept 1 second</msg>
+<status status="PASS" endtime="20160314 15:48:28.786" starttime="20160314 15:48:27.784"></status>
+</kw>
+<kw name="LineDate" library="keywords_8_0">
+<arguments>
+<arg>product.rate.supplement</arg>
+<arg>end_date</arg>
+<arg>08/03/2016</arg>
+</arguments>
+<kw name="Input Text" library="Selenium2Library">
+<doc>Types the given `text` into text field identified by `locator`.</doc>
+<arguments>
+<arg>xpath=//div[contains(@class,'openerp')][last()]//input[@data-bt-testing-model_name='${model}' and @data-bt-testing-name='${field}']</arg>
+<arg>${value}</arg>
+</arguments>
+<msg timestamp="20160314 15:48:28.787" level="INFO">Typing text '08/03/2016' into text field 'xpath=//div[contains(@class,'openerp')][last()]//input[@data-bt-testing-model_name='product.rate.supplement' and @data-bt-testing-name='end_date']'</msg>
+<status status="PASS" endtime="20160314 15:48:28.884" starttime="20160314 15:48:28.787"></status>
+</kw>
+<status status="PASS" endtime="20160314 15:48:28.884" starttime="20160314 15:48:28.786"></status>
+</kw>
+<kw name="Sleep" library="BuiltIn">
+<doc>Pauses the test executed for the given time.</doc>
+<arguments>
+<arg>1</arg>
+</arguments>
+<msg timestamp="20160314 15:48:29.885" level="INFO">Slept 1 second</msg>
+<status status="PASS" endtime="20160314 15:48:29.885" starttime="20160314 15:48:28.885"></status>
+</kw>
+<kw name="Input Text" library="Selenium2Library">
+<doc>Types the given `text` into text field identified by `locator`.</doc>
+<arguments>
+<arg>xpath=//div[contains(@class,'openerp')][last()]//input[@data-bt-testing-model_name='product.rate.supplement' and @data-bt-testing-name='supplement_id']</arg>
+<arg>Aniversario de Bodas</arg>
+</arguments>
+<msg timestamp="20160314 15:48:29.886" level="INFO">Typing text 'Aniversario de Bodas' into text field 'xpath=//div[contains(@class,'openerp')][last()]//input[@data-bt-testing-model_name='product.rate.supplement' and @data-bt-testing-name='supplement_id']'</msg>
+<status status="PASS" endtime="20160314 15:48:29.990" starttime="20160314 15:48:29.885"></status>
+</kw>
+<kw name="Sleep" library="BuiltIn">
+<doc>Pauses the test executed for the given time.</doc>
+<arguments>
+<arg>1</arg>
+</arguments>
+<msg timestamp="20160314 15:48:30.991" level="INFO">Slept 1 second</msg>
+<status status="PASS" endtime="20160314 15:48:30.991" starttime="20160314 15:48:29.990"></status>
+</kw>
+<kw name="Click Link" library="Selenium2Library">
+<doc>Clicks a link identified by locator.</doc>
+<arguments>
+<arg>xpath=//ul[contains(@class,'ui-autocomplete') and not(contains(@style,'display: none'))]/li[3]/a</arg>
+</arguments>
+<msg timestamp="20160314 15:48:30.992" level="INFO">Clicking link 'xpath=//ul[contains(@class,'ui-autocomplete') and not(contains(@style,'display: none'))]/li[3]/a'.</msg>
+<status status="PASS" endtime="20160314 15:48:31.045" starttime="20160314 15:48:30.992"></status>
+</kw>
+<kw name="Sleep" library="BuiltIn">
+<doc>Pauses the test executed for the given time.</doc>
+<arguments>
+<arg>1</arg>
+</arguments>
+<msg timestamp="20160314 15:48:32.046" level="INFO">Slept 1 second</msg>
+<status status="PASS" endtime="20160314 15:48:32.046" starttime="20160314 15:48:31.045"></status>
+</kw>
+<kw name="LineFloat" library="keywords_8_0">
+<arguments>
+<arg>product.rate.supplement</arg>
+<arg>price</arg>
+<arg>20.0</arg>
+</arguments>
+<kw name="Input Text" library="Selenium2Library">
+<doc>Types the given `text` into text field identified by `locator`.</doc>
+<arguments>
+<arg>xpath=//div[contains(@class,'openerp')][last()]//input[@data-bt-testing-model_name='${model}' and @data-bt-testing-name='${field}']</arg>
+<arg>${value}</arg>
+</arguments>
+<msg timestamp="20160314 15:48:32.048" level="INFO">Typing text '20.0' into text field 'xpath=//div[contains(@class,'openerp')][last()]//input[@data-bt-testing-model_name='product.rate.supplement' and @data-bt-testing-name='price']'</msg>
+<status status="PASS" endtime="20160314 15:48:32.141" starttime="20160314 15:48:32.047"></status>
+</kw>
+<status status="PASS" endtime="20160314 15:48:32.141" starttime="20160314 15:48:32.046"></status>
+</kw>
+<kw name="Sleep" library="BuiltIn">
+<doc>Pauses the test executed for the given time.</doc>
+<arguments>
+<arg>1</arg>
+</arguments>
+<msg timestamp="20160314 15:48:33.145" level="INFO">Slept 1 second</msg>
+<status status="PASS" endtime="20160314 15:48:33.145" starttime="20160314 15:48:32.145"></status>
+</kw>
+<status status="PASS" endtime="20160314 15:48:33.146" critical="yes" starttime="20160314 15:48:27.324"></status>
+</test>
+<test id="s1-t6" name="Save Product">
+<kw name="Button" library="keywords_8_0">
+<arguments>
+<arg>product.supplierinfo</arg>
+<arg>oe_form_button_save_and_close</arg>
+</arguments>
+<kw name="Wait Until Page Contains Element" library="Selenium2Library">
+<doc>Waits until element specified with `locator` appears on current page.</doc>
+<arguments>
+<arg>xpath=//div[contains(@class,'openerp')][last()]//*[not(contains(@style,'display:none'))]//button[@data-bt-testing-name='${button_name}']</arg>
+</arguments>
+<status status="PASS" endtime="20160314 15:48:33.174" starttime="20160314 15:48:33.153"></status>
+</kw>
+<kw name="Wait Until Element Is Visible" library="Selenium2Library">
+<doc>Waits until element specified with `locator` is visible.</doc>
+<arguments>
+<arg>xpath=//div[contains(@class,'openerp')][last()]//*[not(contains(@style,'display:none'))]//button[@data-bt-testing-name='${button_name}']</arg>
+<arg>${SELENIUM_TIMEOUT}</arg>
+</arguments>
+<status status="PASS" endtime="20160314 15:48:33.202" starttime="20160314 15:48:33.174"></status>
+</kw>
+<kw name="Click Button" library="Selenium2Library">
+<doc>Clicks a button identified by `locator`.</doc>
+<arguments>
+<arg>xpath=//div[contains(@class,'openerp')][last()]//*[not(contains(@style,'display:none'))]//button[@data-bt-testing-name='${button_name}']</arg>
+</arguments>
+<msg timestamp="20160314 15:48:33.202" level="INFO">Clicking button 'xpath=//div[contains(@class,'openerp')][last()]//*[not(contains(@style,'display:none'))]//button[@data-bt-testing-name='oe_form_button_save_and_close']'.</msg>
+<status status="PASS" endtime="20160314 15:48:33.313" starttime="20160314 15:48:33.202"></status>
+</kw>
+<kw name="Wait For Condition" library="Selenium2Library">
+<doc>Waits until the given `condition` is true or `timeout` expires.</doc>
+<arguments>
+<arg>return true;</arg>
+<arg>20.0</arg>
+</arguments>
+<status status="PASS" endtime="20160314 15:48:33.435" starttime="20160314 15:48:33.313"></status>
+</kw>
+<kw name="ElementPostCheck" library="keywords_8_0">
+<kw name="Wait Until Page Contains Element" library="Selenium2Library">
+<doc>Waits until element specified with `locator` appears on current page.</doc>
+<arguments>
+<arg>xpath=//body[not(contains(@class, 'oe_wait'))]</arg>
+</arguments>
+<status status="PASS" endtime="20160314 15:48:34.125" starttime="20160314 15:48:33.436"></status>
+</kw>
+<status status="PASS" endtime="20160314 15:48:34.125" starttime="20160314 15:48:33.435"></status>
+</kw>
+<status status="PASS" endtime="20160314 15:48:34.125" starttime="20160314 15:48:33.153"></status>
+</kw>
+<kw name="Sleep" library="BuiltIn">
+<doc>Pauses the test executed for the given time.</doc>
+<arguments>
+<arg>1</arg>
+</arguments>
+<msg timestamp="20160314 15:48:35.126" level="INFO">Slept 1 second</msg>
+<status status="PASS" endtime="20160314 15:48:35.126" starttime="20160314 15:48:34.126"></status>
+</kw>
+<kw name="Button" library="keywords_8_0">
+<arguments>
+<arg>product.hotel</arg>
+<arg>oe_form_button_save</arg>
+</arguments>
+<kw name="Wait Until Page Contains Element" library="Selenium2Library">
+<doc>Waits until element specified with `locator` appears on current page.</doc>
+<arguments>
+<arg>xpath=//div[contains(@class,'openerp')][last()]//*[not(contains(@style,'display:none'))]//button[@data-bt-testing-name='${button_name}']</arg>
+</arguments>
+<status status="PASS" endtime="20160314 15:48:35.145" starttime="20160314 15:48:35.127"></status>
+</kw>
+<kw name="Wait Until Element Is Visible" library="Selenium2Library">
+<doc>Waits until element specified with `locator` is visible.</doc>
+<arguments>
+<arg>xpath=//div[contains(@class,'openerp')][last()]//*[not(contains(@style,'display:none'))]//button[@data-bt-testing-name='${button_name}']</arg>
+<arg>${SELENIUM_TIMEOUT}</arg>
+</arguments>
+<status status="PASS" endtime="20160314 15:48:35.180" starttime="20160314 15:48:35.146"></status>
+</kw>
+<kw name="Click Button" library="Selenium2Library">
+<doc>Clicks a button identified by `locator`.</doc>
+<arguments>
+<arg>xpath=//div[contains(@class,'openerp')][last()]//*[not(contains(@style,'display:none'))]//button[@data-bt-testing-name='${button_name}']</arg>
+</arguments>
+<msg timestamp="20160314 15:48:35.181" level="INFO">Clicking button 'xpath=//div[contains(@class,'openerp')][last()]//*[not(contains(@style,'display:none'))]//button[@data-bt-testing-name='oe_form_button_save']'.</msg>
+<status status="PASS" endtime="20160314 15:48:35.241" starttime="20160314 15:48:35.181"></status>
+</kw>
+<kw name="Wait For Condition" library="Selenium2Library">
+<doc>Waits until the given `condition` is true or `timeout` expires.</doc>
+<arguments>
+<arg>return true;</arg>
+<arg>20.0</arg>
+</arguments>
+<status status="PASS" endtime="20160314 15:48:35.263" starttime="20160314 15:48:35.241"></status>
+</kw>
+<kw name="ElementPostCheck" library="keywords_8_0">
+<kw name="Wait Until Page Contains Element" library="Selenium2Library">
+<doc>Waits until element specified with `locator` appears on current page.</doc>
+<arguments>
+<arg>xpath=//body[not(contains(@class, 'oe_wait'))]</arg>
+</arguments>
+<status status="PASS" endtime="20160314 15:48:38.219" starttime="20160314 15:48:35.263"></status>
+</kw>
+<status status="PASS" endtime="20160314 15:48:38.220" starttime="20160314 15:48:35.263"></status>
+</kw>
+<status status="PASS" endtime="20160314 15:48:38.220" starttime="20160314 15:48:35.127"></status>
+</kw>
+<status status="PASS" endtime="20160314 15:48:38.220" critical="yes" starttime="20160314 15:48:33.150"></status>
+</test>
+<doc>Create Product Hotel</doc>
+<status status="FAIL" endtime="20160314 15:48:38.227" starttime="20160314 15:47:27.463"></status>
+</suite>
+<statistics>
+<total>
+<stat fail="1" pass="5">Critical Tests</stat>
+<stat fail="1" pass="5">All Tests</stat>
+</total>
+<tag>
+</tag>
+<suite>
+<stat fail="1" id="s1" name="Create Product" pass="5">Create Product</stat>
+</suite>
+</statistics>
+<errors>
+</errors>
+</robot>

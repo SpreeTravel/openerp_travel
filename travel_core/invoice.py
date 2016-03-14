@@ -19,7 +19,8 @@
 #
 ##############################################################################
 
-from openerp.osv.orm import Model
+from openerp.models import Model
+from openerp.exceptions import except_orm
 
 
 class account_invoice(Model):
@@ -58,9 +59,9 @@ class account_invoice(Model):
         return jids and jids[0] or False
 
     def update_lines_by_supplier(self, lines_by_supplier, supplier, d):
-        if supplier in lines_by_supplier:
+        try:
             lines_by_supplier[supplier].append(d)
-        else:
+        except KeyError:
             lines_by_supplier[supplier] = [d]
         return lines_by_supplier
 
@@ -79,9 +80,21 @@ class account_invoice(Model):
                                 invoice_id = %s', (line.id,))
                     sol_ids = cr.fetchall()[0]
                 order_line = sol_obj.browse(cr, uid, sol_ids[0], context)
-                supplier = sc_obj.get_supplier(order_line)
-                data = {'invoice_line': line, 'sale_line': order_line}
-                self.update_lines_by_supplier(lines_by_supplier, supplier, data)
+                try:
+                    supplier = sc_obj.get_supplier(order_line)
+                    data = {'invoice_line': line, 'sale_line': order_line}
+                    self.update_lines_by_supplier(lines_by_supplier, supplier, data)
+                except except_orm, excep:
+                    if order_line.category and order_line.category.lower() == 'package':
+                        for line in order_line.sale_order_line_package_line_id:
+                            if line.sale_order_line_package_line_conf_id:
+                                data = {'invoice_line': line, 'sale_line': line.sale_order_line_package_line_conf_id}
+                                self.update_lines_by_supplier(lines_by_supplier, line.supplier_id, data)
+                            else:
+                                raise excep
+                    else:
+                        raise excep
+
         return lines_by_supplier
 
     def generate_supplier_invoices(self, cr, uid, inv_id, context=None):
@@ -115,6 +128,7 @@ class account_invoice(Model):
                 il = l['invoice_line']
                 cost_price = self.get_cost_price(cr, uid, sl, currency_id,
                                                  context)
+
                 line_vals = {
                     'name': il.product_id.name,
                     'origin': il.invoice_id.number,

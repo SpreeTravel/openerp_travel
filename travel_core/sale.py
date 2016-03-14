@@ -108,6 +108,7 @@ class sale_order_line_package_line(Model):
     num_day = fields.Integer(_('Number of Days'), default=1, readonly=True)
     order = fields.Integer(_('Order'), readonly=True)
     so_product_package_line_id = fields.Integer(_('Product Package Line ID'), readonly=True)
+    price = fields.Float(_('Price'))
 
     @api.model
     def organize_pax(self, vals):
@@ -757,13 +758,24 @@ class sale_order_line(Model):
             package_ids = product_package.search(cr, uid, [('product_id', '=', product_id)], context=context)
             package = product_package.browse(cr, uid, package_ids)
             lines = []
+            params = context.get('params')
             for line in package.product_line_ids:
+                price = self.pool.get('product.pricelist').price_get(cr, uid, [args[0]],
+                                                                     args[1], args[2] or 1.0, args[3], {
+                                                                         'uom': args[4] or result.get(
+                                                                             'product_uom'),
+                                                                         'date': args[5],
+                                                                         'supplier_id': line.supplier_id.id,
+                                                                         'params': params
+                                                                     })[args[0]]
+
                 lines.append((0, False, {
                     'product_id': line.product_id.id,
                     'category_id': line.category_id.id,
                     'so_product_package_line_id': line.id,
                     'supplier_id': line.supplier_id.id,
                     'order': line.order,
+                    'price': price,
                     'num_day': line.num_day
                 }))
                 # tmp_solpl_ids = tmp_table.search(cr, uid, [('order', '=', line.order)])
@@ -919,10 +931,8 @@ class sale_order_line(Model):
                         date_order, supplier_id, params, pricelist,
                         context=None):
         pl_obj = self.pool.get('product.pricelist')
-        cp_ids = pl_obj.search(cr, uid, [('name', '=', 'Cost Pricelist')],
-                               context=context)
-        if cp_ids:
-            cp_id = cp_ids[0]
+        cp_id = self.pool.get('ir.model.data').xmlid_to_res_id(cr, uid, 'travel_core.cost_pricelist')
+        if cp_id:
             cost_price = pl_obj.price_get(cr, uid, [cp_id],
                                           product, qty or 1.0, partner_id, {
                                               'uom': uom or result.get('product_uom'),
@@ -985,7 +995,7 @@ class sale_order_line(Model):
         The number of days of the service countable for apply a per day margin
         '''
         days = 0
-        if params.get('supplement_ids', False):
+        if params.get('supplement_ids', False) and params['start_date'] and params['end_date']:
             ini = dt.datetime.strptime(params['start_date'], DF)
             end = dt.datetime.strptime(params['end_date'], DF)
             days = (end - ini).days + 1
@@ -1050,15 +1060,17 @@ class sale_order_line(Model):
     @api.model
     def create(self, vals):
         sol = super(sale_order_line, self).create(vals)
-        if self.category and self.category.lower() == 'package':
-            self.copy_model(self.env['tmp.sale.order.line.package.line.conf'])
+
+        # if self.category and self.category.lower() == 'package':
+        #     self.copy_model(self.env['tmp.sale.order.line.package.line.conf'])
         return sol
 
     @api.multi
     def write(self, vals):
         sol = super(sale_order_line, self).write(vals)
-        if self.category and self.category.lower() == 'package':
-            self.copy_model(self.env['tmp.sale.order.line.package.line.conf'])
+        # for x in self:
+        #     if x.category and x.category.lower() == 'package':
+        #         x.copy_model(self.env['tmp.sale.order.line.package.line.conf'])
         return sol
 
     @api.multi

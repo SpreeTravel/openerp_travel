@@ -123,6 +123,7 @@ msgstr "Voucher de Vuelo"
 #. module: travel_flight
 #: model:ir.actions.act_window,name:travel_flight.travel_product_flight_action
 #: model:ir.ui.menu,name:travel_flight.travel_product_flight_menu
+#: model:flights.reservations,name:travel_fligth.travel_reservations_flight_action
 msgid "Flights"
 msgstr "Vuelos"
 

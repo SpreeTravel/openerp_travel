@@ -7,4 +7,6 @@ access_product_rate_sale_manager,product.rate.sale.manager,model_product_rate,ba
 access_sale_context_sale_manager,sale.context.sale.manager,model_sale_context,base.group_sale_manager,1,1,1,1
 access_sale_supplier_price,supplier.price,model_supplier_price,base.group_sale_manager,1,1,1,1
 access_product_rate_supplement_sale_manager,product.rate.supplement.sale.manager,model_product_rate_supplement,base.group_sale_manager,1,1,1,1
+access_sale_order_line_package_line,sale.order.line.package.line,model_sale_order_line_package_line,base.group_sale_manager,1,1,1,1
+access_sale_order_line_package_line_conf,sale.order.line.package.line.conf,model_sale_order_line_package_line_conf,base.group_sale_manager,1,1,1,1
 

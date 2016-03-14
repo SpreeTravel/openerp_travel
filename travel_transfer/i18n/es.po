@@ -456,17 +456,17 @@ msgstr "para"
 #: view:sale.order.line:travel_transfer.travel_sale_order_line_transfer_search_view
 #: view:sale.report:travel_transfer.travel_sale_report_transfer_search_view
 msgid "Transfer"
-msgstr "Transferencia"
+msgstr "Traslado"
 
 #. module: travel_transfer
 #: model:ir.model,name:travel_transfer.model_transfer_report
 msgid "Transfer Report"
-msgstr "Reporte de Transferencia"
+msgstr "Reporte de Traslados"
 
 #. module: travel_transfer
 #: model:ir.actions.report.xml,name:travel_transfer.transfer_travel_voucher_report_id
 msgid "Transfer Travel Voucher Report"
-msgstr "Voucher de Transfer"
+msgstr "Voucher de Traslados"
 
 #. module: travel_transfer
 #: model:ir.actions.act_window,name:travel_transfer.travel_product_transfer_action
@@ -474,12 +474,12 @@ msgstr "Voucher de Transfer"
 #: model:ir.ui.menu,name:travel_transfer.travel_product_transfer_menu
 #: model:ir.ui.menu,name:travel_transfer.travel_reservations_transfer_menu
 msgid "Transfers"
-msgstr "Transferencias"
+msgstr "Traslados"
 
 #. module: travel_transfer
 #: view:transfer.report:travel_transfer.travel_transfers_report_search_view
 msgid "Transfers Analysis"
-msgstr "Análisis de Transferencias"
+msgstr "Análisis de Traslados"
 
 #. module: travel_transfer
 #: model:ir.actions.act_window,name:travel_transfer.action_travel_transfers_report_all

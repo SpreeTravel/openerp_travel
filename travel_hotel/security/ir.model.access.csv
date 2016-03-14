@@ -3,3 +3,4 @@ access_product_hotel_sale_manager,product.hotel.sale.manager,model_product_hotel
 access_rooming_sale_manager,rooming.sale.manager,model_sale_rooming,base.group_sale_manager,1,1,1,1
 access_product_rate_allotment_sale_manager,product.rate.allotment.sale.manager,model_product_rate_allotment,base.group_sale_manager,1,1,1,1
 access_product_hotels_report,hotels.report,model_hotels_report,base.group_sale_manager,1,1,1,1
+access_product_hotels_reservations,hotels.reservations,model_hotels_reservations,base.group_sale_manager,1,1,1,1

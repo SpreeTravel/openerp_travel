@@ -1,0 +1,638 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+#	* travel_package
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 8.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2016-03-14 19:02+0000\n"
+"PO-Revision-Date: 2016-03-14 19:02+0000\n"
+"Last-Translator: <>\n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
+
+#. module: travel_package
+#: model:ir.actions.act_window,help:travel_package.travel_product_package_action
+msgid "<p class=\"oe_view_nocontent_create\">\n"
+"                    Click to define a new product.\n"
+"                </p>\n"
+"            "
+msgstr "<p class=\"oe_view_nocontent_create\">\n"
+"                    Click para definir un producto nuevo.\n"
+"                </p>\n"
+"            "
+
+#. module: travel_package
+#: field:packages.reservations,adults:0
+#: field:product.package.line.conf,adults:0
+msgid "Adultos"
+msgstr "Adultos"
+
+#. module: travel_package
+#: code:addons\travel_package\package.py:319
+#: code:addons\travel_package\reservations.py:37
+#: view:website:travel_package.package_sale_order_line_report_id
+#, python-format
+msgid "Adults"
+msgstr "Adultos"
+
+#. module: travel_package
+#: field:product.package.line.conf,sale_context_id:0
+msgid "Automatically created field to link to parent sale.context"
+msgstr "Automatically created field to link to parent sale.context"
+
+#. module: travel_package
+#: view:packages.reservations:travel_package.travel_reservations_package_tree_view
+#: view:product.package:travel_package.travel_product_package_form_view
+msgid "Cancel"
+msgstr "Cancelar"
+
+#. module: travel_package
+#: view:packages.reservations:travel_package.travel_reservations_package_search_view
+#: selection:packages.reservations,state:0
+msgid "Cancelled"
+msgstr "Cancelado"
+
+#. module: travel_package
+#: code:addons\travel_package\package.py:72
+#: code:addons\travel_package\package.py:311
+#: code:addons\travel_package\package.py:313
+#, python-format
+msgid "Category"
+msgstr "Categorías"
+
+#. module: travel_package
+#: field:product.package.line,category_id:0
+#: field:product.package.line.conf,category:0
+#: field:product.package.line.conf,category_id:0
+msgid "Categorías"
+msgstr "Categorías"
+
+#. module: travel_package
+#: code:addons\travel_package\package.py:326
+#: code:addons\travel_package\reservations.py:38
+#: field:packages.reservations,children:0
+#: field:product.package.line.conf,children:0
+#: view:website:travel_package.package_sale_order_line_report_id
+#, python-format
+msgid "Children"
+msgstr "Hijos"
+
+#. module: travel_package
+#: view:website:travel_package.package_sale_order_line_report_id
+msgid "Client"
+msgstr "Cliente"
+
+#. module: travel_package
+#: code:addons\travel_package\package.py:78
+#: field:product.package.line,product_package_line_conf_id:0
+#, python-format
+msgid "Configuration"
+msgstr "Configuración"
+
+#. module: travel_package
+#: code:addons\travel_package\package.py:147
+#: code:addons\travel_package\package.py:158
+#, python-format
+msgid "Configuration Error!"
+msgstr "Error de Configuración!"
+
+#. module: travel_package
+#: view:packages.reservations:travel_package.travel_reservations_package_tree_view
+#: view:product.package:travel_package.travel_product_package_form_view
+msgid "Confirm"
+msgstr "Confirmar"
+
+#. module: travel_package
+#: view:website:travel_package.package_sale_order_line_report_id
+msgid "Confirmation"
+msgstr "Confirmación"
+
+#. module: travel_package
+#: view:packages.reservations:travel_package.travel_reservations_package_search_view
+#: selection:packages.reservations,state:0
+msgid "Confirmed"
+msgstr "Confirmado"
+
+#. module: travel_package
+#: field:packages.reservations,create_uid:0
+#: field:product.package,create_uid:0
+#: field:product.package.line,create_uid:0
+#: field:product.package.line.conf,create_uid:0
+msgid "Created by"
+msgstr "Creado por"
+
+#. module: travel_package
+#: field:packages.reservations,create_date:0
+#: field:product.package,create_date:0
+#: field:product.package.line,create_date:0
+#: field:product.package.line.conf,create_date:0
+msgid "Created on"
+msgstr "Creado en"
+
+#. module: travel_package
+#: view:product.package:travel_package.travel_product_package_form_view
+msgid "Currency"
+msgstr "Moneda"
+
+#. module: travel_package
+#: code:addons\travel_package\reservations.py:36
+#: view:packages.reservations:travel_package.travel_reservations_package_search_view
+#: field:packages.reservations,customer:0
+#, python-format
+msgid "Customer"
+msgstr "Cliente"
+
+#. module: travel_package
+#: view:packages.reservations:travel_package.travel_reservations_package_search_view
+#: view:product.package.line.conf:travel_package.product_package_line_conf_form_view
+msgid "Date"
+msgstr "Fecha"
+
+#. module: travel_package
+#: help:product.package,message_last_post:0
+msgid "Date of the last message posted on the record."
+msgstr "Fecha del último mensaje posteado."
+
+#. module: travel_package
+#: code:addons\travel_package\package.py:317
+#: field:product.package.line.conf,name:0
+#, python-format
+msgid "Description"
+msgstr "Description"
+
+#. module: travel_package
+#: view:product.package:travel_package.travel_product_package_form_view
+msgid "Description for Suppliers"
+msgstr "Descripción para los Proveedores"
+
+#. module: travel_package
+#: selection:packages.reservations,state:0
+msgid "Done"
+msgstr "Hecho"
+
+#. module: travel_package
+#: view:product.package:travel_package.travel_product_package_form_view
+msgid "Down"
+msgstr "Bajar"
+
+#. module: travel_package
+#: view:packages.reservations:travel_package.travel_reservations_package_search_view
+#: selection:packages.reservations,state:0
+msgid "Draft"
+msgstr "Borrador"
+
+#. module: travel_package
+#: view:product.package:travel_package.travel_product_package_form_view
+msgid "Edit"
+msgstr "Editar"
+
+#. module: travel_package
+#: model:ir.model,name:travel_package.model_product_package
+msgid "Email Thread"
+msgstr "Hilo de mensajes"
+
+#. module: travel_package
+#: code:addons\travel_package\package_report.py:36
+#: code:addons\travel_package\reservations.py:35
+#: view:package.report:travel_package.travel_package_report_search_view
+#: view:website:travel_package.package_sale_order_line_report_id
+#, python-format
+msgid "End Date"
+msgstr "Fecha Final"
+
+#. module: travel_package
+#: selection:packages.reservations,state:0
+msgid "Exception"
+msgstr "Exepción"
+
+#. module: travel_package
+#: field:package.report,end_date:0
+#: field:packages.reservations,end_date:0
+msgid "Fecha Final"
+msgstr "Fecha Final"
+
+#. module: travel_package
+#: field:package.report,start_date:0
+#: field:packages.reservations,start_date:0
+msgid "Fecha Inicial"
+msgstr "Fecha Inicial"
+
+#. module: travel_package
+#: field:product.package,message_follower_ids:0
+msgid "Followers"
+msgstr "Seguidores"
+
+#. module: travel_package
+#: view:website:travel_package.package_sale_order_line_report_id
+msgid "For Emergency Call: (+53)"
+msgstr "Llamadas de emergencia: (+53)"
+
+#. module: travel_package
+#: view:website:travel_package.package_sale_order_line_report_id
+msgid "General Conditions"
+msgstr "Condiciones Generales"
+
+#. module: travel_package
+#: view:packages.reservations:travel_package.travel_reservations_package_tree_view
+#: view:product.package:travel_package.travel_product_package_form_view
+msgid "Go to Order"
+msgstr "Ir a la orden"
+
+#. module: travel_package
+#: view:package.report:travel_package.travel_package_report_search_view
+#: view:packages.reservations:travel_package.travel_reservations_package_search_view
+msgid "Group By..."
+msgstr "Agrupar por..."
+
+#. module: travel_package
+#: help:product.package,message_summary:0
+msgid "Holds the Chatter summary (number of messages, ...). This summary is directly in html format in order to be inserted in kanban views."
+msgstr "Holds the Chatter summary (number of messages, ...). This summary is directly in html format in order to be inserted in kanban views."
+
+#. module: travel_package
+#: field:package.report,id:0
+#: field:packages.reservations,id:0
+#: field:product.package,id:0
+#: field:product.package.line,id:0
+#: field:product.package.line.conf,id:0
+msgid "ID"
+msgstr "ID"
+
+#. module: travel_package
+#: help:product.package,message_unread:0
+msgid "If checked new messages require your attention."
+msgstr "Si se marca nuevos mensajes requieren su atención."
+
+#. module: travel_package
+#: code:addons\travel_package\package.py:329
+#: field:product.package.line.conf,start_date:0
+#, python-format
+msgid "In"
+msgstr "In"
+
+#. module: travel_package
+#: view:product.package:travel_package.travel_product_package_form_view
+msgid "Information"
+msgstr "Información"
+
+#. module: travel_package
+#: field:product.package,message_is_follower:0
+msgid "Is a Follower"
+msgstr "Es un seguidor"
+
+#. module: travel_package
+#: field:product.package,message_last_post:0
+msgid "Last Message Date"
+msgstr "Fecha del último mensaje"
+
+#. module: travel_package
+#: field:packages.reservations,write_uid:0
+#: field:product.package,write_uid:0
+#: field:product.package.line,write_uid:0
+#: field:product.package.line.conf,write_uid:0
+msgid "Last Updated by"
+msgstr "Última actualización por"
+
+#. module: travel_package
+#: field:packages.reservations,write_date:0
+#: field:product.package,write_date:0
+#: field:product.package.line,write_date:0
+#: field:product.package.line.conf,write_date:0
+msgid "Last Updated on"
+msgstr "Última actualización en"
+
+#. module: travel_package
+#: code:addons\travel_package\package.py:307
+#: field:product.package.line.conf,product_package_line_id:0
+#, python-format
+msgid "Line"
+msgstr "Línea"
+
+#. module: travel_package
+#: view:website:travel_package.package_sale_order_line_report_id
+msgid "Lines"
+msgstr "Líneas"
+
+#. module: travel_package
+#: code:addons\travel_package\package.py:295
+#: field:product.rate,max_paxs:0
+#, python-format
+msgid "Max Paxs"
+msgstr "Max Paxs"
+
+#. module: travel_package
+#: field:product.package,message_ids:0
+msgid "Messages"
+msgstr "Mensajes"
+
+#. module: travel_package
+#: help:product.package,message_ids:0
+msgid "Messages and communication history"
+msgstr "Historial de mensajes y comunicación"
+
+#. module: travel_package
+#: code:addons\travel_package\package.py:294
+#: field:product.rate,min_paxs:0
+#, python-format
+msgid "Min Paxs"
+msgstr "Min Paxs"
+
+#. module: travel_package
+#: code:addons\travel_package\package.py:242
+#: code:addons\travel_package\package_report.py:34
+#: code:addons\travel_package\reservations.py:33
+#: field:package.report,name:0
+#: field:packages.reservations,name:0
+#: field:product.package,package_name:0
+#, python-format
+msgid "Name"
+msgstr "Nombre"
+
+#. module: travel_package
+#: view:packages.reservations:travel_package.travel_reservations_package_search_view
+msgid "Next"
+msgstr "Siguiente"
+
+#. module: travel_package
+#: view:packages.reservations:travel_package.travel_reservations_package_search_view
+msgid "Now"
+msgstr "Ahora"
+
+#. module: travel_package
+#: code:addons\travel_package\package.py:75
+#: field:product.package.line,num_day:0
+#, python-format
+msgid "Number of Days"
+msgstr "Número de días"
+
+#. module: travel_package
+#: view:website:travel_package.package_sale_order_line_report_id
+msgid "Office Telephones: (+53 7)"
+msgstr "Teléfono de la oficina: (+53 7)"
+
+#. module: travel_package
+#: code:addons\travel_package\package.py:76
+#: field:product.package.line,order:0
+#, python-format
+msgid "Order"
+msgstr "Orden"
+
+#. module: travel_package
+#: code:addons\travel_package\package.py:137
+#: code:addons\travel_package\package.py:142
+#, python-format
+msgid "Order field can not be repeated, must be unique!!!!"
+msgstr "Campo orden no se puede repetir, tiene que ser único!!!!"
+
+#. module: travel_package
+#: code:addons\travel_package\package.py:144
+#, python-format
+msgid "Order field must be greater than 0!!!!"
+msgstr "Campo orden tiene que ser mayor que 0!!!!"
+
+#. module: travel_package
+#: code:addons\travel_package\reservations.py:40
+#: field:packages.reservations,original:0
+#, python-format
+msgid "Original"
+msgstr "Original"
+
+#. module: travel_package
+#: code:addons\travel_package\package.py:331
+#: field:product.package.line.conf,end_date:0
+#, python-format
+msgid "Out"
+msgstr "Afuera"
+
+#. module: travel_package
+#: code:addons\travel_package\package.py:74
+#: code:addons\travel_package\package.py:244
+#: model:ir.actions.act_window,name:travel_package.travel_product_package_action
+#: model:ir.ui.menu,name:travel_package.travel_product_package_menu
+#: model:product.category,name:travel_package.package
+#: field:product.package,product_line_ids:0
+#: field:product.package.line,package_id:0
+#: view:sale.report:travel_package.travel_sale_report_package_search_view
+#, python-format
+msgid "Package"
+msgstr "Paquete"
+
+#. module: travel_package
+#: view:package.report:travel_package.travel_package_report_search_view
+msgid "Package Analysis"
+msgstr "Análisis de Paquetes"
+
+#. module: travel_package
+#: model:ir.actions.act_window,name:travel_package.action_travel_package_report_all
+#: model:ir.model,name:travel_package.model_package_report
+#: model:ir.ui.menu,name:travel_package.menu_action_travel_package_report_all
+#: view:package.report:travel_package.travel_package_report_tree
+msgid "Package Report"
+msgstr "Reporte de Paquetes"
+
+#. module: travel_package
+#: model:ir.actions.report.xml,name:travel_package.package_travel_voucher_report_id
+msgid "Package Travel Voucher Report"
+msgstr "Voucher de Paquetes"
+
+#. module: travel_package
+#: model:ir.actions.act_window,name:travel_package.travel_reservations_package_action
+#: model:ir.ui.menu,name:travel_package.travel_reservations_package_menu
+#: view:product.package:travel_package.travel_product_package_form_view
+msgid "Packages"
+msgstr "Paquetes"
+
+#. module: travel_package
+#: view:product.package:travel_package.travel_product_package_form_view
+msgid "Packages Lines"
+msgstr "Línea de Paquetes"
+
+#. module: travel_package
+#: model:ir.model,name:travel_package.model_packages_reservations
+msgid "Packages Reservations"
+msgstr "Reservaciones de Paquetes"
+
+#. module: travel_package
+#: view:website:travel_package.package_sale_order_line_report_id
+msgid "Passenger Names"
+msgstr "Nombre de los pasajeros"
+
+#. module: travel_package
+#: field:package.report,price:0
+#: field:packages.reservations,price:0
+msgid "Precio"
+msgstr "Precio"
+
+#. module: travel_package
+#: code:addons\travel_package\package_report.py:37
+#: code:addons\travel_package\reservations.py:39
+#: view:packages.reservations:travel_package.travel_reservations_package_tree_view
+#, python-format
+msgid "Price"
+msgstr "Precio"
+
+#. module: travel_package
+#: view:product.package:travel_package.travel_product_package_form_view
+msgid "Pricelist"
+msgstr "Tarifa"
+
+#. module: travel_package
+#: view:product.package:travel_package.travel_product_package_form_view
+msgid "Procurements"
+msgstr "Contratos"
+
+#. module: travel_package
+#: code:addons\travel_package\package.py:71
+#: code:addons\travel_package\package.py:240
+#: code:addons\travel_package\package.py:309
+#: view:packages.reservations:travel_package.travel_reservations_package_search_view
+#: view:packages.reservations:travel_package.travel_reservations_package_tree_view
+#: view:product.package:travel_package.travel_product_package_form_view
+#: view:product.package:travel_package.travel_product_package_search_view
+#: field:product.package,product_id:0
+#: field:product.package.line,product_id:0
+#: field:product.package.line.conf,product_id:0
+#: view:website:travel_package.package_sale_order_line_report_id
+#, python-format
+msgid "Product"
+msgstr "Producto"
+
+#. module: travel_package
+#: view:product.package:travel_package.travel_product_package_form_view
+msgid "Product Name"
+msgstr "Nombre del Producto"
+
+#. module: travel_package
+#: view:product.package.line.conf:travel_package.product_package_line_conf_form_view
+msgid "Product Package Line Configuration"
+msgstr "Configuración de la línea de paquetes"
+
+#. module: travel_package
+#: view:packages.reservations:travel_package.travel_reservations_package_tree_view
+#: view:product.package:travel_package.travel_product_package_form_view
+#: view:product.package:travel_package.travel_product_package_tree_view
+msgid "Products"
+msgstr "Productos"
+
+#. module: travel_package
+#: view:product.package:travel_package.travel_product_package_form_view
+msgid "Purchase"
+msgstr "Compra"
+
+#. module: travel_package
+#: view:packages.reservations:travel_package.travel_reservations_package_search_view
+#: view:product.package:travel_package.travel_product_package_form_view
+msgid "Reservations"
+msgstr "Reservaciones"
+
+#. module: travel_package
+#: code:addons\travel_package\reservations.py:32
+#: field:packages.reservations,sale_order_line_id:0
+#, python-format
+msgid "Sale Order Line"
+msgstr "Línea de la orden de venta"
+
+#. module: travel_package
+#: code:addons\travel_package\package_report.py:35
+#: code:addons\travel_package\reservations.py:34
+#: view:package.report:travel_package.travel_package_report_search_view
+#: view:website:travel_package.package_sale_order_line_report_id
+#, python-format
+msgid "Start Date"
+msgstr "Fecha de Inicio"
+
+#. module: travel_package
+#: code:addons\travel_package\reservations.py:45
+#: view:packages.reservations:travel_package.travel_reservations_package_search_view
+#: field:packages.reservations,state:0
+#, python-format
+msgid "Status"
+msgstr "Estado"
+
+#. module: travel_package
+#: field:product.package,message_summary:0
+msgid "Summary"
+msgstr "Resumen"
+
+#. module: travel_package
+#: code:addons\travel_package\package.py:323
+#: view:product.package:travel_package.travel_product_package_form_view
+#: field:product.package.line.conf,product_package_supplement_ids:0
+#, python-format
+msgid "Supplements"
+msgstr "Suplementos"
+
+#. module: travel_package
+#: code:addons\travel_package\package.py:73
+#: code:addons\travel_package\package.py:315
+#: code:addons\travel_package\package_report.py:38
+#: code:addons\travel_package\reservations.py:41
+#: view:package.report:travel_package.travel_package_report_search_view
+#: field:package.report,supplier:0
+#: view:packages.reservations:travel_package.travel_reservations_package_search_view
+#: field:packages.reservations,supplier:0
+#: field:product.package.line,supplier_id:0
+#: field:product.package.line.conf,supplier_id:0
+#, python-format
+msgid "Supplier"
+msgstr "Proveedor"
+
+#. module: travel_package
+#: view:product.package:travel_package.travel_product_package_form_view
+msgid "Supplier Information"
+msgstr "Información del Proveedor"
+
+#. module: travel_package
+#: view:product.package:travel_package.travel_product_package_form_view
+msgid "Suppliers"
+msgstr "Proveedor"
+
+#. module: travel_package
+#: code:addons\travel_package\package.py:159
+#, python-format
+msgid "The number of day must be greater than 0"
+msgstr "El número de días tiene que ser mayor que "
+
+#. module: travel_package
+#: view:product.package:travel_package.travel_product_package_form_view
+msgid "The prices below will only be taken into account when your pricelist is set\n"
+"                                            as based on supplier prices."
+msgstr "The prices below will only be taken into account when your pricelist is set\n"
+"                                            as based on supplier prices."
+
+#. module: travel_package
+#: view:product.package:travel_package.travel_product_package_form_view
+msgid "This note will be displayed on requests for quotation..."
+msgstr "Esta nota será mostrada en la solicitud de presupuesto..."
+
+#. module: travel_package
+#: field:product.package,message_unread:0
+msgid "Unread Messages"
+msgstr "Mensajes no leídos"
+
+#. module: travel_package
+#: view:packages.reservations:travel_package.travel_reservations_package_search_view
+msgid "Upcoming"
+msgstr "Próximas"
+
+#. module: travel_package
+#: view:packages.reservations:travel_package.travel_reservations_package_tree_view
+#: view:website:travel_package.package_sale_order_line_report_id
+msgid "Voucher"
+msgstr "Voucher"
+
+#. module: travel_package
+#: view:product.package:travel_package.travel_product_package_form_view
+msgid "describe the product characteristics..."
+msgstr "describa las características del producto..."
+
+#. module: travel_package
+#: model:ir.actions.act_window,name:travel_package.product_package_line_conf_action
+msgid "product.package.line.conf.action"
+msgstr "product.package.line.conf.action"
+

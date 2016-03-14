@@ -1,3 +1,5 @@
 id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
 access_product_package_sale_manager,product.package.sale.manager,model_product_package,base.group_sale_manager,1,1,1,1
 access_product_package_line_sale_manager,product.package.line.sale.manager,model_product_package_line,base.group_sale_manager,1,1,1,1
+access_product_package_report,package.report,model_package_report,base.group_sale_manager,1,1,1,1
+access_product_packages_reservations,packages.reservations,model_packages_reservations,base.group_sale_manager,1,1,1,1

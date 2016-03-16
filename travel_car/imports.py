@@ -20,37 +20,29 @@
 ##############################################################################
 
 import xlrd, base64, datetime, timeit
-
-from openerp.osv import fields, osv
-from openerp.osv.orm import TransientModel
+from openerp.exceptions import except_orm
+from openerp import fields, api
+from openerp.models import TransientModel
+from openerp.tools.translate import _
 
 BASE_DATE = 693594
 
+
 class import_car(TransientModel):
-    _name = 'import.car'
-    _columns = {
-        'file':
-            fields.binary('File'),
-        'result':
-            fields.text('Result')
-    }
+    _inherit = 'import.modules'
 
-    def import_file(self, cr, uid, ids, context=None):
-        obj = self.browse(cr, uid, ids[0], context)
-        if obj.file:
-            data = base64.decodestring(obj.file)
-
-            msg = ''
-            document = xlrd.open_workbook(file_contents=data)
-            sheet = document.sheets()[0]
-            
-            car = self.pool.get('product.car')
-            supplier = self.pool.get('res.partner')
-            supplierinfo = self.pool.get('product.supplierinfo')
-            partnerinfo = self.pool.get('pricelist.partnerinfo')
-            
-            head = {sheet.cell_value(0, x): x for x in range(sheet.ncols)} 
-            
+    @api.model
+    def import_car(self, document):
+        car = self.env['product.car']
+        msg = ''
+        pp = self.env['product.product']
+        pt = self.env['product.template']
+        supplier = self.env['res.partner']
+        supplierinfo = self.env['product.supplierinfo']
+        supplement = self.env['product.rate.supplement']
+        partnerinfo = self.env['pricelist.partnerinfo']
+        for sheet in document.sheets():
+            head = {sheet.cell_value(0, x): x for x in range(sheet.ncols)}
             suppinfo_id = False
             car_name = ''
             car_id = False
@@ -60,143 +52,144 @@ class import_car(TransientModel):
             price = False
             create = False
             for r in range(1, sheet.nrows):
-            
                 def cell(attr):
                     if sheet.cell(r, head[attr]).ctype == xlrd.XL_CELL_ERROR:
                         return None
                     return sheet.cell_value(r, head[attr])
-                
-                if cell('Supplier'):
-                    supplier_name = cell('Supplier').upper()
-                    supplier_ids = supplier.search(cr, uid, [('name', '=', supplier_name)])
-                    if len(supplier_ids) > 1:
-                        msg += 'Ambiguous Supplier name: ' + supplier_name + '\n'                        
-                        supplier_id = False
-                    elif len(supplier_ids) == 0:
-                        msg += 'Supplier not found: ' + supplier_name + '\n'
-                        supplier_id = False
-                    else:
-                        supplier_id = supplier_ids[0]
-                    
-                if cell('Car'):
-                    car_name = cell('Car').upper()
-                    car_ids = car.search(cr, uid, [('name', '=', car_name)])
-                    if len(car_ids) > 1:
-                        msg += 'Ambiguous car name: ' + car_name + '\n'                        
-                        car_id = False
-                    elif len(car_ids) == 0:
-                        create = True
-                        car_id = False
-                    else:
-                        car_id = car_ids[0]
-                    
-                if cell('Class'):
-                    car_class = cell('Class').upper()
-                    car_class_id = self.get_option_value(cr, uid, car_class, 'cl', {})
-                    
-                if cell('Transmission'):
-                    transmission = cell('Transmission').upper()
-                    transmission_id = self.get_option_value(cr, uid, transmission, 'tm', {})
-                    
-                if cell('Passengers'):
-                    passengers = cell('Passengers')
-     
-                if cell('From'):
-                    date_from = self.get_date(cell('From'))  
-                    
-                if cell('To'):
-                    date_to = self.get_date(cell('To'))  
-                    
-                if cell('Price'):
-                    price = cell('Price')
-                else:
-                    price = False
-                    
-                if create:
-                    car_id = car.create(cr, uid, {'name': car_name,
-                                                  'class_id': car_class_id,
-                                                  'categ_id': 4,
-                                                  'transmission_id': transmission_id,
-                                                  'passengers': passengers})
+
+                if sheet.name.lower() == 'carros':
+                    if cell('Nombre'):
+                        name = cell('Nombre').upper()
+                        car_obj = car.search([('car_name', '=', name)])
+                        if len(car_obj) >= 1:
+                            msg += _('Ambiguous Car: ') + name + '\n'
+                            name_d = False
+                        else:
+                            name_d = True
+                    if cell('Clase'):
+                        clase_name = cell('Clase').upper()
+                        clase = self.get_option_value(clase_name, 'cl')
+                    if cell('Transmisión'):
+                        tr_name = cell('Transmisión').upper()
+                        tr = self.get_option_value(tr_name, 'tm')
+                    if name_d:
+                        car.create({
+                            'car_name': name,
+                            'passengers': cell('Pasajeros'),
+                            'class_id': clase.id or False,
+                            'transmission_id': tr.id or False
+                        })
+
+                if sheet.name.lower() == 'proveedor':
+                    company_obj = None
+                    if cell('Nombre'):
+                        name = cell('Nombre').upper()
+                        sup_obj = supplier.search([('name', '=', name)])
+                        if sup_obj:
+                            msg += _('Ambiguous Supplier: ') + name + '\n'
+                            name_d = False
+                        else:
+                            name_d = True
+                    if cell('Compañía'):
+                        company = cell('Compañía').upper()
+                        company_obj = supplier.search([('name', '=', company)])
+                        if company_obj:
+                            company_obj = company_obj.id
+                    if name_d:
+                        supplier.create({
+                            'name': name,
+                            'company_id': company_obj,
+                            'street': cell('Dirección'),
+                            'website': cell('Sitio web'),
+                            'phone': cell('Teléfono'),
+                            'email': cell('Email'),
+                            'fax': cell('Fax')
+                        })
+
+                if sheet.name.lower() == 'precios':
+                    car_obj = None
+                    supp_obj = None
+                    start_date = False
+                    end_date = False
+                    price = 0.0
+                    if cell('Carro'):
+                        name = cell('Carro').upper()
+                        car_obj = car.search([('car_name', '=', name)])
+                        if not car_obj:
+                            msg += _('Car: ') + str(name) + _(' not found!!!!!!')
+                    if cell('Proveedor'):
+                        supplier = cell('Proveedor').upper()
+                        supp_obj = supplier.search([('name', '=', supplier)])
+                        if not supp_obj:
+                            msg += _('Supplier: ') + str(supplier) + _(' not found!!!!!!')
+                    if cell('Fecha inicio'):
+                        start_date = self.get_date(cell('Fecha inicio'))
+                    if cell('Fecha fin'):
+                        end_date = self.get_date(cell('Fecha fin'))
+                    if cell('Precio'):
+                        price = self.get_float(cell('Precio'))
+                    if car_obj and supp_obj:
+                        supplierinfo_tmp = supplierinfo.search(
+                            [('name', '=', supp_obj.id), ('product_tmpl_id', '=', car_obj.product_id.product_tmpl_id)])
+                        if not supplierinfo_tmp:
+                            supplierinfo_tmp = supplierinfo.create({
+                                'name': supp_obj.id,
+                                'product_tmpl_id': car_obj.product_id.product_tmpl_id
+                            })
+                        partnerinfo.create({
+                            'suppinfo_id': supplierinfo_tmp.id,
+                            'start_date': start_date,
+                            'end_date': end_date,
+                            'price': price
+                        })
+
                     create = False
- 
-                if supplier_id and car_id:
-                    
-                    suppinfo_id = None
-                    product_tmpl_id = car.read(cr, uid, car_id, ['product_tmpl_id'])['product_tmpl_id'][0]
-                    suppinfo_ids = supplierinfo.search(cr, uid, ['&', 
-                                                                 ('name', '=', supplier_id), 
-                                                                 ('product_tmpl_id', '=', product_tmpl_id)], 
-                                                               context=context)
-                    if len(suppinfo_ids) == 0:        
-                        svals = {
-                            'name': supplier_id,
-                            'product_tmpl_id': product_tmpl_id,
-                            'min_qty': 0
-                        }
-                        suppinfo_id = supplierinfo.create(cr, uid, svals, context)
-                    else:
-                        suppinfo_id = suppinfo_ids[0] 
 
-                    pvals = {
-                        'suppinfo_id': suppinfo_id,
-                        'start_date': date_from,
-                        'end_date': date_to,
-                        'price': price,
-                        'min_quantity': 0
-                        }                 
-                 
-                    pricelist_ids = partnerinfo.search(cr, uid, [('suppinfo_id', '=', suppinfo_id), 
-                                                                  ('start_date', '=', date_from), 
-                                                                  ('end_date', '=', date_to)], 
-                                                                 context=context)
-                    if len(pricelist_ids) > 0:
-                        partnerinfo.write(cr, uid, [pricelist_ids[0]], {'price': price}, 
-                                                     context=context)                     
-                    else:
-                        partnerinfo.create(cr, uid, pvals, context)  
-                        
-            if msg == '':
-                msg += '\n ================== \nRental information successfully uploaded. \n'
-            else:
-                msg += '\n ================== \nCheck that names are properly typed or present in the system. \n'
-            
-            msg += 'Press cancel to close'    
-                    
-            self.write(cr, uid, obj.id, {'result': msg}, context)
-            return {
-                'name': 'Import Rental Prices',
-                'type': 'ir.actions.act_window',
-                'view_type': 'form',
-                'view_mode': 'form',
-                'res_model': 'import.car',
-                'res_id': obj.id,
-                'target': 'new',
-                'context': context,
-            }
+                if sheet.name.lower() == 'suplementos':
+                    car_obj = None
+                    supp_obj = None
+                    start_date = False
+                    end_date = False
+                    price = 0.0
+                    if cell('Carro'):
+                        name = cell('Carro').upper()
+                        car_obj = car.search([('car_name', '=', name)])
+                        if not car_obj:
+                            msg += _('Car: ') + str(name) + _(' not found!!!!!!')
+                    if cell('Proveedor'):
+                        supplier = cell('Proveedor').upper()
+                        supp_obj = supplier.search([('name', '=', supplier)])
+                        if not supp_obj:
+                            msg += _('Supplier: ') + str(supplier) + _(' not found!!!!!!')
+                    if cell('Nombre suplemento'):
+                        sup = cell('Nombre suplemento').upper()
+                        sup_obj = self.get_option_value(sup, 'sup')
+                        if not sup_obj:
+                            msg += _('Supplement: ') + str(sup) + _(' not found!!!!!!')
+                    if cell('Fecha inicio'):
+                        start_date = self.get_date(cell('Fecha inicio'))
+                    if cell('Fecha fin'):
+                        end_date = self.get_date(cell('Fecha fin'))
+                    if cell('Precio'):
+                        price = self.get_float(cell('Precio'))
+                    if car_obj and supp_obj and sup_obj:
+                        supplierinfo_tmp = supplierinfo.search(
+                            [('name', '=', supp_obj.id), ('product_tmpl_id', '=', car_obj.product_id.product_tmpl_id)])
+                        if not supplierinfo_tmp:
+                            supplierinfo_tmp = supplierinfo.create({
+                                'name': supp_obj.id,
+                                'product_tmpl_id': car_obj.product_id.product_tmpl_id
+                            })
+                        supplement.create({
+                            'suppinf_id': supplierinfo_tmp.id,
+                            'start_date': start_date,
+                            'end_date': end_date,
+                            'price': price,
+                            'supplement_id': sup_obj.id
+                        })
+        if msg == '':
+            msg += _('\n ================== \nRental information successfully uploaded. \n')
         else:
-            raise osv.except_osv('Error!', 'You must select a file.')
-                     
-    def get_date(self, value):
-        try:
-            d = BASE_DATE + int(value)
-            return datetime.datetime.fromordinal(d)
-        except:
-            return datetime.datetime(2017, 1, 1)
-        
-    def get_float(self, value):
-        try:
-            return float(value)
-        except:
-            return 0.0     
-        
-    def get_option_value(self, cr, uid, name, code, context=None):
-        ot = self.pool.get('option.type')
-        ov = self.pool.get('option.value')
-
-        ot_id = ot.search(cr, uid, [('code', '=', code)], context=context)[0]
-        to_search = [('name', '=', name), ('option_type_id', '=', ot_id)]
-        ov_ids = ov.search(cr, uid, to_search, context=context)[0]
-        return ov_ids
-    
-    
+            msg += _('\n ================== \nCheck that names are properly typed or present in the system. \n')
+        msg += _('Press cancel to close')
+        return msg

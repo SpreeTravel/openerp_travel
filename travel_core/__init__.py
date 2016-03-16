@@ -26,3 +26,4 @@ import pricelist
 import invoice
 import report
 import reservations
+import imports

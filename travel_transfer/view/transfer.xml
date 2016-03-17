@@ -178,26 +178,6 @@
         
         <menuitem action="travel_product_transfer_action" id="travel_product_transfer_menu" parent="base.menu_product" sequence="5"/>
 
-    	<record id="import_transfer_form" model="ir.ui.view">
-            <field name="name">import.transfer.form</field>
-            <field name="model">import.transfer</field>
-            <field name="arch" type="xml">
-                <form string="Import" version="7.0"> 
-				     <group>
-						<field name="file" />
-				     </group>
-					 <group>
-					 	<field name="result" colspan="4"/>
-					 </group>
-					 <footer>
-                        <button name="import_file" string="Import" type="object" class="oe_highlight"/>
-                        or
-                        <button string="Cancel" class="oe_link" special="cancel"/>
-                     </footer>
-                </form>
-            </field>
-        </record>
-        
 
     </data>
 </openerp>

@@ -1,4 +1,4 @@
-# -*- coding: utf-8 -*-
+# -*- coding: latin1 -*-
 ##############################################################################
 #
 #    OpenERP, Open Source Management Solution
@@ -19,236 +19,165 @@
 #
 ##############################################################################
 
-import xlrd, datetime, base64, json
+import xlrd
+from openerp.exceptions import except_orm
+from openerp import api
+from openerp.models import TransientModel
+from openerp.tools.translate import _
 
-from openerp.osv import fields, osv
-from openerp.osv.orm import TransientModel
-
-BASE_DATE = 693594
 
 class import_hotel(TransientModel):
-    _name = 'import.hotel'
-    _columns = {
-        'file':
-            fields.binary('File'),
-        'result':
-            fields.text('Result')
-    }
+    _inherit = 'import.modules'
 
-    def import_file(self, cr, uid, ids, context=None):
-        obj = self.browse(cr, uid, ids[0], context)
-        if obj.file:
-            data = base64.decodestring(obj.file)
-            msg = ' '
-            document = xlrd.open_workbook(file_contents=data)
-            
-            for sheet in document.sheets():
-                if sheet.nrows != 0:
-                    new_msg = self.import_prices_data(cr, uid, sheet, context)
-                    if new_msg != '':
-                        msg += new_msg + '\n'
+    @api.model
+    def import_hotel(self, document):
+        hotel = self.env['product.hotel']
+        msg = {
+            'created': 0,
+            'updated': 0,
+        }
+        pp = self.env['product.product']
+        pt = self.env['product.template']
+        pc = self.env['product.category']
+        supplier = self.env['res.partner']
+        supplierinfo = self.env['product.supplierinfo']
+        supplement = self.env['product.rate.supplement']
+        partnerinfo = self.env['pricelist.partnerinfo']
+        for sheet in document.sheets():
+            head = {sheet.cell_value(0, x).encode('latin1'): x for x in range(sheet.ncols)}
+            for r in range(1, sheet.nrows):
+                def cell(attr):
+                    try:
+                        if sheet.cell(r, head[attr]).ctype == xlrd.XL_CELL_ERROR:
+                            return None
+                        return sheet.cell_value(r, head[attr])
+                    except KeyError:
+                        raise except_orm('Error', _('Wrong header: ') + str(attr))
+
+                if sheet.name.lower() == 'hoteles':
+                    dtn = self.env['destination']
+                    name_d = False
+                    if cell('Nombre'):
+                        name = cell('Nombre').upper()
+                        hotel_obj = hotel.search([('hotel_name', '=', name)])
+                        if hotel_obj.id:
+                            msg['updated'] += 1
+                        else:
+                            name_d = True
+                    if cell('Destinos'):
+                        origen = cell('Destinos').upper()
+                        org_obj = dtn.search([('name', '=', origen)])
+                        if not org_obj.id:
+                            org_obj = dtn.create({
+                                'name': origen
+                            })
+                    if cell('Estrellas'):
+                        stars = self.get_int(cell('Estrellas'))
+                    if cell('Cadena Hotelera'):
+                        chain = cell('Cadena Hotelera').upper()
+                        chain_obj = supplier.search([('name', '=', chain)])
+                        if not chain_obj.id:
+                            chain_obj = supplier.create({
+                                'name': chain
+                            })
+                    if cell('Contacto'):
+                        contact = cell('Contacto').upper()
+                        cont_obj = supplier.search([('name', '=', contact)])
+                        if not cont_obj.id:
+                            cont_obj = supplier.create({
+                                'name': contact
+                            })
+                    if name_d:
+                        msg['created'] += 1
+                        cat = pc.search([('name', '=', 'Hotel')])
+                        pt_temp = pt.create({
+                            'name': name,
+                            'categ_id': cat.id,
+                        })
+                        pp_temp = pp.create({
+                            'product_tmpl_id': pt_temp.id,
+                            'name_template': name
+                        })
+                        hotel.create({
+                            'hotel_name': name,
+                            'product_id': pp_temp.id,
+                            'stars': str(stars),
+                            'chain_id': chain_obj.id,
+                            'res_partner_id': cont_obj.id,
+                            'destination': org_obj.id
+                        })
                     else:
-                        msg += new_msg
-                                                
-            self.write(cr, uid, obj.id, {'result': msg}, context)
-            return {
-                'name': 'Import Prices',
-                'type': 'ir.actions.act_window',
-                'view_type': 'form',
-                'view_mode': 'form',
-                'res_model': 'import.hotel',
-                'res_id': obj.id,
-                'target': 'new',
-                'context': context,
-            }
-        else:
-            raise osv.except_osv('Error!', 'You must select a file.')
+                        hotel_obj.write({
+                            'stars': str(stars),
+                            'chain_id': chain_obj.id,
+                            'res_partner_id': cont_obj.id,
+                            'destination': org_obj.id
+                        })
 
-    def import_prices_data(self, cr, uid, sheet, context):
-        
-        msg = ''
-        
-        hotel                   = self.pool.get('product.hotel')
-        product_product         = self.pool.get('product.product')
-        partner                 = self.pool.get('res.partner')
-        product_supplierinfo    = self.pool.get('product.supplierinfo')
-        pricelist_partnerinfo   = self.pool.get('pricelist.partnerinfo')
-        option_value            = self.pool.get('option.value')
-        category                = self.pool.get('product.category')
-        
-        head = {sheet.cell_value(0, x): x for x in range(sheet.ncols)} 
-        product_hotel = False
-        hotel_info = ''
-        supplier = False
-        suppinfo_id = False
-        meal_plan_id = False
-        room_type_id = False
-        date_from = False
-        date_to = False
-        child1 = False
-        child2 = False
-        double_value = False
-        double_option = False
-        simple_value = False
-        simple_option = False
-        triple_value = False
-        triple_option = False
-        
-        for r in range(1, sheet.nrows):
-            
-            def cell(attr):
-                if sheet.cell(r, head[attr]).ctype == xlrd.XL_CELL_ERROR:
-                    return None
-                return sheet.cell_value(r, head[attr])
-                
-            if cell('HOTEL NAME'):
-                # insert additional information (room and hotel comments) of previous hotel
-                if suppinfo_id:
-                    product_supplierinfo.write(cr, uid, [suppinfo_id], {'info': hotel_info})
-                    hotel_info = ''
-                
-                hotel_name = cell('HOTEL NAME').strip()
-                category_id = category.search(cr, uid, [('name', '=', 'Hotel')])[0]
-                product_hotel = hotel.search(cr, uid, [('name', '=', hotel_name)])
-                if len(product_hotel) == 0:
-                    msg += 'Hotel name not found: '+ hotel_name + '\n'
-                    product_hotel = False
-                elif len(product_hotel) > 1: 
-                    msg += 'Ambiguous name for hotel: '+ hotel_name + '\n'
-                    product_hotel = False
+                elif sheet.name.lower() == 'proveedores':
+                    msg = self.set_supplier(cell, supplier, msg)
+
+                elif sheet.name.lower() == 'precios':
+                    hotel_obj = None
+                    supp_obj = None
+                    start_date = False
+                    end_date = False
+                    price = 0.0
+                    if cell('Hotel'):
+                        name = cell('Hotel').upper()
+                        hotel_obj = hotel.search([('hotel_name', '=', name)])
+                        if not hotel_obj.id:
+                            raise except_orm('Error', _('hotel: ') + str(name) + _(' not found!!!!!!') + '\n')
+                    if cell('Proveedor'):
+                        supp_obj = self.get_supplier(cell('Proveedor').upper(), supplier)
+                    if cell('Fecha inicio'):
+                        start_date = self.get_date(cell('Fecha inicio'))
+                    if cell('Fecha fin'):
+                        end_date = self.get_date(cell('Fecha fin'))
+                    if cell('Habitación'):
+                        room = self.get_option_value(cell('Habitación'), 'rt')
+                    if cell('Plan'):
+                        plan = self.get_option_value(cell('Plan'), 'mp')
+                    if cell('Simple'):
+                        simple = self.get_float(cell('Simple'))
+                    if cell('Doble'):
+                        double = self.get_float(cell('Doble'))
+                    if cell('Triple'):
+                        triple = self.get_float(cell('Triple'))
+                    if cell('Adulto Extra'):
+                        extra_adult = self.get_float(cell('Adulto Extra'))
+                    if cell('Niño'):
+                        child = self.get_float(cell('Niño'))
+                    if cell('Segundo niño'):
+                        extra_child = self.get_float(cell('Segundo niño'))
+
+                    supplierinfo_tmp = supplierinfo.search(
+                        [('name', '=', supp_obj.id),
+                         ('product_tmpl_id', '=', hotel_obj.product_id.product_tmpl_id.id)])
+                    if not supplierinfo_tmp.id:
+                        supplierinfo_tmp = supplierinfo.create({
+                            'name': supp_obj.id,
+                            'product_tmpl_id': hotel_obj.product_id.product_tmpl_id.id
+                        })
+                    partnerinfo.create({
+                        'suppinfo_id': supplierinfo_tmp.id,
+                        'start_date': start_date,
+                        'end_date': end_date,
+                        'room_type_id': room.id,
+                        'meal_plan_id': plan.id,
+                        'simple': simple,
+                        'price': double,
+                        'triple': triple,
+                        'extra_adult': extra_adult,
+                        'child': child,
+                        'second_child': extra_child,
+                    })
+                    msg['created'] += 1
+
+                elif sheet.name.lower() == 'suplementos':
+                    msg = self.set_supplement('Hotel', 'hotel', cell, supplement, hotel, supplier, supplierinfo, msg)
+
                 else:
-                    product_hotel = hotel.browse(cr, uid, product_hotel[0])
-                
-            if cell('SUPPLIER'):
-                if product_hotel:
-                   suppinfo_id = None
-                   supplier_name = str(cell('SUPPLIER')).strip()
-                   if supplier_name != '':
-                       partner_ids = partner.search(cr, uid, [('name', '=', supplier_name)])
-                       if len(partner_ids) == 0:
-                           msg += 'Supplier name not found: '+ supplier_name + '\n'
-                       elif len(partner_ids) > 1: 
-                           msg += 'Ambiguous name for supplier: '+ supplier_name + '\n'
-                       else:
-                           partner_id = partner_ids[0]
-                           suppinfo_ids = product_supplierinfo.search(cr, uid, ['&', 
-                                                                                ('name', '=', partner_id), 
-                                                                                ('product_tmpl_id', '=', product_hotel.product_tmpl_id.id)], 
-                                                                      context=context)
-                           if len(suppinfo_ids) == 0:        
-                               svals = {
-                                   'name': partner_id,
-                                   'product_tmpl_id': product_hotel.product_tmpl_id.id,
-                                   'min_qty': 0
-                               }
-                               suppinfo_id = product_supplierinfo.create(cr, uid, svals, context)
-                           else:
-                               suppinfo_id = suppinfo_ids[0] 
-                                                              
-            if cell('MEAL PLAN'):
-                meal_plan_id = cell('MEAL PLAN').strip()
-                mp = self.get_option_value(cr, uid, meal_plan_id, 'mp', context)
-                
-            if cell('ROOM CATEGORY'):
-                room_type_str = cell('ROOM CATEGORY').strip()
-                room_type_id = self.get_option_value(cr, uid, room_type_str, 'rt', context)
-                
-            if cell('DATEBAND FROM'):
-                date_from = self.get_date(cell('DATEBAND FROM'))
-                double_value = False
-                double_option = False
-                simple_value = False
-                simple_option = False
-                triple_value = False
-                triple_option = False
-                
-            if cell('DATEBAND TO'):
-                date_to = self.get_date(cell('DATEBAND TO'))  
-        
-            if cell('ROOM TYPE'):
-                if cell('ROOM TYPE') == 'C1':
-                    child1 = cell('NET RATE')
-                elif cell('ROOM TYPE') == 'C2':
-                    child2 = cell('NET RATE')                       
-                elif cell('ROOM TYPE') == 'D':
-                    double_value = self.get_float(cell('NET RATE'))
-                    double_option = True
-                elif cell('ROOM TYPE') == 'S':
-                    simple_value = self.get_float(cell('NET RATE'))
-                    simple_option = True                    
-                elif cell('ROOM TYPE') == 'T':
-                    triple_value = self.get_float(cell('NET RATE'))
-                    triple_option = True    
-            
-            if cell('HOTEL COMMENTS') and cell('HOTEL COMMENTS').strip() != '':
-                hotel_info = cell('HOTEL COMMENTS') + '\n\n' + hotel_info 
-                                
-            if cell('ROOM COMMENTS') and cell('ROOM COMMENTS').strip() != '':
-                #hotel_info += option_value.get_code_by_id(cr, uid, room_type_id) + '\n' 
-                hotel_info += cell('ROOM COMMENTS') + '\n\n' 
-            
-            if simple_option and double_option and triple_option and product_hotel and suppinfo_id:
-                 pvals = {
-                    'suppinfo_id': suppinfo_id,
-                    'start_date': date_from,
-                    'end_date': date_to,
-                    'room_type_id': room_type_id,
-                    'meal_plan_id': mp,
-                    'price': double_value,
-                    'simple': simple_value,
-                    'triple': triple_value,
-                    'child': child1,
-                    'second_child': child2,
-                    'min_quantity': 0
-                 }                 
-                 
-                 pricelist_ids = pricelist_partnerinfo.search(cr, uid, [('suppinfo_id', '=', suppinfo_id), 
-                                                                       ('start_date', '=', date_from), 
-                                                                       ('end_date', '=', date_to), 
-                                                                       ('room_type_id', '=', room_type_id),
-                                                                       ('meal_plan_id', '=', mp)], 
-                                                             context=context)
-                 if len(pricelist_ids) > 0:
-                     pricelist_partnerinfo.write(cr, uid, [pricelist_ids[0]], {'price': double_value, 
-                                                                           'simple': simple_value,
-                                                                           'triple': triple_value,
-                                                                           'child': child1,
-                                                                           'second_child': child2}, 
-                                                 context=context)                     
-                 else:
-                     pricelist_partnerinfo.create(cr, uid, pvals, context)
-                               
-        # insert additional information (room and hotel comments) of previous hotel
-        # last hotel in sheet case
-        if suppinfo_id:
-            product_supplierinfo.write(cr, uid, [suppinfo_id], {'info': hotel_info})
-            hotel_info = ''       
-                
+                    raise except_orm('Error', _('Wrong excel information!!!'))
+
         return msg
-  
-    def get_option_value(self, cr, uid, name, code, context=None):
-        ot = self.pool.get('option.type')
-        ov = self.pool.get('option.value')
-
-        ot_id = ot.search(cr, uid, [('code', '=', code)], context=context)[0]
-        to_search = [('name', '=', name), ('option_type_id', '=', ot_id)]
-        ov_ids = ov.search(cr, uid, to_search, context=context)
-        if ov_ids:
-            return ov_ids[0]
-        else:
-            to_create = {x[0]: x[2] for x in to_search}
-            return ov.create(cr, uid, to_create, context)     
-             
-    def get_date(self, value):
-        try:
-            d = BASE_DATE + int(value)
-            return datetime.datetime.fromordinal(d)
-        except:
-            return datetime.datetime(2017, 1, 1)
-
-    def get_float(self, value):
-        try:
-            return float(value)
-        except:
-            return 0.0
-        

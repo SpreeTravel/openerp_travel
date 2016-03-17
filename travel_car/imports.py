@@ -47,9 +47,12 @@ class import_car(TransientModel):
             head = {sheet.cell_value(0, x).encode('latin1'): x for x in range(sheet.ncols)}
             for r in range(1, sheet.nrows):
                 def cell(attr):
-                    if sheet.cell(r, head[attr]).ctype == xlrd.XL_CELL_ERROR:
-                        return None
-                    return sheet.cell_value(r, head[attr])
+                    try:
+                        if sheet.cell(r, head[attr]).ctype == xlrd.XL_CELL_ERROR:
+                            return None
+                        return sheet.cell_value(r, head[attr])
+                    except KeyError:
+                        raise except_orm('Error', _('Wrong header: ') + str(attr))
 
                 if sheet.name.lower() == 'carros':
                     name_d = False

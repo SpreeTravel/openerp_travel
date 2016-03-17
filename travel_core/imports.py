@@ -87,6 +87,13 @@ class import_modules(TransientModel):
             return 0.0
 
     @api.model
+    def get_int(self, value):
+        try:
+            return int(value)
+        except:
+            return 0
+
+    @api.model
     def get_supplier(self, value, supplier):
         supp_obj = supplier.search([('name', '=', value)])
         if not supp_obj.id:
@@ -95,12 +102,24 @@ class import_modules(TransientModel):
 
     @api.model
     def get_option_value(self, name, code):
+        name = name.upper()
         ot = self.env['option.type']
         ov = self.env['option.value']
 
         ot_id = ot.search([('code', '=', code)])
+        if not ot_id.id:
+            raise except_orm('Error', _('Code:') + str(code) + _(' not exist!!!!'))
         to_search = [('name', '=', name), ('option_type_id', '=', ot_id.id)]
         ov_ids = ov.search(to_search)
+        if not ov_ids.id:
+            code = name
+            if len(name) > 3:
+                code = name[:3]
+            ov_ids = ov.create({
+                'name': name,
+                'code': code,
+                'option_type_id': ot_id.id
+            })
         return ov_ids
 
     @api.model
@@ -160,7 +179,7 @@ class import_modules(TransientModel):
         if cell('Nombre suplemento'):
             sup = cell('Nombre suplemento')
             sup_obj = self.get_option_value(sup, 'sup')
-            if not sup_obj:
+            if not sup_obj.id:
                 if cell('Código suplemento'):
                     ov = self.env['option.value']
                     ot = self.env['option.type']

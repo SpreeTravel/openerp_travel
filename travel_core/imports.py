@@ -1,4 +1,4 @@
-# -*- coding: utf-8 -*-
+# -*- coding: latin1 -*-
 ##############################################################################
 #
 #    OpenERP, Open Source Management Solution
@@ -27,7 +27,11 @@ from openerp.tools.translate import _
 
 BASE_DATE = 693594
 
-modules = [('car', 'Cars')]
+modules = [('car', _('Cars')),
+           ('flight', _('Flights')),
+           ('hotel', _('Hotels')),
+           ('transfer', _('Transfers')),
+           ('package', _('Packages'))]
 
 
 class import_modules(TransientModel):
@@ -39,11 +43,21 @@ class import_modules(TransientModel):
     @api.multi
     def execute_import(self):
         obj = self[0]
+        if not obj.choices:
+            raise except_orm('Error', 'You have to select a category!!!')
         if obj.file:
             data = base64.decodestring(obj.file)
-            document = xlrd.open_workbook(file_contents=data, encoding_override='cp1252')
+            try:
+                document = xlrd.open_workbook(file_contents=data)
+            except:
+                raise except_orm('Error', _('Wrong file!!!'))
             msg = getattr(obj, 'import_' + obj.choices)(document)
-            self.write(obj.id, {'result': msg})
+            msg = str(msg) + '\n'
+            msg += _('Press cancel to close')
+            if msg:
+                obj.write({'result': msg})
+            else:
+                obj.write({'result': _('Import successfully!!!!')})
             return {
                 'name': 'Import Excels',
                 'type': 'ir.actions.act_window',
@@ -57,6 +71,7 @@ class import_modules(TransientModel):
         else:
             raise except_orm(_('Error!'), _('You must select a file.'))
 
+    @api.model
     def get_date(self, value):
         try:
             d = BASE_DATE + int(value)
@@ -64,11 +79,19 @@ class import_modules(TransientModel):
         except:
             return datetime.datetime(1901, 1, 1)
 
+    @api.model
     def get_float(self, value):
         try:
             return float(value)
         except:
             return 0.0
+
+    @api.model
+    def get_supplier(self, value, supplier):
+        supp_obj = supplier.search([('name', '=', value)])
+        if not supp_obj.id:
+            raise except_orm('Error', _('Supplier: ') + str(value) + _(' not found!!!!!!') + '\n')
+        return supp_obj
 
     @api.model
     def get_option_value(self, name, code):
@@ -79,3 +102,95 @@ class import_modules(TransientModel):
         to_search = [('name', '=', name), ('option_type_id', '=', ot_id.id)]
         ov_ids = ov.search(to_search)
         return ov_ids
+
+    @api.model
+    def set_supplier(self, cell, supplier, msg):
+        company_obj = None
+        if cell('Nombre'):
+            name = cell('Nombre').upper()
+            sup_obj = supplier.search([('name', '=', name)])
+            if sup_obj.id:
+                msg['updated'] += 1
+                name_d = False
+            else:
+                name_d = True
+        if cell('Compañía'):
+            company = cell('Compañía').upper()
+            company_obj = supplier.search([('name', '=', company)])
+            if company_obj.id:
+                company_obj = company_obj.id
+            else:
+                raise except_orm('Error', _('Company Name: ') + name + _('not found!!!!!!!!!'))
+
+        if name_d:
+            msg['created'] += 1
+            supplier.create({
+                'name': name,
+                'company_id': company_obj,
+                'street': cell('Dirección'),
+                'website': cell('Sitio web'),
+                'phone': cell('Teléfono'),
+                'email': cell('Email'),
+                'fax': cell('Fax')
+            })
+        else:
+            supplier.write({
+                'street': cell('Dirección'),
+                'website': cell('Sitio web'),
+                'phone': cell('Teléfono'),
+                'email': cell('Email'),
+                'fax': cell('Fax')
+            })
+        return msg
+
+    @api.model
+    def set_supplement(self, field, _type, cell, supplement, car, supplier, supplierinfo, msg):
+        car_obj = None
+        supp_obj = None
+        start_date = False
+        end_date = False
+        price = 0.0
+        if cell(field):
+            name = cell(field).upper()
+            car_obj = car.search([(_type + '_name', '=', name)])
+            if not car_obj.id:
+                raise except_orm('Error', _(_type.capitalize() + ': ') + str(name) + _(' not found!!!!!!') + '\n')
+        if cell('Proveedor'):
+            supp_obj = self.get_supplier(cell('Proveedor').upper(), supplier)
+        if cell('Nombre suplemento'):
+            sup = cell('Nombre suplemento')
+            sup_obj = self.get_option_value(sup, 'sup')
+            if not sup_obj:
+                if cell('Código suplemento'):
+                    ov = self.env['option.value']
+                    ot = self.env['option.type']
+                    sup_tmp = ot.search([('code', '=', 'sup')])
+                    ov.create({
+                        'code': cell('Código suplemento'),
+                        'name': cell('Nombre suplemento'),
+                        'option_type_id': sup_tmp.id
+                    })
+                else:
+                    except_orm('Error', _('Suplement: ') + sup + ' don\'t have code' + '\n')
+        if cell('Fecha inicio'):
+            start_date = self.get_date(cell('Fecha inicio'))
+        if cell('Fecha fin'):
+            end_date = self.get_date(cell('Fecha fin'))
+        if cell('Precio'):
+            price = self.get_float(cell('Precio'))
+        supplierinfo_tmp = supplierinfo.search(
+            [('name', '=', supp_obj.id), ('product_tmpl_id', '=', car_obj.product_id.product_tmpl_id.id)])
+        if not supplierinfo_tmp.id:
+            supplierinfo_tmp = supplierinfo.create({
+                'name': supp_obj.id,
+                'product_tmpl_id': car_obj.product_id.product_tmpl_id.id
+            })
+        supplement.create({
+            'suppinfo_id': supplierinfo_tmp.id,
+            'start_date': start_date,
+            'end_date': end_date,
+            'price': price,
+            'supplement_id': sup_obj.id
+        })
+        msg['created'] += 1
+        return msg

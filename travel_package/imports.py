@@ -49,13 +49,12 @@ class import_package(TransientModel):
             head = {sheet.cell_value(0, x).encode('latin1'): x for x in range(sheet.ncols)}
             for r in range(1, sheet.nrows):
                 def cell(attr):
-
                     try:
                         if sheet.cell(r, head[attr]).ctype == xlrd.XL_CELL_ERROR:
                             return None
                         return sheet.cell_value(r, head[attr])
                     except KeyError:
-                        raise except_orm('Error', _('Header: ') + attr + 'not exist!!')
+                        raise except_orm('Error', _('Header: ') + unicode(attr) + _(' not exist!!'))
 
                 if sheet.name.lower() == 'paquetes':
                     name_d = False
@@ -66,8 +65,9 @@ class import_package(TransientModel):
                             msg['updated'] += 1
                         else:
                             name_d = True
+
                     if cell('Días'):
-                        days = self.get_int(cell('Días').upper())
+                        days = self.get_int(cell('Días'))
                     if cell('Categoría'):
                         categ = cell('Categoría')
                         categ_obj = category.search([('name', '=', categ)])
@@ -101,9 +101,14 @@ class import_package(TransientModel):
                             'product_id': pp_temp.id,
 
                         })
-
+                    lines = package_lines.search([('package_id', '=', package_obj.id)])
+                    if len(lines):
+                        order = max(lines, key=lambda x: x.order).order + 1
+                    else:
+                        order = 1
                     package_lines.create({
                         'package_id': package_obj.id,
+                        'order': order,
                         'num_day': days,
                         'supplier_id': supl_obj.id,
                         'product_id': product_obj.id,
@@ -136,6 +141,9 @@ class import_package(TransientModel):
                         min_pax = self.get_int(cell('Mínimo pasajeros'))
                     if cell('Máximo pasajeros'):
                         max_pax = self.get_int(cell('Máximo pasajeros'))
+                    supplierinfo_tmp = supplierinfo.search(
+                        [('name', '=', supp_obj.id),
+                         ('product_tmpl_id', '=', package_obj.product_id.product_tmpl_id.id)])
                     if not supplierinfo_tmp.id:
                         supplierinfo_tmp = supplierinfo.create({
                             'name': supp_obj.id,

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <record id="travel_transfer_import_data_form" model="ir.ui.view">
+            <field name="name">import.data.form</field>
+            <field name="model">import.modules</field>
+            <field name="inherit_id" ref="travel_core.import_data_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//page[@string='Download Templates']/group" position="inside">
+                    <field name="transfer_excels" colspan="4"/>
+                </xpath>
+            </field>
+
+        </record>
+    </data>
+</openerp>

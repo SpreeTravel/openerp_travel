@@ -7,18 +7,26 @@
             <field name="model">import.modules</field>
             <field name="arch" type="xml">
                 <form string="Import" version="7.0">
-                    <group>
-                        <field name="file"/>
-                        <field name="choices"/>
-                    </group>
-                    <group>
-                        <field name="result" colspan="4"/>
-                    </group>
-                    <footer>
-                        <button name="execute_import" string="Import" type="object" class="oe_highlight"/>
-                        or
-                        <button string="Cancel" class="oe_link" special="cancel"/>
-                    </footer>
+                    <notebook>
+                        <page string="Upload Excel">
+                            <group>
+                                <field name="file"/>
+                                <field name="choices"/>
+                            </group>
+                            <group>
+                                <field name="result" colspan="4"/>
+                            </group>
+                            <group>
+                                <button name="execute_import" string="Import" type="object" class="oe_highlight"/>
+                                <button string="Cancel" class="oe_link" special="cancel"/>
+                            </group>
+                        </page>
+                        <page string="Download Templates">
+                            <group>
+                            </group>
+                        </page>
+
+                    </notebook>
                 </form>
             </field>
         </record>

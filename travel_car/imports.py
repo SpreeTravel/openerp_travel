@@ -21,13 +21,15 @@
 
 import xlrd
 from openerp.exceptions import except_orm
-from openerp import api
+from openerp import api, fields
 from openerp.models import TransientModel
 from openerp.tools.translate import _
 
 
 class import_car(TransientModel):
     _inherit = 'import.modules'
+
+    car_excels = fields.Binary(_('Car\'s Excels'))
 
     @api.model
     def import_car(self, document):

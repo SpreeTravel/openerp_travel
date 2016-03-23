@@ -29,6 +29,7 @@
     "depends": ['travel_core'],
     "data": ['data/options.xml',
              'data/categories.xml',
+             'view/import.xml',
              'view/car.xml', 'view/sale.xml',
              'security/ir.model.access.csv',
              'report/car_voucher.xml',

@@ -21,13 +21,15 @@
 
 import xlrd
 from openerp.exceptions import except_orm
-from openerp import api
+from openerp import api, fields
 from openerp.models import TransientModel
 from openerp.tools.translate import _
 
 
 class import_hotel(TransientModel):
     _inherit = 'import.modules'
+
+    hotel_excels = fields.Binary(_('Hotel\'s Excels'))
 
     @api.model
     def import_hotel(self, document):

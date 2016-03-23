@@ -30,6 +30,7 @@
     "data": ['data/categories.xml',
              'view/flight.xml',
              'view/sale.xml',
+             'view/imports.xml',
              'view/reservations.xml',
              'security/ir.model.access.csv',
              'report/flight_voucher.xml',

@@ -30,6 +30,7 @@
     "data": ['data/options.xml',
              'data/categories.xml', 'view/transfer.xml',
              'view/sale.xml',
+             'view/imports.xml',
              'view/reservation.xml',
              'security/ir.model.access.csv',
              'report/transfer_voucher.xml',

@@ -29,7 +29,10 @@ from openerp.tools.translate import _
 class import_package(TransientModel):
     _inherit = 'import.modules'
 
-    package_excels = fields.Binary(_('Package\'s Excels'))
+    def _get_excel(self):
+        return 'https://www.googledrive.com/host/0B3qOsAnXwRFhN251MUlmUlNjVWs/Paquetes.xlsx'
+
+    package_excels = fields.Char(_('Package\'s Excels'), default=_get_excel)
 
     @api.model
     def import_package(self, document):

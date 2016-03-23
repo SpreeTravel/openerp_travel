@@ -8,7 +8,7 @@
             <field name="inherit_id" ref="travel_core.import_data_form"/>
             <field name="arch" type="xml">
                 <xpath expr="//page[@string='Download Templates']/group" position="inside">
-                    <field name="car_excels" colspan="4"/>
+                    <field name="car_excels" readonly="1" widget="url"/>
                 </xpath>
             </field>
 

@@ -16,10 +16,9 @@
                             <group>
                                 <field name="result" colspan="4"/>
                             </group>
-                            <group>
-                                <button name="execute_import" string="Import" type="object" class="oe_highlight"/>
+                            <button name="execute_import" string="Import" type="object" class="oe_highlight"/>
+                            or
                                 <button string="Cancel" class="oe_link" special="cancel"/>
-                            </group>
                         </page>
                         <page string="Download Templates">
                             <group>

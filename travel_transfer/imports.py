@@ -29,7 +29,10 @@ from openerp.tools.translate import _
 class import_transfer(TransientModel):
     _inherit = 'import.modules'
 
-    transfer_excels = fields.Binary(_('Transfer\'s Excels'))
+    def _get_excel(self):
+        return 'https://www.googledrive.com/host/0B3qOsAnXwRFhN251MUlmUlNjVWs/Traslado.xlsx'
+
+    transfer_excels = fields.Char(_('Transfer\'s Excels'), default=_get_excel)
 
     @api.model
     def import_transfer(self, document):

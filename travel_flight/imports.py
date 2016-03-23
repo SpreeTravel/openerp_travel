@@ -29,7 +29,10 @@ from openerp.tools.translate import _
 class import_flight(TransientModel):
     _inherit = 'import.modules'
 
-    flight_excels = fields.Binary(_('Flight\'s Excels'))
+    def _get_excel(self):
+        return 'https://www.googledrive.com/host/0B3qOsAnXwRFhN251MUlmUlNjVWs/Vuelos.xlsx'
+
+    flight_excels = fields.Char(_('Flight\'s Excels'), default=_get_excel)
 
     @api.model
     def import_flight(self, document):

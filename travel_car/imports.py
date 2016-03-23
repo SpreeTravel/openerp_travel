@@ -24,12 +24,17 @@ from openerp.exceptions import except_orm
 from openerp import api, fields
 from openerp.models import TransientModel
 from openerp.tools.translate import _
+import base64
+import os
 
 
 class import_car(TransientModel):
     _inherit = 'import.modules'
 
-    car_excels = fields.Binary(_('Car\'s Excels'))
+    def _get_excel(self):
+        return 'https://www.googledrive.com/host/0B3qOsAnXwRFhN251MUlmUlNjVWs/Carros.xlsx'
+
+    car_excels = fields.Char(default=_get_excel, string=_('Car\'s Excels'))
 
     @api.model
     def import_car(self, document):

@@ -36,6 +36,7 @@ modules = [('car', _('Cars')),
 
 class import_modules(TransientModel):
     _name = 'import.modules'
+
     file = fields.Binary(_('File'))
     choices = fields.Selection(modules, _('Selection'))
     result = fields.Text(_('Result'))

@@ -227,10 +227,6 @@ class product_package_line(Model):
             'res_id': res_id.id
         }
 
-        # _defaults = {
-        #     'order': get_default
-        # }
-
 
 class product_package(Model):
     _name = 'product.package'

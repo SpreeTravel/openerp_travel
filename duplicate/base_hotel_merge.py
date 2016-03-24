@@ -49,21 +49,24 @@ class MergePartnerAutomatic(TransientModel):
     base = fields.Many2one('product.hotel', string=_('Hotel'), required=True, help=_(
         "Select for find other hotels with similar names, leave empty for find all hotel similarities"))
     # Group by
-    list_repeated = fields.One2many('result.list', 'merge_id', string=_('List Repeated'))
+    list_repeated_id = fields.One2many('result.list', 'merge_id', string=_('List Repeated'))
 
     @api.multi
     def find_similarities(self):
         obj = self[0]
         ph = self.env['product.hotel']
+        rl = self.env['result.list']
 
         if obj.base and obj.base.id:
             hotels = ph.search([('id', '!=', obj.base.id)])
+            res = []
             for h in hotels:
                 if self.compare_hotels(obj.base, h, 'hotel_name'):
-                    obj.list_repeated.create((0, 0, {
+                    rl.create({
+                        'merge_id': obj.id,
                         'base_product_id': obj.base.id,
                         'similar_product_id': h.id
-                    }))
+                    })
         else:
             base_hotels = ph.search([])
             for base in base_hotels:
@@ -75,10 +78,11 @@ class MergePartnerAutomatic(TransientModel):
                             'similar_product_id': h.id
                         }))
         return {
-            'type': 'ir.ui.view',
+            'type': 'ir.actions.act_window',
             'view_type': 'form',
             'view_mode': 'form',
-            'flags': {'form': {'action_buttons': True}},
+            'target': 'new',
+            # 'flags': {'form': {'action_buttons': True}},
             'res_model': 'base.hotel.merge.automatic.wizard',
             'res_id': obj.id
         }
@@ -86,7 +90,5 @@ class MergePartnerAutomatic(TransientModel):
     def compare_hotels(self, base, other, field):
         base_name = getattr(base, field)
         other_name = getattr(other, field)
-
         _, ratio = sm.find_closers([other_name], base_name)
-
         return ratio >= 0.6

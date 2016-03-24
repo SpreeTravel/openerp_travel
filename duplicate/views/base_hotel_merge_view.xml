@@ -36,14 +36,15 @@
                             <field name="base"/>
                         </group>
                         <group string="Repeated items">
-                            <field name="list_repeated" nolabel="1" col="4">
+                            <field name="list_repeated_id" nolabel="1" colspan="7">
                                 <tree string="Hotels" create="false" delete="false">
                                     <field name="merge_id" invisible="1"/>
-                                    <field name="base_product_id" />
-                                    <field name="similar_product_id" />
+                                    <field name="base_product_id" readonly="1"/>
+                                    <field name="similar_product_id" readonly="1"/>
                                     <button name="merge_left" type="object" string="Merge" icon="gtk-go-left"/>
                                     <button name="merge_right" type="object" string="Merge" icon="gtk-go-right"/>
-                                    <button name="delete_similar" type="object" string="Delete Similar" icon="gtk-delete"/>
+                                    <button name="delete_similar" type="object" string="Delete Similar"
+                                            icon="gtk-delete"/>
                                     <button name="delete_base" type="object" string="Delete Base" icon="gtk-delete"/>
                                 </tree>
                             </field>

@@ -3,29 +3,30 @@
     <data>
         <!-- the sequence of the configuration sub menu is 30 -->
 
-        <record model="ir.actions.act_window" id="base_hotel_merge_automatic_act">
-            <field name="name">Hotels</field>
-            <field name="res_model">base.hotel.merge.automatic.wizard</field>
+        <record model="ir.actions.act_window" id="base_product_merge_automatic_act">
+            <field name="name">Products</field>
+            <field name="res_model">base.product.merge.automatic.wizard</field>
             <field name="view_type">form</field>
             <field name="view_mode">form</field>
             <field name="target">new</field>
             <field name="context">{'active_test': False}</field>
         </record>
 
-        <menuitem id='hotel_merge_automatic_menu'
-                  action='base_hotel_merge_automatic_act'
+        <menuitem id='product_merge_automatic_menu'
+                  action='base_product_merge_automatic_act'
                   groups='base.group_system'
                   parent='root_menu'/>
 
-        <record model='ir.ui.view' id='base_hotel_merge_automatic_wizard_form'>
-            <field name='name'>base.hotel.merge.automatic.wizard.form</field>
-            <field name='model'>base.hotel.merge.automatic.wizard</field>
+        <record model='ir.ui.view' id='base_product_merge_automatic_wizard_form'>
+            <field name='name'>base.product.merge.automatic.wizard.form</field>
+            <field name='model'>base.product.merge.automatic.wizard</field>
             <field name='arch' type='xml'>
                 <form string='Merge Wizard'>
+                    <field name="state" invisible="1"/>
                     <footer>
                         <button name='find_similarities' string='Find Duplicates'
                                 class='oe_highlight'
-                                type='object'
+                                type='object' state="finished"
                         />
                     </footer>
                     <sheet>
@@ -35,17 +36,20 @@
                         <group>
                             <field name="base"/>
                         </group>
+                        <group string="Results" attrs="{'invisible':[('state','=', 'begin')]}">
+                            <field name="result" domain="[('id', 'in', context.get('values'))]"
+                                   options="{'no_create': True}"/>
+                        </group>
                         <group string="Repeated items">
-                            <field name="list_repeated_id" nolabel="1" colspan="7">
-                                <tree string="Hotels" create="false" delete="false">
+                            <field name="list_repeated_id" nolabel="1" colspan="7"
+                                   domain="[('base_product_id', '=', result)]">
+                                <tree string="products" create="false" delete="false">
                                     <field name="merge_id" invisible="1"/>
-                                    <field name="base_product_id" readonly="1"/>
                                     <field name="similar_product_id" readonly="1"/>
-                                    <button name="merge_left" type="object" string="Merge" icon="gtk-go-left"/>
-                                    <button name="merge_right" type="object" string="Merge" icon="gtk-go-right"/>
-                                    <button name="delete_similar" type="object" string="Delete Similar"
-                                            icon="gtk-delete"/>
-                                    <button name="delete_base" type="object" string="Delete Base" icon="gtk-delete"/>
+                                    <field name="base_product_id" invisible="1"/>
+                                    <button name="delete" type="object" string="Delete Similar"
+                                            icon="gtk-close"/>
+                                    <button name="merge" type="object" string="Merge" icon="gtk-copy"/>
                                 </tree>
                             </field>
                         </group>
@@ -54,8 +58,6 @@
             </field>
         </record>
 
-        <act_window id="action_hotel_merge" res_model="base.hotel.merge.automatic.wizard" src_model="travel.hotel"
-                    target="new" multi="True" key2="client_action_multi" view_mode="form" name="Automatic Merge"/>
 
     </data>
 

@@ -35,4 +35,4 @@ def find_closers(seq_list, seq_target, threshold=0.7):
 
     return closer, min_ratio
 
-
+# print find_closers(['INTERNACIONAL VARADERO'], 'Hotel Nacional de Cuba')

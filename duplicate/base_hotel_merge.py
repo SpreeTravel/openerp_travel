@@ -39,9 +39,14 @@ class ResultList(TransientModel):
     _name = 'result.list'
 
     merge_id = fields.Many2one('base.product.merge.automatic.wizard', string=_('Wizard'), ondelete='cascade')
-    similar_product_id = fields.Many2one('product.product', string=_('Similar Product'), required=True)
+    similar_product_id = fields.Many2one('product.product', string=_('Similar Product'), ondelete='cascade')
     base_product_id = fields.Many2one('product.product', string=_('Base Product'))
     actual = fields.Boolean(_('Actual'), default=True)
+
+    def check_sale_order(self, prod):
+        sol = self.env['sale.order.line']
+        lines = sol.search([('name', '=', prod.name_template)])
+        return len(lines)
 
     @api.multi
     def merge(self):
@@ -49,7 +54,26 @@ class ResultList(TransientModel):
 
     @api.multi
     def delete(self):
-        pass
+        obj = self[0]
+        if self.check_sale_order(obj.similar_product_id):
+            raise except_orm(_('Error'), _('This product belongs to a order, it can\'t be deleted'))
+        else:
+            pp = self.env['product.product']
+            pt = self.env['product.product']
+            pc = self.env['product.category']
+            product_p = pp.search([('id', '=', obj.similar_product_id.id)])
+            product_t = pt.search([('id', '=', obj.similar_product_id.product_tmpl_id.id)])
+            product_c = pc.search([('id', '=', product_t.categ_id.id)])
+            table = self.env['product.' + product_c.name.lower()]
+            element = table.search([('product_id', '=', product_p.id)])
+
+            try:
+                element.unlink()
+                product_p.unlink()
+                product_t.unlink()
+                self.unlink()
+            except Exception as e:
+                raise except_orm(_('Error'), _('Something went wrong!!!\n Message: ' + str(e.message)))
 
 
 class MergePartnerAutomaticProduct(TransientModel):
@@ -58,11 +82,7 @@ class MergePartnerAutomaticProduct(TransientModel):
     base = fields.Many2one('product.product', string=_('Product'), help=_(
         "Select for find other products with similar names, leave empty for find all product similarities"))
 
-    state = fields.Selection([('begin', 'Begin'),
-                              ('finished', 'Finished')],
-                             _('State'),
-                             default='begin',
-                             readonly=True,
+    state = fields.Selection([('begin', 'Begin'), ('finished', 'Finished')], _('State'), default='begin', readonly=True,
                              select=True)
 
     result = fields.Many2one('product.product', string=_('Product\'s Result'))
@@ -157,29 +177,32 @@ class MergePartnerAutomaticProduct(TransientModel):
         base_name = getattr(base, field)
         other_name = getattr(other, field)
         _, ratio = sm.find_closers([other_name], base_name)
-        return ratio >= 0.6
+        return ratio >= 0.7
 
     @api.onchange('result')
     def change_result(self):
         rl = self.env['result.list']
+        res = []
         for x in rl.search([('merge_id', '!=', False)]):
             x.write({
                 'merge_id': False
             })
-        _id = self.env.context.get('obj', False)
-        for y in rl.search([('base_product_id', '=', self.result.id), ('actual', '=', True)]):
-            y.write({
-                'merge_id': _id
+            res.append((2, x.id))
+        if len(res):
+            self.update({
+                'list_repeated_id': res
             })
-        return {
-            'type': 'ir.actions.act_window',
-            'view_type': 'form',
-            'view_mode': 'form',
-            'target': 'new',
-            'res_model': 'base.product.merge.automatic.wizard',
-            'res_id': _id,
-            'context': {
-                'values': self.env.context.get('domain', False),
-                'obj': _id
-            }
-        }
+        _id = self.env.context.get('obj', False)
+        res = []
+        if self.result.id:
+            for y in rl.search([('base_product_id', '=', self.result.id), ('actual', '=', True)]):
+                y.write({
+                    'merge_id': _id
+                })
+                res.append((1, y.id, {
+                    'merge_id': _id
+                }))
+            if len(res):
+                self.update({
+                    'list_repeated_id': res
+                })

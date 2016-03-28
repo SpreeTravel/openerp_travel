@@ -9,7 +9,6 @@
             <field name="view_type">form</field>
             <field name="view_mode">form</field>
             <field name="target">new</field>
-            <field name="context">{'active_test': False}</field>
         </record>
 
         <menuitem id='product_merge_automatic_menu'
@@ -24,17 +23,18 @@
                 <form string='Merge Wizard'>
                     <field name="state" invisible="1"/>
                     <footer>
-                        <button name='find_similarities' string='Find Duplicates'
-                                class='oe_highlight'
-                                type='object' state="finished"
-                        />
+                        <button name="dummy_button" string="Update Changes" type="object" class="oe_highlight"/>
+                        or
+                        <button string="Cancel" class="oe_link" special="cancel"/>
                     </footer>
                     <sheet>
                         <group col="1">
                             <h2>Similars</h2>
                         </group>
-                        <group>
+                        <group col="4" colspan="2">
                             <field name="base"/>
+                            <button name='find_similarities' string='Find Duplicates' class='oe_highlight'
+                                    type='object'/>
                         </group>
                         <group string="Results" attrs="{'invisible':[('state','=', 'begin')]}">
                             <field name="result" domain="[('id', 'in', context.get('values'))]"
@@ -43,12 +43,12 @@
                         <group string="Repeated items">
                             <field name="list_repeated_id" nolabel="1" colspan="7"
                                    domain="[('base_product_id', '=', result)]">
-                                <tree string="products" create="false" delete="false">
+                                <tree string="products" create="false">
                                     <field name="merge_id" invisible="1"/>
                                     <field name="similar_product_id" readonly="1"/>
                                     <field name="base_product_id" invisible="1"/>
-                                    <button name="delete" type="object" string="Delete Similar"
-                                            icon="gtk-close"/>
+                                    <!--<button name="delete" type="object" string="Delete Similar"-->
+                                    <!--icon="gtk-close"/>-->
                                     <button name="merge" type="object" string="Merge" icon="gtk-copy"/>
                                 </tree>
                             </field>

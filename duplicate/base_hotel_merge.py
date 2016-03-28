@@ -28,13 +28,6 @@ import stringmatcher as sm
 import os
 
 
-class travel_hotel(Model):
-    _name = 'travel.hotel'
-
-    id = fields.Integer('Id', readonly=True)
-    create_date = fields.Datetime('Create Date', readonly=True)
-
-
 class ResultList(TransientModel):
     _name = 'result.list'
 
@@ -52,8 +45,44 @@ class ResultList(TransientModel):
     def merge(self):
         pass
 
+    # @api.multi
+    # def delete(self):
+    #     obj = self[0]
+    #     if self.check_sale_order(obj.similar_product_id):
+    #         raise except_orm(_('Error'), _('This product belongs to a order, it can\'t be deleted'))
+    #     else:
+    #         pp = self.env['product.product']
+    #         pt = self.env['product.product']
+    #         pc = self.env['product.category']
+    #         product_p = pp.search([('id', '=', obj.similar_product_id.id)])
+    #         product_t = pt.search([('id', '=', obj.similar_product_id.product_tmpl_id.id)])
+    #         product_c = pc.search([('id', '=', product_t.categ_id.id)])
+    #         table = self.env['product.' + product_c.name.lower()]
+    #         element = table.search([('product_id', '=', product_p.id)])
+    #
+    #         try:
+    #             element.unlink()
+    #             product_p.unlink()
+    #             product_t.unlink()
+    #             obj.unlink()
+    #         except Exception as e:
+    #             raise except_orm(_('Error'), _('Something went wrong!!!\n Message: ' + str(e.message)))
+    #     return {
+    #         'type': 'ir.actions.act_window',
+    #         'view_type': 'form',
+    #         'view_mode': 'form',
+    #         'target': 'new',
+    #         # 'flags': {'form': {'action_buttons': True}},
+    #         'res_model': 'base.product.merge.automatic.wizard',
+    #         'res_id': obj.merge_id.id,
+    #         'context': {
+    #             'values': self.env.context.get('domain', False),
+    #             'obj': obj.merge_id.id
+    #         }
+    #     }
+
     @api.multi
-    def delete(self):
+    def unlink(self):
         obj = self[0]
         if self.check_sale_order(obj.similar_product_id):
             raise except_orm(_('Error'), _('This product belongs to a order, it can\'t be deleted'))
@@ -71,9 +100,13 @@ class ResultList(TransientModel):
                 element.unlink()
                 product_p.unlink()
                 product_t.unlink()
-                self.unlink()
             except Exception as e:
-                raise except_orm(_('Error'), _('Something went wrong!!!\n Message: ' + str(e.message)))
+                raise except_orm(_('Error'), _('Something went wrong!!!\n Message: ' + str(e)))
+        return super(ResultList, self).unlink()
+
+    @api.multi
+    def write(self, vals):
+        return super(ResultList, self).write(vals)
 
 
 class MergePartnerAutomaticProduct(TransientModel):
@@ -206,3 +239,24 @@ class MergePartnerAutomaticProduct(TransientModel):
                 self.update({
                     'list_repeated_id': res
                 })
+
+    @api.multi
+    def dummy_button(self):
+        obj = self[0]
+        return {
+            'type': 'ir.actions.act_window',
+            'view_type': 'form',
+            'view_mode': 'form',
+            'target': 'new',
+            # 'flags': {'form': {'action_buttons': True}},
+            'res_model': 'base.product.merge.automatic.wizard',
+            'res_id': obj.id,
+            'context': {
+                'values': self.env.context.get('domain', False),
+                'obj': obj.id
+            }
+        }
+
+    @api.cr_uid_ids_context
+    def write(self, cr, uid, ids, vals, context=None):
+        return super(MergePartnerAutomaticProduct, self).write(cr, uid, ids, vals, context)

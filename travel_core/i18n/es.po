@@ -6,14 +6,641 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 8.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-01-29 20:20+0000\n"
-"PO-Revision-Date: 2016-01-29 20:20+0000\n"
+"POT-Creation-Date: 2016-03-31 14:12+0000\n"
+"PO-Revision-Date: 2016-03-31 14:12+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: \n"
+
+#. module: travel_core
+#: model:email.template,body_html:travel_core.core_partner_invitation_email_template
+msgid "\n"
+"<div style=\"font-family: 'Lucica Grande', Ubuntu, Arial, Verdana, sans-serif; font-size: 12px; color: rgb(34, 34, 34); background-color: #FFF; \">\n"
+"\n"
+"    <p>Dear ${object.name}:</p>\n"
+"    <p>We want to invite you, to join our portal where you can create sale orders.</p>\n"
+"    <% set signup = object.get_signup_url()[0]%>\n"
+"    <p>\n"
+"    Follow this link:\n"
+"    </p>\n"
+"        <a style=\"display:block; width: 150px; height:20px; margin-left: 120px; color: #DDD; font-family: 'Lucida Grande', Helvetica, Arial, sans-serif; font-size: 13px; font-weight: bold; text-align: center; text-decoration: none !important; line-height: 1; padding: 5px 0px 0px 0px; background-color: #8E0000; border-radius: 5px 5px; background-repeat: repeat no-repeat;\"\n"
+"           href=\"${signup}\">Join US!!!</a>\n"
+"\n"
+"\n"
+"    </div>\n"
+"</div>\n"
+"            "
+msgstr "\n"
+"<div style=\"font-family: 'Lucica Grande', Ubuntu, Arial, Verdana, sans-serif; font-size: 12px; color: rgb(34, 34, 34); background-color: #FFF; \">\n"
+"\n"
+"    <p>Dear ${object.name}:</p>\n"
+"    <p>Lo invitamos a que se una a nuestro portal donde puede crear órdenes de ventas.</p>\n"
+"    <% set signup = object.get_signup_url()[0]%>\n"
+"    <p>\n"
+"    Siga este link:\n"
+"    </p>\n"
+"        <a style=\"display:block; width: 150px; height:20px; margin-left: 120px; color: #DDD; font-family: 'Lucida Grande', Helvetica, Arial, sans-serif; font-size: 13px; font-weight: bold; text-align: center; text-decoration: none !important; line-height: 1; padding: 5px 0px 0px 0px; background-color: #8E0000; border-radius: 5px 5px; background-repeat: repeat no-repeat;\"\n"
+"           href=\"${signup}\">Únase!!!</a>\n"
+"\n"
+"\n"
+"    </div>\n"
+"</div>\n"
+"            "
+
+#. module: travel_core
+#: model:email.template,body_html:travel_core.core_supplier_email_template
+msgid "\n"
+"<div style=\"font-family: 'Lucica Grande', Ubuntu, Arial, Verdana, sans-serif; font-size: 12px; color: rgb(34, 34, 34); background-color: #FFF; \">\n"
+"\n"
+"    <p>Estimado  ${object.supplier_id.name},</p>\n"
+"\n"
+"    <p>Le solicitamos el siguiente servicio: </p>\n"
+"\n"
+"    <p style=\"border-left: 1px solid #8e0000; margin-left: 30px;\">\n"
+"       &nbsp;&nbsp;${object.category_id.name}: <strong>${object.product_id.name}</strong><br />\n"
+"       &nbsp;&nbsp;Fecha de Inicio: <strong>${object.start_date}</strong><br />\n"
+"       &nbsp;&nbsp;Fecha de Fin: <strong>${object.end_date}</strong><br />\n"
+"       &nbsp;&nbsp;Cantidad: <strong>${object.product_uom_qty| int}</strong><br />\n"
+"       % if object.hotel_2_meal_plan_id:\n"
+"       &nbsp;&nbsp;Plan: ${object.hotel_2_meal_plan_id.name}<br />\n"
+"       % endif\n"
+"       % if object.category_id.name != 'Hotel':\n"
+"       &nbsp;&nbsp;Adultos: ${object.adults}<br />\n"
+"       &nbsp;&nbsp;Niños: ${object.children}<br />\n"
+"       % endif\n"
+"       % if object.category_id.name == 'Transfer':\n"
+"       &nbsp;&nbsp;Tipo de Transporte: ${object.transfer_1_vehicle_type_id.name}<br />\n"
+"       &nbsp;&nbsp;Guía: ${object.transfer_2_guide_id.name}<br />\n"
+"       &nbsp;&nbsp;Confort: ${object.transfer_3_confort_id.name}<br />\n"
+"       % endif\n"
+"       % if object.sale_line_supplement_ids| length:\n"
+"       &nbsp;&nbsp;Suplemento:\n"
+"       % for s in object.sale_line_supplement_ids:\n"
+"       %if loop.last:\n"
+"        ${s.name}</br>\n"
+"        %else\n"
+"        ${s.name},\n"
+"        %endif\n"
+"\n"
+"        %endfor\n"
+"       % endif\n"
+"       % if object.category_id.name == 'Hotel':\n"
+"       <table>\n"
+"       <thead>\n"
+"        <caption style=text-align=center; align=top><h3>Rooming</h3>\n"
+"        </caption>\n"
+"        <tr>\n"
+"            <th align=\"center\"><strong>Hab</strong></th>\n"
+"            <th align=\"center\"><strong>Tipo</strong></th>\n"
+"            <th align=\"center\"><strong>Adultos</strong></th>\n"
+"            <th align=\"center\"><strong>Niños</strong></th>\n"
+"            <th align=\"center\"><strong>Cantidad</strong></th>\n"
+"\n"
+"        </tr>\n"
+"        </thead>\n"
+"        <tbody>\n"
+"        % for x in object.hotel_1_rooming_ids:\n"
+"        <tr style=\"text-align=center;\">\n"
+"            <td align=\"center\">${x.room}</td>\n"
+"            <td align=\"center\">${x.room_type_id.name}</td>\n"
+"            <td align=\"center\"><span>${x.adults or 0}</span></td>\n"
+"            <td align=\"center\">${x.children or 0}</td>\n"
+"            <td align=\"center\">${x.quantity or 0}</td>\n"
+"        </tr>\n"
+"        %endfor\n"
+"        </tbody>\n"
+"       </table>\n"
+"       % endif\n"
+"\n"
+"       % if object.category_id.name == 'Package':\n"
+"       <table>\n"
+"       <thead>\n"
+"        <caption style=text-align=center; align=top><h3>Package Lines</h3>\n"
+"        </caption>\n"
+"        <tr>\n"
+"            <th align=\"center\"><strong>Días</strong></th>\n"
+"            <th align=\"center\"><strong>Categoría</strong></th>\n"
+"            <th align=\"center\"><strong>Producto</strong></th>\n"
+"        </tr>\n"
+"        </thead>\n"
+"        <tbody>\n"
+"        % for x in object.sale_order_line_package_line_id:\n"
+"        <tr style=\"text-align=center;\">\n"
+"            <td align=\"center\">${x.num_day}</td>\n"
+"            <td align=\"center\">${x.category_id.name}</td>\n"
+"            <td align=\"center\"><span>${x.product_id.name_template}</span></td>\n"
+"        </tr>\n"
+"        %endfor\n"
+"        </tbody>\n"
+"       </table>\n"
+"       % endif\n"
+"\n"
+"    </p>\n"
+"    </br>\n"
+"\n"
+"    <p>Si tiene alguna pregunta, no dude en contactárnos.</p>\n"
+"    <p>Gracias por escorgernos ${object.order_id.company_id.name or ''}!</p>\n"
+"    <br/>\n"
+"    <br/>\n"
+"    <div style=\"width: 375px; margin: 0px; padding: 0px; background-color: #8E0000; border-top-left-radius: 5px 5px; border-top-right-radius: 5px 5px; background-repeat: repeat no-repeat;\">\n"
+"        <h3 style=\"margin: 0px; padding: 2px 14px; font-size: 12px; color: #DDD;\">\n"
+"            <strong style=\"text-transform:uppercase;\">${object.order_id.company_id.name}</strong></h3>\n"
+"    </div>\n"
+"    <div style=\"width: 347px; margin: 0px; padding: 5px 14px; line-height: 16px; background-color: #F2F2F2;\">\n"
+"        <span style=\"color: #222; margin-bottom: 5px; display: block; \">\n"
+"        % if object.order_id.company_id.street:\n"
+"            ${object.order_id.company_id.street}<br/>\n"
+"        % endif\n"
+"        % if object.order_id.company_id.street2:\n"
+"            ${object.order_id.company_id.street2}<br/>\n"
+"        % endif\n"
+"        % if object.order_id.company_id.city or object.order_id.company_id.zip:\n"
+"            ${object.order_id.company_id.zip} ${object.order_id.company_id.city}<br/>\n"
+"        % endif\n"
+"        % if object.order_id.company_id.country_id:\n"
+"            ${object.order_id.company_id.state_id and ('%s, ' % object.order_id.company_id.state_id.name) or ''} ${object.order_id.company_id.country_id.name or ''}<br/>\n"
+"        % endif\n"
+"        </span>\n"
+"        % if object.order_id.company_id.phone:\n"
+"            <div style=\"margin-top: 0px; margin-right: 0px; margin-bottom: 0px; margin-left: 0px; padding-top: 0px; padding-right: 0px; padding-bottom: 0px; padding-left: 0px; \">\n"
+"                Phone:&nbsp; ${object.order_id.company_id.phone}\n"
+"            </div>\n"
+"        % endif\n"
+"        % if object.order_id.company_id.website:\n"
+"            <div>\n"
+"                Web :&nbsp;<a href=\"${object.order_id.company_id.website}\">${object.order_id.company_id.website}</a>\n"
+"            </div>\n"
+"        %endif\n"
+"        <p></p>\n"
+"    </div>\n"
+"</div>\n"
+"            "
+msgstr "\n"
+"<div style=\"font-family: 'Lucica Grande', Ubuntu, Arial, Verdana, sans-serif; font-size: 12px; color: rgb(34, 34, 34); background-color: #FFF; \">\n"
+"\n"
+"    <p>Estimado  ${object.supplier_id.name},</p>\n"
+"\n"
+"    <p>Le solicitamos el siguiente servicio: </p>\n"
+"\n"
+"    <p style=\"border-left: 1px solid #8e0000; margin-left: 30px;\">\n"
+"       &nbsp;&nbsp;${object.category_id.name}: <strong>${object.product_id.name}</strong><br />\n"
+"       &nbsp;&nbsp;Fecha de Inicio: <strong>${object.start_date}</strong><br />\n"
+"       &nbsp;&nbsp;Fecha de Fin: <strong>${object.end_date}</strong><br />\n"
+"       &nbsp;&nbsp;Cantidad: <strong>${object.product_uom_qty| int}</strong><br />\n"
+"       % if object.hotel_2_meal_plan_id:\n"
+"       &nbsp;&nbsp;Plan: ${object.hotel_2_meal_plan_id.name}<br />\n"
+"       % endif\n"
+"       % if object.category_id.name != 'Hotel':\n"
+"       &nbsp;&nbsp;Adultos: ${object.adults}<br />\n"
+"       &nbsp;&nbsp;Niños: ${object.children}<br />\n"
+"       % endif\n"
+"       % if object.category_id.name == 'Transfer':\n"
+"       &nbsp;&nbsp;Tipo de Transporte: ${object.transfer_1_vehicle_type_id.name}<br />\n"
+"       &nbsp;&nbsp;Guía: ${object.transfer_2_guide_id.name}<br />\n"
+"       &nbsp;&nbsp;Confort: ${object.transfer_3_confort_id.name}<br />\n"
+"       % endif\n"
+"       % if object.sale_line_supplement_ids| length:\n"
+"       &nbsp;&nbsp;Suplemento:\n"
+"       % for s in object.sale_line_supplement_ids:\n"
+"       %if loop.last:\n"
+"        ${s.name}</br>\n"
+"        %else\n"
+"        ${s.name},\n"
+"        %endif\n"
+"\n"
+"        %endfor\n"
+"       % endif\n"
+"       % if object.category_id.name == 'Hotel':\n"
+"       <table>\n"
+"       <thead>\n"
+"        <caption style=text-align=center; align=top><h3>Rooming</h3>\n"
+"        </caption>\n"
+"        <tr>\n"
+"            <th align=\"center\"><strong>Hab</strong></th>\n"
+"            <th align=\"center\"><strong>Tipo</strong></th>\n"
+"            <th align=\"center\"><strong>Adultos</strong></th>\n"
+"            <th align=\"center\"><strong>Niños</strong></th>\n"
+"            <th align=\"center\"><strong>Cantidad</strong></th>\n"
+"\n"
+"        </tr>\n"
+"        </thead>\n"
+"        <tbody>\n"
+"        % for x in object.hotel_1_rooming_ids:\n"
+"        <tr style=\"text-align=center;\">\n"
+"            <td align=\"center\">${x.room}</td>\n"
+"            <td align=\"center\">${x.room_type_id.name}</td>\n"
+"            <td align=\"center\"><span>${x.adults or 0}</span></td>\n"
+"            <td align=\"center\">${x.children or 0}</td>\n"
+"            <td align=\"center\">${x.quantity or 0}</td>\n"
+"        </tr>\n"
+"        %endfor\n"
+"        </tbody>\n"
+"       </table>\n"
+"       % endif\n"
+"\n"
+"       % if object.category_id.name == 'Package':\n"
+"       <table>\n"
+"       <thead>\n"
+"        <caption style=text-align=center; align=top><h3>Package Lines</h3>\n"
+"        </caption>\n"
+"        <tr>\n"
+"            <th align=\"center\"><strong>Días</strong></th>\n"
+"            <th align=\"center\"><strong>Categoría</strong></th>\n"
+"            <th align=\"center\"><strong>Producto</strong></th>\n"
+"        </tr>\n"
+"        </thead>\n"
+"        <tbody>\n"
+"        % for x in object.sale_order_line_package_line_id:\n"
+"        <tr style=\"text-align=center;\">\n"
+"            <td align=\"center\">${x.num_day}</td>\n"
+"            <td align=\"center\">${x.category_id.name}</td>\n"
+"            <td align=\"center\"><span>${x.product_id.name_template}</span></td>\n"
+"        </tr>\n"
+"        %endfor\n"
+"        </tbody>\n"
+"       </table>\n"
+"       % endif\n"
+"\n"
+"    </p>\n"
+"    </br>\n"
+"\n"
+"    <p>Si tiene alguna pregunta, no dude en contactárnos.</p>\n"
+"    <p>Gracias por escorgernos ${object.order_id.company_id.name or ''}!</p>\n"
+"    <br/>\n"
+"    <br/>\n"
+"    <div style=\"width: 375px; margin: 0px; padding: 0px; background-color: #8E0000; border-top-left-radius: 5px 5px; border-top-right-radius: 5px 5px; background-repeat: repeat no-repeat;\">\n"
+"        <h3 style=\"margin: 0px; padding: 2px 14px; font-size: 12px; color: #DDD;\">\n"
+"            <strong style=\"text-transform:uppercase;\">${object.order_id.company_id.name}</strong></h3>\n"
+"    </div>\n"
+"    <div style=\"width: 347px; margin: 0px; padding: 5px 14px; line-height: 16px; background-color: #F2F2F2;\">\n"
+"        <span style=\"color: #222; margin-bottom: 5px; display: block; \">\n"
+"        % if object.order_id.company_id.street:\n"
+"            ${object.order_id.company_id.street}<br/>\n"
+"        % endif\n"
+"        % if object.order_id.company_id.street2:\n"
+"            ${object.order_id.company_id.street2}<br/>\n"
+"        % endif\n"
+"        % if object.order_id.company_id.city or object.order_id.company_id.zip:\n"
+"            ${object.order_id.company_id.zip} ${object.order_id.company_id.city}<br/>\n"
+"        % endif\n"
+"        % if object.order_id.company_id.country_id:\n"
+"            ${object.order_id.company_id.state_id and ('%s, ' % object.order_id.company_id.state_id.name) or ''} ${object.order_id.company_id.country_id.name or ''}<br/>\n"
+"        % endif\n"
+"        </span>\n"
+"        % if object.order_id.company_id.phone:\n"
+"            <div style=\"margin-top: 0px; margin-right: 0px; margin-bottom: 0px; margin-left: 0px; padding-top: 0px; padding-right: 0px; padding-bottom: 0px; padding-left: 0px; \">\n"
+"                Phone:&nbsp; ${object.order_id.company_id.phone}\n"
+"            </div>\n"
+"        % endif\n"
+"        % if object.order_id.company_id.website:\n"
+"            <div>\n"
+"                Web :&nbsp;<a href=\"${object.order_id.company_id.website}\">${object.order_id.company_id.website}</a>\n"
+"            </div>\n"
+"        %endif\n"
+"        <p></p>\n"
+"    </div>\n"
+"</div>\n"
+"            "
+
+#. module: travel_core
+#: model:email.template,body_html:travel_core.core_client_email_template
+msgid "\n"
+"<div style=\"font-family: 'Lucica Grande', Ubuntu, Arial, Verdana, sans-serif; font-size: 12px; color: rgb(34, 34, 34); background-color: #FFF; \">\n"
+"\n"
+"    <p>Estimado ${object.partner_id.name},</p>\n"
+"\n"
+"    <p>Aquí está ${object.state in ('draft', 'sent') and 'presupuesto' or 'confirmación de orden'} de ${object.company_id.name}: </p>\n"
+"\n"
+"    <p style=\"border-left: 1px solid #8e0000; margin-left: 30px;\">\n"
+"       &nbsp;&nbsp;<strong>REFERENCIAS</strong><br />\n"
+"       &nbsp;&nbsp;Número : <strong>${object.name}</strong><br />\n"
+"       &nbsp;&nbsp;Total: <strong>${object.amount_total} ${object.pricelist_id.currency_id.name}</strong><br />\n"
+"       &nbsp;&nbsp;Fecha:  ${object.date_order} <br />\n"
+"       % if object.origin:\n"
+"       &nbsp;&nbsp;Referencia: ${object.origin}<br />\n"
+"       % endif\n"
+"       % if object.client_order_ref:\n"
+"       &nbsp;&nbsp;Tu referencia: ${object.client_order_ref}<br />\n"
+"       % endif\n"
+"       % if object.user_id:\n"
+"       &nbsp;&nbsp;Contacto: <a href=\"mailto:${object.user_id.email or ''}?subject=Order%20${object.name}\">${object.user_id.name}</a>\n"
+"       % endif\n"
+"    </p>\n"
+"\n"
+"    </br>\n"
+"    <h2>Detalles de Servicios:</h2>\n"
+"\n"
+"    %for x in object.order_line:\n"
+"<h3>Servicio: ${loop.index}</h3>\n"
+"<p style=\"border-left: 1px solid #8e0000; margin-left: 30px;\">\n"
+"       &nbsp;&nbsp;${x.category_id.name}: <strong>${x.product_id.name}</strong><br />\n"
+"       &nbsp;&nbsp;Fecha de Inicio: <strong>${x.start_date}</strong><br />\n"
+"       &nbsp;&nbsp;Fecha de Fin: <strong>${x.end_date}</strong><br />\n"
+"       &nbsp;&nbsp;Cantidad: <strong>${x.product_uom_qty| int}</strong><br />\n"
+"       % if x.hotel_2_meal_plan_id:\n"
+"       &nbsp;&nbsp;Plan: ${x.hotel_2_meal_plan_id.name}<br />\n"
+"       % endif\n"
+"       % if x.category_id.name != 'Hotel':\n"
+"       &nbsp;&nbsp;Adultos: ${x.adults}<br />\n"
+"       &nbsp;&nbsp;Niños: ${x.children}<br />\n"
+"       % endif\n"
+"       % if x.category_id.name == 'Transfer':\n"
+"       &nbsp;&nbsp;Tipo de Transporte: ${x.transfer_1_vehicle_type_id.name}<br />\n"
+"       &nbsp;&nbsp;Guía: ${x.transfer_2_guide_id.name}<br />\n"
+"       &nbsp;&nbsp;Confort: ${x.transfer_3_confort_id.name}<br />\n"
+"       % endif\n"
+"       % if x.sale_line_supplement_ids| length:\n"
+"       &nbsp;&nbsp;Suplemento:\n"
+"       % for s in x.sale_line_supplement_ids:\n"
+"       %if loop.last:\n"
+"        ${s.name}</br>\n"
+"        %else\n"
+"        ${s.name},\n"
+"        %endif\n"
+"\n"
+"        %endfor\n"
+"       % endif\n"
+"       % if x.category_id.name == 'Hotel':\n"
+"       <table>\n"
+"       <thead>\n"
+"              <tr>\n"
+"            <th align=\"center\"><strong>Hab</strong></th>\n"
+"            <th align=\"center\"><strong>Tipo</strong></th>\n"
+"            <th align=\"center\"><strong>Adultos</strong></th>\n"
+"            <th align=\"center\"><strong>Niños</strong></th>\n"
+"            <th align=\"center\"><strong>Cantidad</strong></th>\n"
+"\n"
+"        </tr>\n"
+"        </thead>\n"
+"        <tbody>\n"
+"        % for h in x.hotel_1_rooming_ids:\n"
+"        <tr style=\"text-align=center;\">\n"
+"            <td align=\"center\">${h.room}</td>\n"
+"            <td align=\"center\">${h.room_type_id.name}</td>\n"
+"            <td align=\"center\"><span>${h.adults or 0}</span></td>\n"
+"            <td align=\"center\">${h.children or 0}</td>\n"
+"            <td align=\"center\">${h.quantity or 0}</td>\n"
+"        </tr>\n"
+"        %endfor\n"
+"        </tbody>\n"
+"       </table>\n"
+"       % endif\n"
+"\n"
+"        % if x.category_id.name == 'Package':\n"
+"       <table>\n"
+"       <thead>\n"
+"        <caption style=text-align=center; align=top><h3>Package Lines</h3>\n"
+"        </caption>\n"
+"        <tr>\n"
+"            <th align=\"center\"><strong>Días</strong></th>\n"
+"            <th align=\"center\"><strong>Categoría</strong></th>\n"
+"            <th align=\"center\"><strong>Producto</strong></th>\n"
+"        </tr>\n"
+"        </thead>\n"
+"        <tbody>\n"
+"        % for lines in x.sale_order_line_package_line_id:\n"
+"        <tr style=\"text-align=center;\">\n"
+"            <td align=\"center\">${lines.num_day}</td>\n"
+"            <td align=\"center\">${lines.category_id.name}</td>\n"
+"            <td align=\"center\"><span>${lines.product_id.name_template}</span></td>\n"
+"        </tr>\n"
+"        %endfor\n"
+"        </tbody>\n"
+"       </table>\n"
+"       % endif\n"
+"\n"
+"    </p>\n"
+"    %endfor\n"
+"\n"
+"    <% set signup_url = object.get_signup_url() %>\n"
+"    % if signup_url:\n"
+"    <p>\n"
+"    Usted puede acceder a este documento via online:\n"
+"    </p>\n"
+"        <a style=\"display:block; width: 150px; height:20px; margin-left: 120px; color: #DDD; font-family: 'Lucida Grande', Helvetica, Arial, sans-serif; font-size: 13px; font-weight: bold; text-align: center; text-decoration: none !important; line-height: 1; padding: 5px 0px 0px 0px; background-color: #8E0000; border-radius: 5px 5px; background-repeat: repeat no-repeat;\"\n"
+"           href=\"${signup_url}\">View ${object.state in ('draft', 'sent') and 'Quotation' or 'Order'}</a>\n"
+"    % endif\n"
+"\n"
+"\n"
+"    <br/>\n"
+"     <p>Si tiene alguna pregunta, no dude en contactárnos.</p>\n"
+"    <p>Gracias por escorgernos ${object.company_id.name or ''}!</p>\n"
+"    <br/>\n"
+"    <br/>\n"
+"    <div style=\"width: 375px; margin: 0px; padding: 0px; background-color: #8E0000; border-top-left-radius: 5px 5px; border-top-right-radius: 5px 5px; background-repeat: repeat no-repeat;\">\n"
+"        <h3 style=\"margin: 0px; padding: 2px 14px; font-size: 12px; color: #DDD;\">\n"
+"            <strong style=\"text-transform:uppercase;\">${object.company_id.name}</strong></h3>\n"
+"    </div>\n"
+"    <div style=\"width: 347px; margin: 0px; padding: 5px 14px; line-height: 16px; background-color: #F2F2F2;\">\n"
+"        <span style=\"color: #222; margin-bottom: 5px; display: block; \">\n"
+"        % if object.company_id.street:\n"
+"            ${object.company_id.street}<br/>\n"
+"        % endif\n"
+"        % if object.company_id.street2:\n"
+"            ${object.company_id.street2}<br/>\n"
+"        % endif\n"
+"        % if object.company_id.city or object.company_id.zip:\n"
+"            ${object.company_id.zip} ${object.company_id.city}<br/>\n"
+"        % endif\n"
+"        % if object.company_id.country_id:\n"
+"            ${object.company_id.state_id and ('%s, ' % object.company_id.state_id.name) or ''} ${object.company_id.country_id.name or ''}<br/>\n"
+"        % endif\n"
+"        </span>\n"
+"        % if object.company_id.phone:\n"
+"            <div style=\"margin-top: 0px; margin-right: 0px; margin-bottom: 0px; margin-left: 0px; padding-top: 0px; padding-right: 0px; padding-bottom: 0px; padding-left: 0px; \">\n"
+"                Phone:&nbsp; ${object.company_id.phone}\n"
+"            </div>\n"
+"        % endif\n"
+"        % if object.company_id.website:\n"
+"            <div>\n"
+"                Web :&nbsp;<a href=\"${object.company_id.website}\">${object.company_id.website}</a>\n"
+"            </div>\n"
+"        %endif\n"
+"        <p></p>\n"
+"    </div>\n"
+"</div>\n"
+"            "
+msgstr "\n"
+"<div style=\"font-family: 'Lucica Grande', Ubuntu, Arial, Verdana, sans-serif; font-size: 12px; color: rgb(34, 34, 34); background-color: #FFF; \">\n"
+"\n"
+"    <p>Estimado ${object.partner_id.name},</p>\n"
+"\n"
+"    <p>Aquí está ${object.state in ('draft', 'sent') and 'presupuesto' or 'confirmación de orden'} de ${object.company_id.name}: </p>\n"
+"\n"
+"    <p style=\"border-left: 1px solid #8e0000; margin-left: 30px;\">\n"
+"       &nbsp;&nbsp;<strong>REFERENCIAS</strong><br />\n"
+"       &nbsp;&nbsp;Número : <strong>${object.name}</strong><br />\n"
+"       &nbsp;&nbsp;Total: <strong>${object.amount_total} ${object.pricelist_id.currency_id.name}</strong><br />\n"
+"       &nbsp;&nbsp;Fecha:  ${object.date_order} <br />\n"
+"       % if object.origin:\n"
+"       &nbsp;&nbsp;Referencia: ${object.origin}<br />\n"
+"       % endif\n"
+"       % if object.client_order_ref:\n"
+"       &nbsp;&nbsp;Tu referencia: ${object.client_order_ref}<br />\n"
+"       % endif\n"
+"       % if object.user_id:\n"
+"       &nbsp;&nbsp;Contacto: <a href=\"mailto:${object.user_id.email or ''}?subject=Order%20${object.name}\">${object.user_id.name}</a>\n"
+"       % endif\n"
+"    </p>\n"
+"\n"
+"    </br>\n"
+"    <h2>Detalles de Servicios:</h2>\n"
+"\n"
+"    %for x in object.order_line:\n"
+"<h3>Servicio: ${loop.index}</h3>\n"
+"<p style=\"border-left: 1px solid #8e0000; margin-left: 30px;\">\n"
+"       &nbsp;&nbsp;${x.category_id.name}: <strong>${x.product_id.name}</strong><br />\n"
+"       &nbsp;&nbsp;Fecha de Inicio: <strong>${x.start_date}</strong><br />\n"
+"       &nbsp;&nbsp;Fecha de Fin: <strong>${x.end_date}</strong><br />\n"
+"       &nbsp;&nbsp;Cantidad: <strong>${x.product_uom_qty| int}</strong><br />\n"
+"       % if x.hotel_2_meal_plan_id:\n"
+"       &nbsp;&nbsp;Plan: ${x.hotel_2_meal_plan_id.name}<br />\n"
+"       % endif\n"
+"       % if x.category_id.name != 'Hotel':\n"
+"       &nbsp;&nbsp;Adultos: ${x.adults}<br />\n"
+"       &nbsp;&nbsp;Niños: ${x.children}<br />\n"
+"       % endif\n"
+"       % if x.category_id.name == 'Transfer':\n"
+"       &nbsp;&nbsp;Tipo de Transporte: ${x.transfer_1_vehicle_type_id.name}<br />\n"
+"       &nbsp;&nbsp;Guía: ${x.transfer_2_guide_id.name}<br />\n"
+"       &nbsp;&nbsp;Confort: ${x.transfer_3_confort_id.name}<br />\n"
+"       % endif\n"
+"       % if x.sale_line_supplement_ids| length:\n"
+"       &nbsp;&nbsp;Suplemento:\n"
+"       % for s in x.sale_line_supplement_ids:\n"
+"       %if loop.last:\n"
+"        ${s.name}</br>\n"
+"        %else\n"
+"        ${s.name},\n"
+"        %endif\n"
+"\n"
+"        %endfor\n"
+"       % endif\n"
+"       % if x.category_id.name == 'Hotel':\n"
+"       <table>\n"
+"       <thead>\n"
+"              <tr>\n"
+"            <th align=\"center\"><strong>Hab</strong></th>\n"
+"            <th align=\"center\"><strong>Tipo</strong></th>\n"
+"            <th align=\"center\"><strong>Adultos</strong></th>\n"
+"            <th align=\"center\"><strong>Niños</strong></th>\n"
+"            <th align=\"center\"><strong>Cantidad</strong></th>\n"
+"\n"
+"        </tr>\n"
+"        </thead>\n"
+"        <tbody>\n"
+"        % for h in x.hotel_1_rooming_ids:\n"
+"        <tr style=\"text-align=center;\">\n"
+"            <td align=\"center\">${h.room}</td>\n"
+"            <td align=\"center\">${h.room_type_id.name}</td>\n"
+"            <td align=\"center\"><span>${h.adults or 0}</span></td>\n"
+"            <td align=\"center\">${h.children or 0}</td>\n"
+"            <td align=\"center\">${h.quantity or 0}</td>\n"
+"        </tr>\n"
+"        %endfor\n"
+"        </tbody>\n"
+"       </table>\n"
+"       % endif\n"
+"\n"
+"        % if x.category_id.name == 'Package':\n"
+"       <table>\n"
+"       <thead>\n"
+"        <caption style=text-align=center; align=top><h3>Package Lines</h3>\n"
+"        </caption>\n"
+"        <tr>\n"
+"            <th align=\"center\"><strong>Días</strong></th>\n"
+"            <th align=\"center\"><strong>Categoría</strong></th>\n"
+"            <th align=\"center\"><strong>Producto</strong></th>\n"
+"        </tr>\n"
+"        </thead>\n"
+"        <tbody>\n"
+"        % for lines in x.sale_order_line_package_line_id:\n"
+"        <tr style=\"text-align=center;\">\n"
+"            <td align=\"center\">${lines.num_day}</td>\n"
+"            <td align=\"center\">${lines.category_id.name}</td>\n"
+"            <td align=\"center\"><span>${lines.product_id.name_template}</span></td>\n"
+"        </tr>\n"
+"        %endfor\n"
+"        </tbody>\n"
+"       </table>\n"
+"       % endif\n"
+"\n"
+"    </p>\n"
+"    %endfor\n"
+"\n"
+"    <% set signup_url = object.get_signup_url() %>\n"
+"    % if signup_url:\n"
+"    <p>\n"
+"    Usted puede acceder a este documento via online:\n"
+"    </p>\n"
+"        <a style=\"display:block; width: 150px; height:20px; margin-left: 120px; color: #DDD; font-family: 'Lucida Grande', Helvetica, Arial, sans-serif; font-size: 13px; font-weight: bold; text-align: center; text-decoration: none !important; line-height: 1; padding: 5px 0px 0px 0px; background-color: #8E0000; border-radius: 5px 5px; background-repeat: repeat no-repeat;\"\n"
+"           href=\"${signup_url}\">View ${object.state in ('draft', 'sent') and 'Quotation' or 'Order'}</a>\n"
+"    % endif\n"
+"\n"
+"\n"
+"    <br/>\n"
+"     <p>Si tiene alguna pregunta, no dude en contactárnos.</p>\n"
+"    <p>Gracias por escorgernos ${object.company_id.name or ''}!</p>\n"
+"    <br/>\n"
+"    <br/>\n"
+"    <div style=\"width: 375px; margin: 0px; padding: 0px; background-color: #8E0000; border-top-left-radius: 5px 5px; border-top-right-radius: 5px 5px; background-repeat: repeat no-repeat;\">\n"
+"        <h3 style=\"margin: 0px; padding: 2px 14px; font-size: 12px; color: #DDD;\">\n"
+"            <strong style=\"text-transform:uppercase;\">${object.company_id.name}</strong></h3>\n"
+"    </div>\n"
+"    <div style=\"width: 347px; margin: 0px; padding: 5px 14px; line-height: 16px; background-color: #F2F2F2;\">\n"
+"        <span style=\"color: #222; margin-bottom: 5px; display: block; \">\n"
+"        % if object.company_id.street:\n"
+"            ${object.company_id.street}<br/>\n"
+"        % endif\n"
+"        % if object.company_id.street2:\n"
+"            ${object.company_id.street2}<br/>\n"
+"        % endif\n"
+"        % if object.company_id.city or object.company_id.zip:\n"
+"            ${object.company_id.zip} ${object.company_id.city}<br/>\n"
+"        % endif\n"
+"        % if object.company_id.country_id:\n"
+"            ${object.company_id.state_id and ('%s, ' % object.company_id.state_id.name) or ''} ${object.company_id.country_id.name or ''}<br/>\n"
+"        % endif\n"
+"        </span>\n"
+"        % if object.company_id.phone:\n"
+"            <div style=\"margin-top: 0px; margin-right: 0px; margin-bottom: 0px; margin-left: 0px; padding-top: 0px; padding-right: 0px; padding-bottom: 0px; padding-left: 0px; \">\n"
+"                Phone:&nbsp; ${object.company_id.phone}\n"
+"            </div>\n"
+"        % endif\n"
+"        % if object.company_id.website:\n"
+"            <div>\n"
+"                Web :&nbsp;<a href=\"${object.company_id.website}\">${object.company_id.website}</a>\n"
+"            </div>\n"
+"        %endif\n"
+"        <p></p>\n"
+"    </div>\n"
+"</div>\n"
+"            "
+
+#. module: travel_core
+#: code:addons\travel_core\imports.py:112
+#, python-format
+msgid " not exist!!!!"
+msgstr " no existe!!!!"
+
+#. module: travel_core
+#: code:addons\travel_core\imports.py:101
+#: code:addons\travel_core\imports.py:177
+#, python-format
+msgid "not found!!!!!!"
+msgstr " no se encuentra!!!!!!"
+
+#. module: travel_core
+#: model:email.template,subject:travel_core.core_client_email_template
+msgid "${object.company_id.name|safe}\n"
+"                ${object.state in ('draft', 'sent') and 'Quotation' or 'Order'} (Ref ${object.name or 'n/a' })\n"
+"            "
+msgstr "${object.company_id.name|safe}\n"
+"                ${object.state in ('draft', 'sent') and 'Quotation' or 'Order'} (Ref ${object.name or 'n/a' })\n"
+"            "
 
 #. module: travel_core
 #: view:product.pricelist.item:travel_core.travel_product_pricelist_item_view
@@ -36,14 +663,24 @@ msgid "4 Weeks"
 msgstr "4 Semanas"
 
 #. module: travel_core
+#: code:addons\travel_core\product.py:109
 #: field:product.supplierinfo,info:0
+#, python-format
 msgid "Additional Information"
 msgstr "Información Adicional"
 
 #. module: travel_core
+#: code:addons\travel_core\reservations.py:37
+#: code:addons\travel_core\sale.py:44
+#: code:addons\travel_core\sale.py:73
+#: code:addons\travel_core\sale.py:376
+#: field:all.reservations,adults:0
 #: field:flight.report,adults:0
 #: field:sale.context,adults:0
+#: field:sale.order.line.package.line.conf,adults:0
+#: field:tmp.sale.order.line.package.line.conf,adults:0
 #: view:website:sale.report_saleorder_document
+#, python-format
 msgid "Adults"
 msgstr "Adultos"
 
@@ -54,13 +691,18 @@ msgid "All"
 msgstr "Todo"
 
 #. module: travel_core
+#: model:ir.model,name:travel_core.model_all_reservations
+msgid "All Reservations"
+msgstr "Todas las reservaciones"
+
+#. module: travel_core
 #: view:sale.report:travel_core.travel_sale_report_search_view
 msgid "Analytic Account"
 msgstr "Cuenta Analítica"
 
 #. module: travel_core
-#: code:addons\travel_core\pricelist.py:152
-#: code:addons\travel_core\pricelist.py:340
+#: code:addons\travel_core\pricelist.py:170
+#: code:addons\travel_core\pricelist.py:398
 #, python-format
 msgid "At least one pricelist has no active version !\n"
 "Please create or activate one."
@@ -68,7 +710,13 @@ msgstr "Al menos una tarifa no tiene version activa !\n"
 "Por favor crea o activa una."
 
 #. module: travel_core
-#: code:addons\travel_core\sale.py:353
+#: field:sale.order.line.package.line.conf,sale_context_id:0
+#: field:tmp.sale.order.line.package.line.conf,sale_context_id:0
+msgid "Automatically created field to link to parent sale.context"
+msgstr "Campo creado automáticamente para enlazar con sale.context"
+
+#. module: travel_core
+#: code:addons\travel_core\sale.py:595
 #, python-format
 msgid "Before choosing a product,\n"
 " select a customer in the sales form."
@@ -76,28 +724,43 @@ msgstr "Antes de escoger un producto,\n"
 " seleccione un cliente en el formulario de ventas."
 
 #. module: travel_core
+#: view:all.reservations:travel_core.travel_sale_order_line_tree_view
 #: view:customer.price:travel_core.travel_customer_prices_form_view
+#: view:import.modules:travel_core.import_data_form
 #: view:sale.order:travel_core.travel_sale_order_form_view
 #: view:sale.order:travel_core.travel_sale_order_tree_view
 #: view:sale.order.line:travel_core.travel_sale_order_line_form_view
-#: view:sale.order.line:travel_core.travel_sale_order_line_tree_view
 #: view:sale.report:travel_core.travel_sale_report_search_view
 msgid "Cancel"
 msgstr "Cancelar"
 
 #. module: travel_core
+#: view:all.reservations:travel_core.travel_all_reservations_search_view
+#: selection:all.reservations,state:0
 #: view:sale.order:travel_core.travel_sale_order_search_view
 #: view:sale.order.line:travel_core.travel_sale_order_line_search_view
 msgid "Cancelled"
 msgstr "Cancelado"
 
 #. module: travel_core
-#: code:addons\travel_core\sale.py:450
+#: code:addons\travel_core\sale.py:692
 #, python-format
 msgid "Cannot find a pricelist line matching this product and quantity.\n"
 "You have to change either the product, the quantity or the pricelist."
-msgstr "No se puo encontrar una línea de tarifa que corresponda con este producto y cantidad.\n"
+msgstr "No se pudo encontrar una línea de tarifa que corresponda con este producto y cantidad.\n"
 "TIenes que cambiar el producto, la cantidad o la tarifa."
+
+#. module: travel_core
+#: field:import.modules,car_excels:0
+msgid "Car's Excels"
+msgstr "Excels de los autos"
+
+#. module: travel_core
+#: code:addons\travel_core\imports.py:30
+#: selection:import.modules,choices:0
+#, python-format
+msgid "Cars"
+msgstr "Autos"
 
 #. module: travel_core
 #: model:ir.model,name:travel_core.model_cars_report
@@ -105,33 +768,54 @@ msgid "Cars Report"
 msgstr "Reporte de Autos"
 
 #. module: travel_core
-#: code:addons\travel_core\pricelist.py:485
+#: code:addons\travel_core\pricelist.py:543
+#: code:addons\travel_core\sale.py:40
+#: code:addons\travel_core\sale.py:65
+#: code:addons\travel_core\sale.py:67
+#: code:addons\travel_core\sale.py:106
+#: code:addons\travel_core\sale.py:371
+#: code:addons\travel_core\sale.py:372
 #: field:customer.price,category:0
 #: field:sale.context,category:0
 #: field:sale.context,category_id:0
 #: view:sale.order.line:travel_core.travel_sale_order_line_search_view
+#: field:sale.order.line.package.line,category_id:0
+#: field:sale.order.line.package.line.conf,category:0
+#: field:sale.order.line.package.line.conf,category_id:0
 #: view:sale.report:travel_core.travel_sale_report_search_view
+#: field:tmp.sale.order.line.package.line.conf,category_id:0
 #: view:website:sale.report_saleorder_document
 #, python-format
 msgid "Category"
 msgstr "Categorías"
 
 #. module: travel_core
+#: code:addons\travel_core\product.py:126
 #: field:flight.report,child:0
 #: field:hotels.report,child:0
 #: field:product.rate,child:0
+#, python-format
 msgid "Child"
 msgstr "Hijo"
 
 #. module: travel_core
+#: code:addons\travel_core\base.py:204
+#: code:addons\travel_core\reservations.py:38
+#: code:addons\travel_core\sale.py:46
+#: code:addons\travel_core\sale.py:80
+#: code:addons\travel_core\sale.py:377
+#: field:all.reservations,children:0
 #: field:destination,child_ids:0
 #: field:sale.context,children:0
+#: field:sale.order.line.package.line.conf,children:0
+#: field:tmp.sale.order.line.package.line.conf,children:0
 #: view:website:sale.report_saleorder_document
+#, python-format
 msgid "Children"
 msgstr "Hijos"
 
 #. module: travel_core
-#: code:addons\travel_core\pricelist.py:482
+#: code:addons\travel_core\pricelist.py:540
 #: field:customer.price,client:0
 #: view:website:travel_core.sale_order_line_report_id
 #, python-format
@@ -139,30 +823,59 @@ msgid "Client"
 msgstr "Cliente"
 
 #. module: travel_core
+#: code:addons\travel_core\base.py:163
+#: code:addons\travel_core\base.py:200
 #: field:destination,code:0
 #: field:option.type,code:0
 #: field:option.value,code:0
+#, python-format
 msgid "Code"
 msgstr "Código"
+
+#. module: travel_core
+#: code:addons\travel_core\imports.py:112
+#, python-format
+msgid "Code:"
+msgstr "Código:"
 
 #. module: travel_core
 #: view:res.partner:travel_core.travel_res_partner_search_view
 #: view:sale.report:travel_core.travel_sale_report_search_view
 msgid "Company"
-msgstr "Compañías"
+msgstr "Compañía"
 
 #. module: travel_core
-#: code:addons\travel_core\sale.py:339
-#: code:addons\travel_core\sale.py:463
+#: code:addons\travel_core\imports.py:143
+#, python-format
+msgid "Company Name: "
+msgstr "Nombre de Compañía: "
+
+#. module: travel_core
+#: code:addons\travel_core\sale.py:102
+#: field:sale.order.line.package.line,sale_order_line_package_line_conf_id:0
+#, python-format
+msgid "Conf"
+msgstr "Conf"
+
+#. module: travel_core
+#: code:addons\travel_core\sale.py:146
+#, python-format
+msgid "Configuration Error"
+msgstr "Error de configuración"
+
+#. module: travel_core
+#: code:addons\travel_core\sale.py:545
+#: code:addons\travel_core\sale.py:560
+#: code:addons\travel_core\sale.py:705
 #, python-format
 msgid "Configuration Error!"
 msgstr "Error de Configuración!"
 
 #. module: travel_core
+#: view:all.reservations:travel_core.travel_sale_order_line_tree_view
 #: view:sale.order:travel_core.travel_sale_order_form_view
 #: view:sale.order:travel_core.travel_sale_order_tree_view
 #: view:sale.order.line:travel_core.travel_sale_order_line_form_view
-#: view:sale.order.line:travel_core.travel_sale_order_line_tree_view
 msgid "Confirm"
 msgstr "Confirmar"
 
@@ -172,6 +885,8 @@ msgid "Confirmation"
 msgstr "Confirmación"
 
 #. module: travel_core
+#: view:all.reservations:travel_core.travel_all_reservations_search_view
+#: selection:all.reservations,state:0
 #: view:sale.order:travel_core.travel_sale_order_search_view
 #: view:sale.order.line:travel_core.travel_sale_order_line_search_view
 #: view:sale.report:travel_core.travel_sale_report_search_view
@@ -189,7 +904,16 @@ msgid "Contacts"
 msgstr "Contactos"
 
 #. module: travel_core
+#: code:addons\travel_core\sale.py:61
+#: field:sale.order.line.package.line.conf,copied:0
+#, python-format
+msgid "Copied from package template"
+msgstr "Copiado de la plantilla de paquetes"
+
+#. module: travel_core
+#: code:addons\travel_core\sale.py:500
 #: field:sale.order.line,price_unit_cost:0
+#, python-format
 msgid "Cost Price"
 msgstr "Precio de Costo"
 
@@ -204,42 +928,60 @@ msgid "Country"
 msgstr "País"
 
 #. module: travel_core
+#: field:all.reservations,create_uid:0
 #: field:customer.price,create_uid:0
 #: field:destination,create_uid:0
 #: field:destination.distance,create_uid:0
+#: field:import.modules,create_uid:0
 #: field:option.type,create_uid:0
 #: field:option.value,create_uid:0
 #: field:product.rate,create_uid:0
 #: field:product.rate.supplement,create_uid:0
 #: field:sale.context,create_uid:0
+#: field:sale.order.line.package.line,create_uid:0
+#: field:sale.order.line.package.line.conf,create_uid:0
 #: field:supplier.price,create_uid:0
+#: field:tmp.sale.order.line.package.line.conf,create_uid:0
 msgid "Created by"
 msgstr "Creado por"
 
 #. module: travel_core
+#: field:all.reservations,create_date:0
 #: field:customer.price,create_date:0
 #: field:destination,create_date:0
 #: field:destination.distance,create_date:0
+#: field:import.modules,create_date:0
 #: field:option.type,create_date:0
 #: field:option.value,create_date:0
 #: field:product.rate,create_date:0
 #: field:product.rate.supplement,create_date:0
 #: field:sale.context,create_date:0
+#: field:sale.order.line.package.line,create_date:0
+#: field:sale.order.line.package.line.conf,create_date:0
 #: field:supplier.price,create_date:0
+#: field:tmp.sale.order.line.package.line.conf,create_date:0
 msgid "Created on"
 msgstr "Creado en"
 
 #. module: travel_core
+#: code:addons\travel_core\product.py:110
+#: code:addons\travel_core\sale.py:501
 #: field:product.supplierinfo,currency_cost_id:0
 #: field:sale.order.line,currency_cost_id:0
+#, python-format
 msgid "Currency Cost"
 msgstr "Moneda de costo"
 
 #. module: travel_core
+#: code:addons\travel_core\reservations.py:36
+#: code:addons\travel_core\sale.py:503
+#: view:all.reservations:travel_core.travel_all_reservations_search_view
+#: field:all.reservations,customer:0
 #: view:sale.order:travel_core.travel_sale_order_search_view
 #: view:sale.order.line:travel_core.travel_sale_order_line_search_view
 #: field:sale.order.line,customer_id:0
 #: view:sale.report:travel_core.travel_sale_report_search_view
+#, python-format
 msgid "Customer"
 msgstr "Cliente"
 
@@ -264,9 +1006,11 @@ msgid "Customers"
 msgstr "Clientes"
 
 #. module: travel_core
+#: view:all.reservations:travel_core.travel_all_reservations_search_view
 #: view:sale.order:travel_core.travel_sale_order_form_view
 #: view:sale.order.line:travel_core.travel_sale_order_line_form_view
 #: view:sale.order.line:travel_core.travel_sale_order_line_search_view
+#: view:sale.order.line.package.line.conf:travel_core.sale_order_line_package_line_conf_form_view
 msgid "Date"
 msgstr "Fecha"
 
@@ -274,6 +1018,12 @@ msgstr "Fecha"
 #: view:website:sale.report_saleorder_document
 msgid "Date Ordered:"
 msgstr "Fecha pedido:"
+
+#. module: travel_core
+#: code:addons\travel_core\sale.py:146
+#, python-format
+msgid "Dates did not match"
+msgstr "Fechas no se corresponden"
 
 #. module: travel_core
 #: code:addons\travel_core\report\sale_report.py:35
@@ -294,10 +1044,15 @@ msgid "Default Version"
 msgstr "Version por default"
 
 #. module: travel_core
+#: code:addons\travel_core\base.py:202
+#: code:addons\travel_core\sale.py:71
+#: code:addons\travel_core\sale.py:492
 #: field:destination,description:0
 #: view:sale.order.line:travel_core.travel_sale_order_line_form_view
 #: field:sale.order.line,description:0
+#: field:sale.order.line.package.line.conf,name:0
 #: view:website:sale.report_saleorder_document
+#, python-format
 msgid "Description"
 msgstr "Descripción"
 
@@ -324,11 +1079,14 @@ msgid "Disc.(%)"
 msgstr "Desc.(%)"
 
 #. module: travel_core
+#: code:addons\travel_core\base.py:211
 #: field:destination.distance,distance:0
+#, python-format
 msgid "Distance"
 msgstr "Distancia"
 
 #. module: travel_core
+#: selection:all.reservations,state:0
 #: view:sale.order:travel_core.travel_sale_order_search_view
 #: view:sale.report:travel_core.travel_sale_report_search_view
 msgid "Done"
@@ -340,6 +1098,13 @@ msgid "Double"
 msgstr "Doble"
 
 #. module: travel_core
+#: view:import.modules:travel_core.import_data_form
+msgid "Download Templates"
+msgstr "Descargar plantillas"
+
+#. module: travel_core
+#: view:all.reservations:travel_core.travel_all_reservations_search_view
+#: selection:all.reservations,state:0
 #: view:sale.order:travel_core.travel_sale_order_search_view
 #: view:sale.order.line:travel_core.travel_sale_order_line_search_view
 #: view:sale.report:travel_core.travel_sale_report_search_view
@@ -347,19 +1112,36 @@ msgid "Draft"
 msgstr "Borrador"
 
 #. module: travel_core
-#: code:addons\travel_core\pricelist.py:681
-#: code:addons\travel_core\pricelist.py:682
+#: code:addons\travel_core\sale.py:375
+#, python-format
+msgid "Duration"
+msgstr "Duración"
+
+#. module: travel_core
+#: view:sale.order.line:travel_core.travel_sale_order_line_form_view
+msgid "Edit"
+msgstr "Editar"
+
+#. module: travel_core
+#: code:addons\travel_core\pricelist.py:739
+#: code:addons\travel_core\pricelist.py:740
 #, python-format
 msgid "Empty"
 msgstr "Vacío"
 
 #. module: travel_core
+#: code:addons\travel_core\product.py:125
 #: field:product.rate,end_date:0
+#, python-format
 msgid "End"
 msgstr "Final"
 
 #. module: travel_core
-#: code:addons\travel_core\pricelist.py:593
+#: code:addons\travel_core\pricelist.py:651
+#: code:addons\travel_core\reservations.py:35
+#: code:addons\travel_core\sale.py:268
+#: code:addons\travel_core\sale.py:374
+#: field:all.reservations,end_date:0
 #: field:cars.report,end_date:0
 #: field:flight.report,end_date:0
 #: field:hotels.report,end_date:0
@@ -372,17 +1154,22 @@ msgid "End Date"
 msgstr "Fecha Final"
 
 #. module: travel_core
+#: code:addons\travel_core\sale.py:381
 #: field:sale.context,end_place:0
+#, python-format
 msgid "End Place"
 msgstr "Final"
 
 #. module: travel_core
+#: code:addons\travel_core\sale.py:380
 #: field:sale.context,end_time:0
+#, python-format
 msgid "End Time"
 msgstr "Tiempo final"
 
 #. module: travel_core
-#: code:addons\travel_core\pricelist.py:484
+#: code:addons\travel_core\pricelist.py:542
+#: code:addons\travel_core\product.py:139
 #: field:customer.price,end_date:0
 #: field:product.rate.supplement,end_date:0
 #, python-format
@@ -390,7 +1177,8 @@ msgid "End date"
 msgstr "Fecha Final"
 
 #. module: travel_core
-#: code:addons\travel_core\sale.py:177
+#: code:addons\travel_core\imports.py:73
+#: code:addons\travel_core\sale.py:392
 #, python-format
 msgid "Error!"
 msgstr "Error!"
@@ -413,6 +1201,11 @@ msgid "Excel Name"
 msgstr "Nombre del Excel"
 
 #. module: travel_core
+#: selection:all.reservations,state:0
+msgid "Exception"
+msgstr "Excepción"
+
+#. module: travel_core
 #: view:customer.price:travel_core.travel_customer_prices_form_view
 msgid "Export"
 msgstr "Exportar"
@@ -426,7 +1219,7 @@ msgstr "Exportar Precios de Clientes"
 #: view:customer.price:travel_core.travel_customer_prices_form_view
 #: model:ir.actions.act_window,name:travel_core.travel_customer_prices_action
 msgid "Export Prices"
-msgstr "Export Precios"
+msgstr "Exportar Precios"
 
 #. module: travel_core
 #: field:hotels.report,extra_adult:0
@@ -434,17 +1227,28 @@ msgid "Extra Adult"
 msgstr "Adulto Extra"
 
 #. module: travel_core
+#: code:addons\travel_core\imports.py:40
+#: field:import.modules,file:0
+#, python-format
+msgid "File"
+msgstr "Fichero"
+
+#. module: travel_core
 #: view:sale.order:travel_core.travel_sale_order_form_view
 msgid "Flight"
 msgstr "Vuelos"
 
 #. module: travel_core
+#: code:addons\travel_core\sale.py:271
 #: field:sale.order,flight_in:0
+#, python-format
 msgid "Flight In"
 msgstr "Entrada del vuelo"
 
 #. module: travel_core
+#: code:addons\travel_core\sale.py:273
 #: field:sale.order,flight_out:0
+#, python-format
 msgid "Flight Out"
 msgstr "Salida del vuelo"
 
@@ -452,6 +1256,18 @@ msgstr "Salida del vuelo"
 #: model:ir.model,name:travel_core.model_flight_report
 msgid "Flight Report"
 msgstr "Reporte de Vuelo"
+
+#. module: travel_core
+#: field:import.modules,flight_excels:0
+msgid "Flight's Excels"
+msgstr "Excels de los Vuelos"
+
+#. module: travel_core
+#: code:addons\travel_core\imports.py:31
+#: selection:import.modules,choices:0
+#, python-format
+msgid "Flights"
+msgstr "Vuelos"
 
 #. module: travel_core
 #: view:website:travel_core.sale_order_line_report_id
@@ -464,11 +1280,12 @@ msgid "General Conditions"
 msgstr "Condiciones Generales"
 
 #. module: travel_core
-#: view:sale.order.line:travel_core.travel_sale_order_line_tree_view
+#: view:all.reservations:travel_core.travel_sale_order_line_tree_view
 msgid "Go to Order"
 msgstr "Ir a la orden"
 
 #. module: travel_core
+#: view:all.reservations:travel_core.travel_all_reservations_search_view
 #: view:res.partner:travel_core.travel_res_partner_search_view
 #: view:sale.order:travel_core.travel_sale_order_search_view
 #: view:sale.order.line:travel_core.travel_sale_order_line_search_view
@@ -482,29 +1299,69 @@ msgid "Guide"
 msgstr "Guía"
 
 #. module: travel_core
+#: field:import.modules,hotel_excels:0
+msgid "Hotel's Excels"
+msgstr "Excels de los Hoteles"
+
+#. module: travel_core
+#: code:addons\travel_core\imports.py:32
+#: selection:import.modules,choices:0
+#, python-format
+msgid "Hotels"
+msgstr "Hoteles"
+
+#. module: travel_core
 #: model:ir.model,name:travel_core.model_hotels_report
 msgid "Hotels Report"
 msgstr "Reporte de Hoteles"
 
 #. module: travel_core
+#: field:all.reservations,id:0
 #: field:cars.report,id:0
 #: field:customer.price,id:0
 #: field:destination,id:0
 #: field:destination.distance,id:0
 #: field:flight.report,id:0
 #: field:hotels.report,id:0
+#: field:import.modules,id:0
 #: field:option.type,id:0
 #: field:option.value,id:0
 #: field:product.rate,id:0
 #: field:product.rate.supplement,id:0
 #: field:sale.context,id:0
+#: field:sale.order.line.package.line,id:0
+#: field:sale.order.line.package.line.conf,id:0
 #: field:supplier.price,id:0
+#: field:tmp.sale.order.line.package.line.conf,id:0
 #: field:transfer.report,id:0
 msgid "ID"
 msgstr "ID"
 
 #. module: travel_core
+#: view:import.modules:travel_core.import_data_form
+msgid "Import"
+msgstr "Importar"
+
+#. module: travel_core
+#: model:ir.actions.act_window,name:travel_core.import_data_action
+#: model:ir.ui.menu,name:travel_core.import_data_menu
+msgid "Import Excels"
+msgstr "Importar Excels"
+
+#. module: travel_core
+#: code:addons\travel_core\imports.py:61
+#, python-format
+msgid "Import successfully!!!!"
+msgstr "Importado correctamente!!!!"
+
+#. module: travel_core
+#: code:addons\travel_core\sale.py:48
+#: code:addons\travel_core\sale.py:82
+#: code:addons\travel_core\sale.py:505
 #: field:sale.order.line,order_start_date:0
+#: field:sale.order.line.package.line.conf,start_date:0
+#: field:tmp.sale.order.line.package.line.conf,start_date:0
+#, python-format
 msgid "In"
 msgstr "Entrada"
 
@@ -514,35 +1371,56 @@ msgid "Information about a product supplier"
 msgstr "Información de un proveedor de producto"
 
 #. module: travel_core
+#: model:email.template,subject:travel_core.core_partner_invitation_email_template
+msgid "Invitation to join our portal"
+msgstr "Invitación a unirse a nuestro portal"
+
+#. module: travel_core
 #: model:ir.model,name:travel_core.model_account_invoice
 msgid "Invoice"
 msgstr "Factura"
 
 #. module: travel_core
+#: field:all.reservations,write_uid:0
 #: field:customer.price,write_uid:0
 #: field:destination,write_uid:0
 #: field:destination.distance,write_uid:0
+#: field:import.modules,write_uid:0
 #: field:option.type,write_uid:0
 #: field:option.value,write_uid:0
 #: field:product.rate,write_uid:0
 #: field:product.rate.supplement,write_uid:0
 #: field:sale.context,write_uid:0
+#: field:sale.order.line.package.line,write_uid:0
+#: field:sale.order.line.package.line.conf,write_uid:0
 #: field:supplier.price,write_uid:0
+#: field:tmp.sale.order.line.package.line.conf,write_uid:0
 msgid "Last Updated by"
 msgstr "Última actualización por"
 
 #. module: travel_core
+#: field:all.reservations,write_date:0
 #: field:customer.price,write_date:0
 #: field:destination,write_date:0
 #: field:destination.distance,write_date:0
+#: field:import.modules,write_date:0
 #: field:option.type,write_date:0
 #: field:option.value,write_date:0
 #: field:product.rate,write_date:0
 #: field:product.rate.supplement,write_date:0
 #: field:sale.context,write_date:0
+#: field:sale.order.line.package.line,write_date:0
+#: field:sale.order.line.package.line.conf,write_date:0
 #: field:supplier.price,write_date:0
+#: field:tmp.sale.order.line.package.line.conf,write_date:0
 msgid "Last Updated on"
 msgstr "Última actualización en"
+
+#. module: travel_core
+#: code:addons\travel_core\sale.py:282
+#, python-format
+msgid "Lead Name"
+msgstr "Nombre de Líder"
 
 #. module: travel_core
 #: view:sale.order:travel_core.travel_sale_order_search_view
@@ -550,9 +1428,23 @@ msgid "Lead name"
 msgstr "Nombre de Líder"
 
 #. module: travel_core
+#: code:addons\travel_core\sale.py:59
+#: field:sale.order.line.package.line.conf,sale_order_line_package_line_id:0
+#, python-format
+msgid "Line"
+msgstr "Línea"
+
+#. module: travel_core
+#: code:addons\travel_core\base.py:165
 #: field:option.value,load_default:0
+#, python-format
 msgid "Load Default"
 msgstr "Cargar por defecto"
+
+#. module: travel_core
+#: view:sale.order:travel_core.travel_sale_order_form_view
+msgid "Mail"
+msgstr "Correo"
 
 #. module: travel_core
 #: field:product.pricelist.item,margin_per_pax:0
@@ -576,7 +1468,9 @@ msgid "Min. Margin"
 msgstr "Margen mín."
 
 #. module: travel_core
+#: code:addons\travel_core\product.py:46
 #: field:product.category,model_name:0
+#, python-format
 msgid "Model name"
 msgstr "Nombre del modelo"
 
@@ -589,6 +1483,11 @@ msgid "Month"
 msgstr "Mes"
 
 #. module: travel_core
+#: code:addons\travel_core\base.py:162
+#: code:addons\travel_core\base.py:201
+#: code:addons\travel_core\product.py:44
+#: code:addons\travel_core\reservations.py:33
+#: field:all.reservations,name:0
 #: field:cars.report,name:0
 #: field:destination,name:0
 #: field:flight.report,name:0
@@ -597,6 +1496,7 @@ msgstr "Mes"
 #: field:option.value,name:0
 #: view:sale.order:travel_core.travel_sale_order_form_view
 #: field:transfer.report,name:0
+#, python-format
 msgid "Name"
 msgstr "Nombre"
 
@@ -606,28 +1506,37 @@ msgid "New Price ="
 msgstr "Nuevo Precio ="
 
 #. module: travel_core
+#: view:all.reservations:travel_core.travel_all_reservations_search_view
 #: view:sale.order:travel_core.travel_sale_order_search_view
 #: view:sale.order.line:travel_core.travel_sale_order_line_search_view
 msgid "Next"
 msgstr "Siguiente"
 
 #. module: travel_core
-#: code:addons\travel_core\sale.py:352
+#: code:addons\travel_core\sale.py:594
 #, python-format
 msgid "No Customer Defined !"
 msgstr "No hay definido un cliente !"
 
 #. module: travel_core
-#: code:addons\travel_core\sale.py:440
+#: code:addons\travel_core\sale.py:682
 #, python-format
 msgid "No Pricelist ! : "
 msgstr "No hay tarifa ! : "
 
 #. module: travel_core
+#: view:all.reservations:travel_core.travel_all_reservations_search_view
 #: view:sale.order:travel_core.travel_sale_order_search_view
 #: view:sale.order.line:travel_core.travel_sale_order_line_search_view
 msgid "Now"
 msgstr "Ahora"
+
+#. module: travel_core
+#: code:addons\travel_core\sale.py:108
+#: field:sale.order.line.package.line,num_day:0
+#, python-format
+msgid "Number of Days"
+msgstr "Número de días"
 
 #. module: travel_core
 #: view:website:travel_core.sale_order_line_report_id
@@ -640,12 +1549,22 @@ msgid "Option"
 msgstr "Opción"
 
 #. module: travel_core
+#: code:addons\travel_core\base.py:166
+#, python-format
+msgid "Option Code"
+msgstr "Código de opción"
+
+#. module: travel_core
+#: code:addons\travel_core\base.py:164
 #: field:option.value,option_type_id:0
+#, python-format
 msgid "Option Type"
 msgstr "Tipo de Opción"
 
 #. module: travel_core
+#: code:addons\travel_core\base.py:132
 #: field:option.type,option_value_ids:0
+#, python-format
 msgid "Option Values"
 msgstr "Valores de opción"
 
@@ -657,7 +1576,18 @@ msgid "Options"
 msgstr "Opciones"
 
 #. module: travel_core
+#: code:addons\travel_core\sale.py:52
+#: code:addons\travel_core\sale.py:109
+#: field:sale.order.line.package.line,order:0
+#: field:tmp.sale.order.line.package.line.conf,order:0
+#, python-format
+msgid "Order"
+msgstr "Orden"
+
+#. module: travel_core
+#: code:addons\travel_core\sale.py:275
 #: view:sale.order:travel_core.travel_sale_order_form_view
+#, python-format
 msgid "Order Lines"
 msgstr "Líneas del pedido"
 
@@ -669,7 +1599,7 @@ msgstr "Ordenado por año"
 #. module: travel_core
 #: view:sale.report:travel_core.travel_sale_report_search_view
 msgid "Ordered date of the sales order"
-msgstr "Ordenado por Fecha"
+msgstr "Fecha ordenada de los pedidos de venta"
 
 #. module: travel_core
 #: view:sale.report:travel_core.travel_sale_report_search_view
@@ -677,12 +1607,27 @@ msgid "Ordered month of the sales order"
 msgstr "Ordenado por Mes"
 
 #. module: travel_core
+#: code:addons\travel_core\base.py:209
 #: field:destination.distance,origin:0
+#, python-format
 msgid "Origin"
 msgstr "Origen"
 
 #. module: travel_core
+#: code:addons\travel_core\reservations.py:40
+#: field:all.reservations,original:0
+#, python-format
+msgid "Original"
+msgstr "Original"
+
+#. module: travel_core
+#: code:addons\travel_core\sale.py:50
+#: code:addons\travel_core\sale.py:84
+#: code:addons\travel_core\sale.py:508
 #: field:sale.order.line,order_end_date:0
+#: field:sale.order.line.package.line.conf,end_date:0
+#: field:tmp.sale.order.line.package.line.conf,end_date:0
+#, python-format
 msgid "Out"
 msgstr "Fuera"
 
@@ -697,7 +1642,26 @@ msgid "PDF Name"
 msgstr "Nombre del PDF"
 
 #. module: travel_core
+#: field:import.modules,package_excels:0
+msgid "Package's Excels"
+msgstr "Excels de los Paquetes"
+
+#. module: travel_core
+#: code:addons\travel_core\imports.py:34
+#: selection:import.modules,choices:0
+#, python-format
+msgid "Packages"
+msgstr "Paquetes"
+
+#. module: travel_core
+#: view:sale.order.line:travel_core.travel_sale_order_line_form_view
+msgid "Packages Lines"
+msgstr "Líneas de Paquetes"
+
+#. module: travel_core
+#: code:addons\travel_core\base.py:203
 #: field:destination,parent_id:0
+#, python-format
 msgid "Parent"
 msgstr "Padre"
 
@@ -707,17 +1671,26 @@ msgid "Partner"
 msgstr "Empresa"
 
 #. module: travel_core
+#: view:res.partner:travel_core.travel_customer_price_button
+msgid "Partner Invitation"
+msgstr "Invitación"
+
+#. module: travel_core
 #: view:website:travel_core.sale_order_line_report_id
 msgid "Passenger Names"
 msgstr "Nombre de los pasajeros"
 
 #. module: travel_core
+#: code:addons\travel_core\base.py:110
 #: field:res.partner,pax:0
+#, python-format
 msgid "Pax"
 msgstr "Pax"
 
 #. module: travel_core
 #: code:addons\travel_core\report\sale_report.py:32
+#: code:addons\travel_core\sale.py:279
+#: code:addons\travel_core\sale.py:384
 #: field:sale.context,paxs:0
 #: view:sale.order:travel_core.travel_sale_order_form_view
 #: field:sale.order,pax_ids:0
@@ -727,7 +1700,14 @@ msgid "Paxs"
 msgstr "Paxs"
 
 #. module: travel_core
+#: model:email.template,subject:travel_core.core_supplier_email_template
+msgid "Pedido de Servicio"
+msgstr "Pedido de Servicio"
+
+#. module: travel_core
+#: code:addons\travel_core\product.py:127
 #: field:product.rate,per_pax:0
+#, python-format
 msgid "Per Pax"
 msgstr "Por Pax"
 
@@ -737,11 +1717,22 @@ msgid "Plan"
 msgstr "Plan"
 
 #. module: travel_core
-#: code:addons\travel_core\sale.py:39
+#: code:addons\travel_core\imports.py:57
+#, python-format
+msgid "Press cancel to close"
+msgstr "Click en canelar para cerrar la ventana"
+
+#. module: travel_core
+#: code:addons\travel_core\product.py:140
+#: code:addons\travel_core\reservations.py:39
+#: code:addons\travel_core\sale.py:111
+#: code:addons\travel_core\sale.py:212
+#: view:all.reservations:travel_core.travel_sale_order_line_tree_view
+#: field:all.reservations,price:0
 #: field:cars.report,price:0
 #: field:product.rate.supplement,price:0
 #: view:sale.order:travel_core.travel_sale_order_form_view
-#: view:sale.order.line:travel_core.travel_sale_order_line_tree_view
+#: field:sale.order.line.package.line,price:0
 #: field:supplier.price,price:0
 #: field:transfer.report,price:0
 #: view:website:sale.report_saleorder_document
@@ -755,7 +1746,7 @@ msgid "Price unit must be over 0."
 msgstr "El precio de la unidad debe ser mayor q 0."
 
 #. module: travel_core
-#: code:addons\travel_core\pricelist.py:481
+#: code:addons\travel_core\pricelist.py:539
 #: field:customer.price,pricelist:0
 #: model:ir.model,name:travel_core.model_product_pricelist
 #, python-format
@@ -773,17 +1764,28 @@ msgid "Pricelist item"
 msgstr "Elemento de la tarifa"
 
 #. module: travel_core
+#: code:addons\travel_core\sale.py:487
+#: model:ir.ui.menu,name:travel_core.pricelist_next_id_64
 #: field:sale.order.line,resume_table_price:0
+#, python-format
 msgid "Prices"
 msgstr "Precios"
 
 #. module: travel_core
-#: code:addons\travel_core\pricelist.py:593
+#: code:addons\travel_core\pricelist.py:651
+#: code:addons\travel_core\product.py:156
+#: code:addons\travel_core\sale.py:38
+#: code:addons\travel_core\sale.py:63
+#: code:addons\travel_core\sale.py:105
+#: view:all.reservations:travel_core.travel_all_reservations_search_view
+#: view:all.reservations:travel_core.travel_sale_order_line_tree_view
 #: model:ir.model,name:travel_core.model_product_product
 #: field:pricelist.partnerinfo,product_id:0
 #: view:sale.order.line:travel_core.travel_sale_order_line_search_view
-#: view:sale.order.line:travel_core.travel_sale_order_line_tree_view
+#: field:sale.order.line.package.line,product_id:0
+#: field:sale.order.line.package.line.conf,product_id:0
 #: view:sale.report:travel_core.travel_sale_report_search_view
+#: field:tmp.sale.order.line.package.line.conf,product_id:0
 #: view:website:travel_core.sale_order_line_report_id
 #, python-format
 msgid "Product"
@@ -795,12 +1797,27 @@ msgid "Product Category"
 msgstr "Categoría de producto"
 
 #. module: travel_core
+#: view:sale.order.line.package.line.conf:travel_core.sale_order_line_package_line_conf_form_view
+msgid "Product Package Line Configuration"
+msgstr "Configuración de la Línea de Paquetes"
+
+#. module: travel_core
+#: code:addons\travel_core\sale.py:110
+#: field:sale.order.line.package.line,so_product_package_line_id:0
+#, python-format
+msgid "Product Package Line ID"
+msgstr "Id de la línea de paquetes"
+
+#. module: travel_core
+#: code:addons\travel_core\product.py:151
 #: field:pricelist.partnerinfo,product_rate_id:0
+#, python-format
 msgid "Product Rate"
 msgstr "Tarifas de producto"
 
 #. module: travel_core
-#: view:sale.order.line:travel_core.travel_sale_order_line_tree_view
+#: view:all.reservations:travel_core.travel_sale_order_line_tree_view
+#: view:sale.order.line:travel_core.travel_sale_order_line_form_view
 msgid "Products"
 msgstr "Productos"
 
@@ -815,12 +1832,15 @@ msgid "Quotation Date:"
 msgstr "Fecha de presupuesto:"
 
 #. module: travel_core
+#: code:addons\travel_core\product.py:143
 #: field:product.rate.supplement,rate_ids:0
+#, python-format
 msgid "Rates"
 msgstr "Tarifas"
 
 #. module: travel_core
-#: field:product.rate,reference:0
+#: code:addons\travel_core\product.py:123
+#, python-format
 msgid "Ref"
 msgstr "Ref"
 
@@ -831,16 +1851,34 @@ msgid "Reference"
 msgstr "Referencia"
 
 #. module: travel_core
+#: code:addons\travel_core\sale.py:262
+#, python-format
+msgid "Reference/Description"
+msgstr "Referencia/Descripción"
+
+#. module: travel_core
+#: code:addons\travel_core\sale.py:383
 #: field:sale.context,reservation_number:0
+#, python-format
 msgid "Reservation"
 msgstr "Reservación"
 
 #. module: travel_core
+#: code:addons\travel_core\base.py:109
+#: code:addons\travel_core\product.py:67
+#: view:all.reservations:travel_core.travel_all_reservations_search_view
 #: model:ir.ui.menu,name:travel_core.travel_reservations_menu
-#: field:product.product,reservation_ids:0
 #: view:sale.order.line:travel_core.travel_sale_order_line_search_view
+#, python-format
 msgid "Reservations"
 msgstr "Reservaciones"
+
+#. module: travel_core
+#: code:addons\travel_core\imports.py:42
+#: field:import.modules,result:0
+#, python-format
+msgid "Result"
+msgstr "Resultados"
 
 #. module: travel_core
 #: field:hotels.report,room:0
@@ -859,9 +1897,27 @@ msgid "Sale"
 msgstr "Venta"
 
 #. module: travel_core
+#: code:addons\travel_core\sale.py:494
 #: field:sale.order.line,sale_context_id:0
+#, python-format
 msgid "Sale Context"
 msgstr "Contexto de Venta"
+
+#. module: travel_core
+#: code:addons\travel_core\reservations.py:32
+#: code:addons\travel_core\sale.py:104
+#: field:all.reservations,sale_order_line_id:0
+#: field:sale.order.line.package.line,sale_order_line_id:0
+#, python-format
+msgid "Sale Order Line"
+msgstr "Línea de Ventas"
+
+#. module: travel_core
+#: code:addons\travel_core\sale.py:490
+#: field:sale.order.line,sale_order_line_package_line_id:0
+#, python-format
+msgid "Sale Order Line Package"
+msgstr "Línea de Paquetes en la Liínea de Ventas"
 
 #. module: travel_core
 #: field:supplier.price,sale_order_line:0
@@ -916,12 +1972,21 @@ msgid "Second Child"
 msgstr "Sengundo Hijo"
 
 #. module: travel_core
-#: view:sale.order.line:travel_core.travel_sale_order_line_form_view
-msgid "Send Email"
-msgstr "Enviar Email"
+#: code:addons\travel_core\imports.py:41
+#: field:import.modules,choices:0
+#, python-format
+msgid "Selection"
+msgstr "Selección"
 
 #. module: travel_core
+#: view:sale.order.line:travel_core.travel_sale_order_line_form_view
+msgid "Send Email"
+msgstr "Enviar Correo"
+
+#. module: travel_core
+#: code:addons\travel_core\product.py:158
 #: field:pricelist.partnerinfo,sequence:0
+#, python-format
 msgid "Sequence"
 msgstr "Secuencia"
 
@@ -931,16 +1996,21 @@ msgid "Simple"
 msgstr "Simple"
 
 #. module: travel_core
+#: code:addons\travel_core\product.py:124
 #: field:product.rate,start_date:0
+#, python-format
 msgid "Start"
 msgstr "Incio"
 
 #. module: travel_core
-#: code:addons\travel_core\pricelist.py:593
+#: code:addons\travel_core\pricelist.py:651
+#: code:addons\travel_core\reservations.py:34
+#: code:addons\travel_core\sale.py:266
+#: code:addons\travel_core\sale.py:373
+#: field:all.reservations,start_date:0
 #: field:cars.report,start_date:0
 #: field:flight.report,start_date:0
 #: field:hotels.report,start_date:0
-#: field:pricelist.partnerinfo,rate_start_date:0
 #: field:sale.context,start_date:0
 #: field:transfer.report,start_date:0
 #: view:website:sale.report_saleorder_document
@@ -950,17 +2020,22 @@ msgid "Start Date"
 msgstr "Fecha de Inicio"
 
 #. module: travel_core
+#: code:addons\travel_core\sale.py:379
 #: field:sale.context,start_place:0
+#, python-format
 msgid "Start Place"
 msgstr "Lugar de inicio"
 
 #. module: travel_core
+#: code:addons\travel_core\sale.py:378
 #: field:sale.context,start_time:0
+#, python-format
 msgid "Start Time"
 msgstr "Tiempo de inicio"
 
 #. module: travel_core
-#: code:addons\travel_core\pricelist.py:483
+#: code:addons\travel_core\pricelist.py:541
+#: code:addons\travel_core\product.py:138
 #: field:customer.price,start_date:0
 #: field:product.rate.supplement,start_date:0
 #: view:sale.order:travel_core.travel_sale_order_search_view
@@ -969,28 +2044,53 @@ msgid "Start date"
 msgstr "Fecha de Inicio"
 
 #. module: travel_core
+#: code:addons\travel_core\reservations.py:45
+#: view:all.reservations:travel_core.travel_all_reservations_search_view
+#: field:all.reservations,state:0
 #: view:sale.order:travel_core.travel_sale_order_search_view
 #: view:sale.order.line:travel_core.travel_sale_order_line_search_view
 #: view:sale.report:travel_core.travel_sale_report_search_view
+#, python-format
 msgid "Status"
 msgstr "Estado"
 
 #. module: travel_core
+#: code:addons\travel_core\imports.py:194
+#, python-format
+msgid "Suplement: "
+msgstr "Suplemento: "
+
+#. module: travel_core
+#: code:addons\travel_core\product.py:136
 #: model:option.type,name:travel_core.option_type_supplement
 #: field:product.rate.supplement,supplement_id:0
+#, python-format
 msgid "Supplement"
 msgstr "Suplemento"
 
 #. module: travel_core
+#: code:addons\travel_core\product.py:108
+#: code:addons\travel_core\sale.py:77
+#: code:addons\travel_core\sale.py:497
 #: field:product.supplierinfo,supplement_ids:0
 #: field:sale.order.line,sale_line_supplement_ids:0
+#: field:sale.order.line.package.line.conf,sale_line_supplement_ids:0
+#, python-format
 msgid "Supplements"
 msgstr "Suplementos"
 
 #. module: travel_core
-#: code:addons\travel_core\pricelist.py:488
+#: code:addons\travel_core\pricelist.py:546
+#: code:addons\travel_core\product.py:141
 #: code:addons\travel_core\report\sale_report.py:36
-#: code:addons\travel_core\sale.py:38
+#: code:addons\travel_core\reservations.py:41
+#: code:addons\travel_core\sale.py:42
+#: code:addons\travel_core\sale.py:69
+#: code:addons\travel_core\sale.py:107
+#: code:addons\travel_core\sale.py:211
+#: code:addons\travel_core\sale.py:382
+#: view:all.reservations:travel_core.travel_all_reservations_search_view
+#: field:all.reservations,supplier:0
 #: field:cars.report,supplier:0
 #: field:customer.price,supplier:0
 #: field:flight.report,supplier:0
@@ -999,9 +2099,12 @@ msgstr "Suplementos"
 #: field:product.rate.supplement,suppinfo_id:0
 #: field:sale.context,supplier_id:0
 #: view:sale.order.line:travel_core.travel_sale_order_line_search_view
+#: field:sale.order.line.package.line,supplier_id:0
+#: field:sale.order.line.package.line.conf,supplier_id:0
 #: view:sale.report:travel_core.travel_sale_report_search_view
 #: field:sale.report,supplier_id:0
 #: field:supplier.price,supplier:0
+#: field:tmp.sale.order.line.package.line.conf,supplier_id:0
 #: field:transfer.report,supplier:0
 #, python-format
 msgid "Supplier"
@@ -1013,10 +2116,16 @@ msgid "Supplier Partners"
 msgstr "Proveedores"
 
 #. module: travel_core
+#: code:addons\travel_core\imports.py:101
+#, python-format
+msgid "Supplier: "
+msgstr "Proveedor: "
+
+#. module: travel_core
 #: model:ir.ui.menu,name:travel_core.travel_partner_supplier_menu
 #: view:res.partner:travel_core.travel_res_partner_search_view
 msgid "Suppliers"
-msgstr "Proveedor"
+msgstr "Proveedores"
 
 #. module: travel_core
 #: view:res.partner:travel_core.travel_res_partner_search_view
@@ -1024,7 +2133,9 @@ msgid "Tag"
 msgstr "Etiqueta"
 
 #. module: travel_core
+#: code:addons\travel_core\base.py:210
 #: field:destination.distance,target:0
+#, python-format
 msgid "Target"
 msgstr "Objetivo"
 
@@ -1044,20 +2155,34 @@ msgid "The name of the partner must be unique !"
 msgstr "El nombre del contacto debe ser único!!"
 
 #. module: travel_core
-#: code:addons\travel_core\sale.py:178
+#: code:addons\travel_core\sale.py:393
 #, python-format
 msgid "There is at least one sale order line without supplier"
 msgstr "Existe al menos una línea de venta sin proveedor"
 
 #. module: travel_core
+#: code:addons\travel_core\sale.py:281
 #: field:sale.order,total_paxs:0
+#, python-format
 msgid "Total paxs"
 msgstr "paxs Totales"
 
 #. module: travel_core
 #: model:ir.model,name:travel_core.model_transfer_report
 msgid "Transfer Report"
-msgstr "Reporte de Transferencia"
+msgstr "Reporte de Traslado"
+
+#. module: travel_core
+#: field:import.modules,transfer_excels:0
+msgid "Transfer's Excels"
+msgstr "Excels de las Traslados"
+
+#. module: travel_core
+#: code:addons\travel_core\imports.py:33
+#: selection:import.modules,choices:0
+#, python-format
+msgid "Transfers"
+msgstr "Traslado"
 
 #. module: travel_core
 #: model:ir.ui.menu,name:travel_core.travel_menu
@@ -1080,13 +2205,19 @@ msgid "UoS"
 msgstr "UdV"
 
 #. module: travel_core
+#: view:all.reservations:travel_core.travel_all_reservations_search_view
 #: view:sale.order:travel_core.travel_sale_order_search_view
 #: view:sale.order.line:travel_core.travel_sale_order_line_search_view
 msgid "Upcoming"
 msgstr "Próximas"
 
 #. module: travel_core
-#: code:addons\travel_core\base.py:109
+#: view:import.modules:travel_core.import_data_form
+msgid "Upload Excel"
+msgstr "Subir Excel"
+
+#. module: travel_core
+#: code:addons\travel_core\base.py:144
 #, python-format
 msgid "Validation!"
 msgstr "Validación!"
@@ -1102,24 +2233,32 @@ msgid "Vehicle Type"
 msgstr "Tipo de vehículo"
 
 #. module: travel_core
+#: view:all.reservations:travel_core.travel_sale_order_line_tree_view
 #: view:sale.order:travel_core.travel_sale_order_form_view
-#: view:sale.order.line:travel_core.travel_sale_order_line_tree_view
 #: view:website:travel_core.sale_order_line_report_id
 msgid "Voucher"
 msgstr "Voucher"
 
 #. module: travel_core
+#: code:addons\travel_core\product.py:45
 #: field:product.category,voucher_name:0
+#, python-format
 msgid "Voucher name"
 msgstr "Nombre del Voucher"
 
 #. module: travel_core
-#: code:addons\travel_core\pricelist.py:151
-#: code:addons\travel_core\pricelist.py:339
-#: code:addons\travel_core\sale.py:709
+#: code:addons\travel_core\pricelist.py:169
+#: code:addons\travel_core\pricelist.py:397
+#: code:addons\travel_core\sale.py:1018
 #, python-format
 msgid "Warning!"
 msgstr "Advertencia!"
+
+#. module: travel_core
+#: code:addons\travel_core\imports.py:54
+#, python-format
+msgid "Wrong file!!!"
+msgstr "Fichero Incorrecto!!!"
 
 #. module: travel_core
 #: code:addons\travel_core\report\sale_report.py:33
@@ -1130,13 +2269,19 @@ msgid "Year"
 msgstr "Año"
 
 #. module: travel_core
-#: code:addons\travel_core\base.py:109
+#: code:addons\travel_core\sale.py:546
+#, python-format
+msgid "You can not cancel the line, cancel order first!!!"
+msgstr "No puedes cancelar la línea, primero debes cancelar la order!!!"
+
+#. module: travel_core
+#: code:addons\travel_core\base.py:144
 #, python-format
 msgid "You can not modify the code for this option!"
 msgstr "No puedes modificar el código para esta opción!"
 
 #. module: travel_core
-#: code:addons\travel_core\sale.py:438
+#: code:addons\travel_core\sale.py:680
 #, python-format
 msgid "You have to select a pricelist or a customer in the sales form !\n"
 "Please set one before choosing a product."
@@ -1144,25 +2289,31 @@ msgstr "Tienes que seleccionar una tarifa o un cliente en el formulario de la ve
 "Por favor seleccione uno antes de escoger un producto ."
 
 #. module: travel_core
-#: code:addons\travel_core\sale.py:709
+#: code:addons\travel_core\imports.py:73
+#, python-format
+msgid "You must select a file."
+msgstr "Tienes que seleccionar un fichero."
+
+#. module: travel_core
+#: code:addons\travel_core\sale.py:1018
 #, python-format
 msgid "You should select lines with the same category!"
 msgstr "Debe seleccionar una línea con la misma categoría!"
 
 #. module: travel_core
-#: code:addons\travel_core\sale.py:332
+#: code:addons\travel_core\sale.py:553
 #, python-format
 msgid "Your cost price is lower or equal zero."
 msgstr "El precio de costo es menor o igual a 0."
 
 #. module: travel_core
-#: code:addons\travel_core\sale.py:336
+#: code:addons\travel_core\sale.py:557
 #, python-format
 msgid "Your cost price is lower than your real price."
 msgstr "El precio de costo es menor o igual que el precio de venta."
 
 #. module: travel_core
-#: code:addons\travel_core\sale.py:334
+#: code:addons\travel_core\sale.py:555
 #, python-format
 msgid "Your sale price is lower or equal zero."
 msgstr "El precio de venta es menor o igual a 0."
@@ -1173,7 +2324,24 @@ msgid "attrs"
 msgstr "atributos"
 
 #. module: travel_core
+#: code:addons\travel_core\imports.py:143
+#, python-format
+msgid "not found!!!!!!!!!"
+msgstr "no se encuentra!!!!!!!!!"
+
+#. module: travel_core
 #: view:customer.price:travel_core.travel_customer_prices_form_view
+#: view:import.modules:travel_core.import_data_form
 msgid "or"
 msgstr "o"
+
+#. module: travel_core
+#: field:pricelist.partnerinfo,rate_start_date:0
+msgid "product_rate_id.start_date"
+msgstr "product_rate_id.start_date"
+
+#. module: travel_core
+#: model:ir.actions.act_window,name:travel_core.sale_order_line_package_line_conf_action
+msgid "sale.order.line.package.line.conf.action"
+msgstr "sale.order.line.package.line.conf.action"
 

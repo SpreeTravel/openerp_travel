@@ -6,14 +6,20 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 8.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-01-29 19:44+0000\n"
-"PO-Revision-Date: 2016-01-29 19:44+0000\n"
+"POT-Creation-Date: 2016-03-31 14:13+0000\n"
+"PO-Revision-Date: 2016-03-31 14:13+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: \n"
+
+#. module: travel_flight
+#: code:addons\travel_flight\imports.py:122
+#, python-format
+msgid " not found!!!!!!"
+msgstr " no se encontró!!!!!!"
 
 #. module: travel_flight
 #: model:ir.actions.act_window,help:travel_flight.travel_product_flight_action
@@ -28,21 +34,37 @@ msgstr "<p class=\"oe_view_nocontent_create\">\n"
 
 #. module: travel_flight
 #: code:addons\travel_flight\flights_report.py:37
+#: code:addons\travel_flight\reservations.py:37
+#: field:flights.reservations,adults:0
 #: view:product.flight:travel_flight.travel_product_flight_form_view
 #, python-format
 msgid "Adults"
 msgstr "Adultos"
 
 #. module: travel_flight
+#: view:flights.reservations:travel_flight.travel_reservations_flight_tree_view
 #: view:product.flight:travel_flight.travel_product_flight_form_view
 msgid "Cancel"
 msgstr "Cancelar"
+
+#. module: travel_flight
+#: view:flights.reservations:travel_flight.travel_reservations_flight_search_view
+#: selection:flights.reservations,state:0
+msgid "Cancelled"
+msgstr "Cancelado"
 
 #. module: travel_flight
 #: code:addons\travel_flight\flights_report.py:38
 #, python-format
 msgid "Child"
 msgstr "Hijo"
+
+#. module: travel_flight
+#: code:addons\travel_flight\reservations.py:38
+#: field:flights.reservations,children:0
+#, python-format
+msgid "Children"
+msgstr "Hijos"
 
 #. module: travel_flight
 #: view:website:travel_flight.flight_sale_order_line_report_id
@@ -52,9 +74,10 @@ msgstr "Cliente"
 #. module: travel_flight
 #: view:product.flight:travel_flight.travel_product_flight_search_view
 msgid "Company"
-msgstr "Compañías"
+msgstr "Compañía"
 
 #. module: travel_flight
+#: view:flights.reservations:travel_flight.travel_reservations_flight_tree_view
 #: view:product.flight:travel_flight.travel_product_flight_form_view
 msgid "Confirm"
 msgstr "Confirmar"
@@ -65,11 +88,19 @@ msgid "Confirmation"
 msgstr "Confirmación"
 
 #. module: travel_flight
+#: view:flights.reservations:travel_flight.travel_reservations_flight_search_view
+#: selection:flights.reservations,state:0
+msgid "Confirmed"
+msgstr "Confirmado"
+
+#. module: travel_flight
+#: field:flights.reservations,create_uid:0
 #: field:product.flight,create_uid:0
 msgid "Created by"
 msgstr "Creado por"
 
 #. module: travel_flight
+#: field:flights.reservations,create_date:0
 #: field:product.flight,create_date:0
 msgid "Created on"
 msgstr "Creado en"
@@ -78,6 +109,19 @@ msgstr "Creado en"
 #: view:product.flight:travel_flight.travel_product_flight_form_view
 msgid "Currency"
 msgstr "Moneda"
+
+#. module: travel_flight
+#: code:addons\travel_flight\reservations.py:36
+#: view:flights.reservations:travel_flight.travel_reservations_flight_search_view
+#: field:flights.reservations,customer:0
+#, python-format
+msgid "Customer"
+msgstr "Cliente"
+
+#. module: travel_flight
+#: view:flights.reservations:travel_flight.travel_reservations_flight_search_view
+msgid "Date"
+msgstr "Fecha"
 
 #. module: travel_flight
 #: help:product.flight,message_last_post:0
@@ -90,23 +134,40 @@ msgid "Description for Suppliers"
 msgstr "Descripción para los Proveedores"
 
 #. module: travel_flight
+#: selection:flights.reservations,state:0
+msgid "Done"
+msgstr "Realizado"
+
+#. module: travel_flight
+#: view:flights.reservations:travel_flight.travel_reservations_flight_search_view
+#: selection:flights.reservations,state:0
+msgid "Draft"
+msgstr "Borrador"
+
+#. module: travel_flight
 #: model:ir.model,name:travel_flight.model_product_flight
 msgid "Email Thread"
 msgstr "Hilo de mensajes"
 
 #. module: travel_flight
 #: code:addons\travel_flight\flights_report.py:36
+#: code:addons\travel_flight\reservations.py:35
 #: view:flight.report:travel_flight.travel_flight_report_search_view
+#: field:flights.reservations,end_date:0
 #, python-format
 msgid "End Date"
 msgstr "Fecha Final"
 
 #. module: travel_flight
+#: selection:flights.reservations,state:0
+msgid "Exception"
+msgstr "Excepción"
+
+#. module: travel_flight
 #: model:product.category,name:travel_flight.flight
-#: view:sale.order.line:travel_flight.travel_sale_order_line_flight_search_view
 #: view:sale.report:travel_flight.travel_sale_report_flight_search_view
 msgid "Flight"
-msgstr "Vuelo"
+msgstr "Vuelos"
 
 #. module: travel_flight
 #: model:ir.actions.act_window,name:travel_flight.action_travel_flight_report_all
@@ -121,9 +182,22 @@ msgid "Flight Travel Voucher Report"
 msgstr "Voucher de Vuelo"
 
 #. module: travel_flight
+#: code:addons\travel_flight\imports.py:35
+#, python-format
+msgid "Flight's Excels"
+msgstr "Excels de los Vuelos"
+
+#. module: travel_flight
+#: code:addons\travel_flight\imports.py:122
+#, python-format
+msgid "Flight: "
+msgstr "Vuelo: "
+
+#. module: travel_flight
 #: model:ir.actions.act_window,name:travel_flight.travel_product_flight_action
+#: model:ir.actions.act_window,name:travel_flight.travel_reservations_flight_action
 #: model:ir.ui.menu,name:travel_flight.travel_product_flight_menu
-#: model:flights.reservations,name:travel_fligth.travel_reservations_flight_action
+#: model:ir.ui.menu,name:travel_flight.travel_reservations_flight_menu
 msgid "Flights"
 msgstr "Vuelos"
 
@@ -136,6 +210,11 @@ msgstr "Análisis de Vuelos"
 #: view:flight.report:travel_flight.travel_flight_report_tree
 msgid "Flights Report"
 msgstr "Reporte de Vuelo"
+
+#. module: travel_flight
+#: model:ir.model,name:travel_flight.model_flights_reservations
+msgid "Flights Reservations"
+msgstr "Reservaciones de Vuelos"
 
 #. module: travel_flight
 #: field:product.flight,message_follower_ids:0
@@ -153,12 +232,14 @@ msgid "General Conditions"
 msgstr "Condiciones Generales"
 
 #. module: travel_flight
+#: view:flights.reservations:travel_flight.travel_reservations_flight_tree_view
 #: view:product.flight:travel_flight.travel_product_flight_form_view
 msgid "Go to Order"
 msgstr "Ir a la orden"
 
 #. module: travel_flight
 #: view:flight.report:travel_flight.travel_flight_report_search_view
+#: view:flights.reservations:travel_flight.travel_reservations_flight_search_view
 msgid "Group By..."
 msgstr "Agrupar por..."
 
@@ -170,9 +251,10 @@ msgstr "Agrupar por..."
 #. module: travel_flight
 #: help:product.flight,message_summary:0
 msgid "Holds the Chatter summary (number of messages, ...). This summary is directly in html format in order to be inserted in kanban views."
-msgstr "Holds the Chatter summary (number of messages, ...). This summary is directly in html format in order to be inserted in kanban views."
+msgstr "Mantén el resumen 'Chatter' (número de mensajes, ...). Este resumen está en formato html listo para ser insertado en vistas kanban."
 
 #. module: travel_flight
+#: field:flights.reservations,id:0
 #: field:product.flight,id:0
 msgid "ID"
 msgstr "ID"
@@ -198,11 +280,13 @@ msgid "Last Message Date"
 msgstr "Fecha del último mensaje"
 
 #. module: travel_flight
+#: field:flights.reservations,write_uid:0
 #: field:product.flight,write_uid:0
 msgid "Last Updated by"
 msgstr "Última actualización por"
 
 #. module: travel_flight
+#: field:flights.reservations,write_date:0
 #: field:product.flight,write_date:0
 msgid "Last Updated on"
 msgstr "Última actualización en"
@@ -224,11 +308,23 @@ msgstr "Historial de mensajes y comunicación"
 
 #. module: travel_flight
 #: code:addons\travel_flight\flights_report.py:34
+#: code:addons\travel_flight\reservations.py:33
 #: view:flight.report:travel_flight.travel_flight_report_search_view
+#: field:flights.reservations,name:0
 #: field:product.flight,flight_name:0
 #, python-format
 msgid "Name"
 msgstr "Nombre"
+
+#. module: travel_flight
+#: view:flights.reservations:travel_flight.travel_reservations_flight_search_view
+msgid "Next"
+msgstr "Siguiente"
+
+#. module: travel_flight
+#: view:flights.reservations:travel_flight.travel_reservations_flight_search_view
+msgid "Now"
+msgstr "Ahora"
 
 #. module: travel_flight
 #: view:website:travel_flight.flight_sale_order_line_report_id
@@ -242,9 +338,24 @@ msgid "Origin"
 msgstr "Origen"
 
 #. module: travel_flight
+#: code:addons\travel_flight\reservations.py:40
+#: field:flights.reservations,original:0
+#, python-format
+msgid "Original"
+msgstr "Original"
+
+#. module: travel_flight
 #: view:website:travel_flight.flight_sale_order_line_report_id
 msgid "Passenger Names"
 msgstr "Nombre de los pasajeros"
+
+#. module: travel_flight
+#: code:addons\travel_flight\reservations.py:39
+#: view:flights.reservations:travel_flight.travel_reservations_flight_tree_view
+#: field:flights.reservations,price:0
+#, python-format
+msgid "Price"
+msgstr "Precio"
 
 #. module: travel_flight
 #: view:product.flight:travel_flight.travel_product_flight_form_view
@@ -257,6 +368,8 @@ msgid "Procurements"
 msgstr "Contratos"
 
 #. module: travel_flight
+#: view:flights.reservations:travel_flight.travel_reservations_flight_search_view
+#: view:flights.reservations:travel_flight.travel_reservations_flight_tree_view
 #: view:product.flight:travel_flight.travel_product_flight_form_view
 #: view:product.flight:travel_flight.travel_product_flight_search_view
 #: field:product.flight,product_id:0
@@ -270,6 +383,7 @@ msgid "Product Name"
 msgstr "Nombre del Producto"
 
 #. module: travel_flight
+#: view:flights.reservations:travel_flight.travel_reservations_flight_tree_view
 #: view:product.flight:travel_flight.travel_product_flight_tree_view
 msgid "Products"
 msgstr "Productos"
@@ -280,17 +394,35 @@ msgid "Purchase"
 msgstr "Compra"
 
 #. module: travel_flight
+#: view:flights.reservations:travel_flight.travel_reservations_flight_search_view
 #: view:product.flight:travel_flight.travel_product_flight_form_view
 msgid "Reservations"
 msgstr "Reservaciones"
 
 #. module: travel_flight
+#: code:addons\travel_flight\reservations.py:32
+#: field:flights.reservations,sale_order_line_id:0
+#, python-format
+msgid "Sale Order Line"
+msgstr "Línea de Ventas"
+
+#. module: travel_flight
 #: code:addons\travel_flight\flights_report.py:35
+#: code:addons\travel_flight\reservations.py:34
 #: view:flight.report:travel_flight.travel_flight_report_search_view
+#: field:flights.reservations,start_date:0
 #: view:website:travel_flight.flight_sale_order_line_report_id
 #, python-format
 msgid "Start Date"
 msgstr "Fecha de Inicio"
+
+#. module: travel_flight
+#: code:addons\travel_flight\reservations.py:45
+#: view:flights.reservations:travel_flight.travel_reservations_flight_search_view
+#: field:flights.reservations,state:0
+#, python-format
+msgid "Status"
+msgstr "Estado"
 
 #. module: travel_flight
 #: field:product.flight,message_summary:0
@@ -304,7 +436,10 @@ msgstr "Suplementos"
 
 #. module: travel_flight
 #: code:addons\travel_flight\flights_report.py:39
+#: code:addons\travel_flight\reservations.py:41
 #: view:flight.report:travel_flight.travel_flight_report_search_view
+#: view:flights.reservations:travel_flight.travel_reservations_flight_search_view
+#: field:flights.reservations,supplier:0
 #, python-format
 msgid "Supplier"
 msgstr "Proveedor"
@@ -317,7 +452,7 @@ msgstr "Información del Proveedor"
 #. module: travel_flight
 #: view:product.flight:travel_flight.travel_product_flight_form_view
 msgid "Suppliers"
-msgstr "Proveedor"
+msgstr "Proveedores"
 
 #. module: travel_flight
 #: view:product.flight:travel_flight.travel_product_flight_form_view
@@ -340,9 +475,27 @@ msgid "Unread Messages"
 msgstr "Mensajes no leídos"
 
 #. module: travel_flight
+#: view:flights.reservations:travel_flight.travel_reservations_flight_search_view
+msgid "Upcoming"
+msgstr "Próximas"
+
+#. module: travel_flight
+#: view:flights.reservations:travel_flight.travel_reservations_flight_tree_view
 #: view:website:travel_flight.flight_sale_order_line_report_id
 msgid "Voucher"
 msgstr "Voucher"
+
+#. module: travel_flight
+#: code:addons\travel_flight\imports.py:154
+#, python-format
+msgid "Wrong excel information!!!"
+msgstr "El excel contiene errores!!!"
+
+#. module: travel_flight
+#: code:addons\travel_flight\imports.py:60
+#, python-format
+msgid "Wrong header: "
+msgstr "Los encabezados contienen errores: "
 
 #. module: travel_flight
 #: view:product.flight:travel_flight.travel_product_flight_form_view

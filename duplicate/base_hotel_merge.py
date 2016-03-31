@@ -118,7 +118,7 @@ class MergePartnerAutomaticProduct(TransientModel):
     state = fields.Selection([('begin', 'Begin'), ('finished', 'Finished')], _('State'), default='begin', readonly=True,
                              select=True)
 
-    result = fields.Many2one('product.product', string=_('Product\'s Result'))
+    result = fields.Many2one('product.product', string=_('Result'))
 
     # Group by
     list_repeated_id = fields.One2many('result.list', 'merge_id', string=_('List Repeated'))

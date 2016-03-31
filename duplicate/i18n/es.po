@@ -1,0 +1,444 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+#	* duplicate
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 8.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2016-03-31 14:08+0000\n"
+"PO-Revision-Date: 2016-03-31 14:08+0000\n"
+"Last-Translator: <>\n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
+
+#. module: duplicate
+#: field:base.partner.merge.automatic.wizard,exclude_contact:0
+msgid "A user associated to the contact"
+msgstr "Usuario asociado al contacto"
+
+#. module: duplicate
+#: code:addons\duplicate\base_hotel_merge.py:37
+#: field:result.list,actual:0
+#, python-format
+msgid "Actual"
+msgstr "Actual"
+
+#. module: duplicate
+#: code:addons\duplicate\base_partner_merge.py:313
+#, python-format
+msgid "All contacts must have the same email. Only the Administrator can merge contacts with different emails."
+msgstr "Todos los contactos tienen que tener el mismo correo. Sole el administrador puede mezclar contactos con correos diferentes."
+
+#. module: duplicate
+#: view:base.partner.merge.automatic.wizard:duplicate.base_partner_merge_automatic_wizard_form
+msgid "Are you sure to execute the automatic merge of your contacts ?"
+msgstr "¿Está seguro de ejecutar la fusión automática de sus contactos?"
+
+#. module: duplicate
+#: view:base.partner.merge.automatic.wizard:duplicate.base_partner_merge_automatic_wizard_form
+msgid "Are you sure to execute the list of automatic merges of your contacts ?"
+msgstr "¿Está seguro de ejecutar la lista de fusiones automáticas de sus contactos?"
+
+#. module: duplicate
+#: model:ir.actions.act_window,name:duplicate.action_partner_merge
+msgid "Automatic Merge"
+msgstr "Fusión automática"
+
+#. module: duplicate
+#: view:base.partner.merge.automatic.wizard:duplicate.base_partner_merge_automatic_wizard_form
+msgid "Automatic Merge Wizard"
+msgstr "Asistente de fusión automática"
+
+#. module: duplicate
+#: code:addons\duplicate\base_hotel_merge.py:36
+#: field:result.list,base_product_id:0
+#, python-format
+msgid "Base Product"
+msgstr "Producto Base"
+
+#. module: duplicate
+#: selection:base.product.merge.automatic.wizard,state:0
+msgid "Begin"
+msgstr "Inicio"
+
+#. module: duplicate
+#: view:base.partner.merge.automatic.wizard:duplicate.base_partner_merge_automatic_wizard_form
+#: view:base.product.merge.automatic.wizard:duplicate.base_product_merge_automatic_wizard_form
+msgid "Cancel"
+msgstr "Cancelar"
+
+#. module: duplicate
+#: view:base.partner.merge.automatic.wizard:duplicate.base_partner_merge_automatic_wizard_form
+msgid "Close"
+msgstr "Cerrado"
+
+#. module: duplicate
+#: field:base.partner.merge.automatic.wizard,partner_ids:0
+#: model:ir.actions.act_window,name:duplicate.base_partner_merge_automatic_act
+#: model:ir.ui.menu,name:duplicate.partner_merge_automatic_menu
+msgid "Contacts"
+msgstr "Contactos"
+
+#. module: duplicate
+#: field:base.partner.merge.automatic.wizard,create_uid:0
+#: field:base.partner.merge.line,create_uid:0
+#: field:base.product.merge.automatic.wizard,create_uid:0
+#: field:result.list,create_uid:0
+msgid "Created by"
+msgstr "Creado por"
+
+#. module: duplicate
+#: field:base.partner.merge.automatic.wizard,create_date:0
+#: field:base.partner.merge.line,create_date:0
+#: field:base.product.merge.automatic.wizard,create_date:0
+#: field:result.list,create_date:0
+msgid "Created on"
+msgstr "Creado en"
+
+#. module: duplicate
+#: field:base.partner.merge.automatic.wizard,current_line_id:0
+msgid "Current Line"
+msgstr "Línea actual"
+
+#. module: duplicate
+#: view:base.partner.merge.automatic.wizard:duplicate.base_partner_merge_automatic_wizard_form
+msgid "Deduplicate the other Contacts"
+msgstr "Deduplicar los otros contactos"
+
+#. module: duplicate
+#: field:base.partner.merge.automatic.wizard,dst_partner_id:0
+msgid "Destination Contact"
+msgstr "Contacto de destino"
+
+#. module: duplicate
+#: field:base.partner.merge.automatic.wizard,group_by_email:0
+msgid "Email"
+msgstr "Correo"
+
+#. module: duplicate
+#: code:addons\duplicate\base_hotel_merge.py:88
+#: code:addons\duplicate\base_hotel_merge.py:104
+#: code:addons\duplicate\base_partner_merge.py:308
+#: code:addons\duplicate\base_partner_merge.py:313
+#: code:addons\duplicate\base_partner_merge.py:327
+#: code:addons\duplicate\base_partner_merge.py:459
+#, python-format
+msgid "Error"
+msgstr "Error"
+
+#. module: duplicate
+#: view:base.partner.merge.automatic.wizard:duplicate.base_partner_merge_automatic_wizard_form
+msgid "Exclude contacts having"
+msgstr "Excluir los contactos que tienen"
+
+#. module: duplicate
+#: view:base.product.merge.automatic.wizard:duplicate.base_product_merge_automatic_wizard_form
+msgid "Find Duplicates"
+msgstr "Encontrar duplicados"
+
+#. module: duplicate
+#: selection:base.partner.merge.automatic.wizard,state:0
+#: selection:base.product.merge.automatic.wizard,state:0
+msgid "Finished"
+msgstr "Finalizado"
+
+#. module: duplicate
+#: code:addons\duplicate\base_partner_merge.py:308
+#, python-format
+msgid "For safety reasons, you cannot merge more than 3 contacts together. You can re-open the wizard several times if needed."
+msgstr "Por razones de seguridad, no puedes mezclar mas de 3 contactos juntos. Usted puede reabrir el asitente varias veces si lo necesita."
+
+#. module: duplicate
+#: field:base.partner.merge.automatic.wizard,number_group:0
+msgid "Group of Contacts"
+msgstr "Grupo de contactos"
+
+#. module: duplicate
+#: field:base.partner.merge.automatic.wizard,id:0
+#: field:base.partner.merge.line,id:0
+#: field:base.product.merge.automatic.wizard,id:0
+#: field:result.list,id:0
+msgid "ID"
+msgstr "ID"
+
+#. module: duplicate
+#: field:base.partner.merge.line,aggr_ids:0
+msgid "Ids"
+msgstr "Ids"
+
+#. module: duplicate
+#: field:base.partner.merge.automatic.wizard,group_by_is_company:0
+msgid "Is Company"
+msgstr "Es empresa"
+
+#. module: duplicate
+#: field:base.partner.merge.automatic.wizard,exclude_journal_item:0
+msgid "Journal Items associated to the contact"
+msgstr "Asientos contables asociados al contacto"
+
+#. module: duplicate
+#: field:base.partner.merge.automatic.wizard,write_uid:0
+#: field:base.partner.merge.line,write_uid:0
+#: field:base.product.merge.automatic.wizard,write_uid:0
+#: field:result.list,write_uid:0
+msgid "Last Updated by"
+msgstr "Última actualización de"
+
+#. module: duplicate
+#: field:base.partner.merge.automatic.wizard,write_date:0
+#: field:base.partner.merge.line,write_date:0
+#: field:base.product.merge.automatic.wizard,write_date:0
+#: field:result.list,write_date:0
+msgid "Last Updated on"
+msgstr "Última actualización en"
+
+#. module: duplicate
+#: field:base.partner.merge.automatic.wizard,line_ids:0
+msgid "Lines"
+msgstr "Líneas"
+
+#. module: duplicate
+#: code:addons\duplicate\base_hotel_merge.py:124
+#: field:base.product.merge.automatic.wizard,list_repeated_id:0
+#, python-format
+msgid "List Repeated"
+msgstr "Lista de Repetidos"
+
+#. module: duplicate
+#: field:base.partner.merge.automatic.wizard,maximum_group:0
+msgid "Maximum of Group of Contacts"
+msgstr "Máximo de grupos de contactos"
+
+#. module: duplicate
+#: view:base.product.merge.automatic.wizard:duplicate.base_product_merge_automatic_wizard_form
+msgid "Merge"
+msgstr "Mezclar"
+
+#. module: duplicate
+#: view:base.partner.merge.automatic.wizard:duplicate.base_partner_merge_automatic_wizard_form
+msgid "Merge Automatically"
+msgstr "Combinar automáticamente"
+
+#. module: duplicate
+#: view:base.partner.merge.automatic.wizard:duplicate.base_partner_merge_automatic_wizard_form
+msgid "Merge Automatically all process"
+msgstr "Combinar automáticamente todos los procesos"
+
+#. module: duplicate
+#: view:base.partner.merge.automatic.wizard:duplicate.base_partner_merge_automatic_wizard_form
+msgid "Merge Selection"
+msgstr "Combinar selección"
+
+#. module: duplicate
+#: view:base.product.merge.automatic.wizard:duplicate.base_product_merge_automatic_wizard_form
+msgid "Merge Wizard"
+msgstr "Asistente de mezcla"
+
+#. module: duplicate
+#: view:base.partner.merge.automatic.wizard:duplicate.base_partner_merge_automatic_wizard_form
+msgid "Merge the following contacts"
+msgstr "Combinar los siguientes contactos"
+
+#. module: duplicate
+#: view:base.partner.merge.automatic.wizard:duplicate.base_partner_merge_automatic_wizard_form
+msgid "Merge with Manual Check"
+msgstr "Combinar con verificación manual"
+
+#. module: duplicate
+#: code:addons\duplicate\base_partner_merge.py:339
+#, python-format
+msgid "Merged with the following partners:"
+msgstr "Mezclado con los siguientes contactos:"
+
+#. module: duplicate
+#: field:base.partner.merge.line,min_id:0
+msgid "MinID"
+msgstr "MinID"
+
+#. module: duplicate
+#: field:base.partner.merge.automatic.wizard,group_by_name:0
+msgid "Name"
+msgstr "Nombre"
+
+#. module: duplicate
+#: code:addons\duplicate\base_partner_merge.py:327
+#, python-format
+msgid "Only the destination contact may be linked to existing Journal Items. Please ask the Administrator if you need to merge several contacts linked to existing Journal Items."
+msgstr "Solo el contacto de destino puede ser enlazado con Asientos Contables . Por favor pregunte al administrador si necesita mezclar varios contactos enlazados a un Asientos Contables existente."
+
+#. module: duplicate
+#: selection:base.partner.merge.automatic.wizard,state:0
+msgid "Option"
+msgstr "Opción"
+
+#. module: duplicate
+#: view:base.partner.merge.automatic.wizard:duplicate.base_partner_merge_automatic_wizard_form
+msgid "Options"
+msgstr "Opciones"
+
+#. module: duplicate
+#: field:base.partner.merge.automatic.wizard,group_by_parent_id:0
+msgid "Parent Company"
+msgstr "Empresa matriz"
+
+#. module: duplicate
+#: model:ir.model,name:duplicate.model_res_partner
+msgid "Partner"
+msgstr "Empresa"
+
+#. module: duplicate
+#: view:base.partner.merge.automatic.wizard:duplicate.base_partner_merge_automatic_wizard_form
+msgid "Partners"
+msgstr "Empresas"
+
+#. module: duplicate
+#: code:addons\duplicate\base_hotel_merge.py:115
+#: field:base.product.merge.automatic.wizard,base:0
+#, python-format
+msgid "Product"
+msgstr "Producto"
+
+#. module: duplicate
+#: code:addons\duplicate\base_hotel_merge.py:121
+#: field:base.product.merge.automatic.wizard,result:0
+#, python-format
+msgid "Result"
+msgstr "Resultado"
+
+#. module: duplicate
+#: model:ir.actions.act_window,name:duplicate.base_product_merge_automatic_act
+#: model:ir.ui.menu,name:duplicate.product_merge_automatic_menu
+msgid "Products"
+msgstr "Productos"
+
+#. module: duplicate
+#: model:ir.ui.menu,name:duplicate.root_menu
+msgid "Remove Duplicates"
+msgstr "Remover Duplicados"
+
+#. module: duplicate
+#: view:base.product.merge.automatic.wizard:duplicate.base_product_merge_automatic_wizard_form
+msgid "Repeated items"
+msgstr "Elementos Repetidos"
+
+#. module: duplicate
+#: view:base.product.merge.automatic.wizard:duplicate.base_product_merge_automatic_wizard_form
+msgid "Results"
+msgstr "Resultados"
+
+#. module: duplicate
+#: view:base.partner.merge.automatic.wizard:duplicate.base_partner_merge_automatic_wizard_form
+msgid "Search duplicates based on duplicated data in"
+msgstr "Buscar duplicados basados en datos duplicados en"
+
+#. module: duplicate
+#: code:addons\duplicate\base_hotel_merge.py:115
+#: help:base.product.merge.automatic.wizard,base:0
+#, python-format
+msgid "Select for find other products with similar names, leave empty for find all product similarities"
+msgstr "Seleccione un producto para encontrar otros con nombres similares, deje en blanco para encontrar todas las similitudes"
+
+#. module: duplicate
+#: view:base.partner.merge.automatic.wizard:duplicate.base_partner_merge_automatic_wizard_form
+msgid "Select the list of fields used to search for\n"
+"                            duplicated records. If you select several fields,\n"
+"                            Odoo will propose you to merge only those having\n"
+"                            all these fields in common. (not one of the fields)."
+msgstr "Seleccione la lista de campos usada para buscar registros duplicados, Si selecciona varios campos, Odoo le propondrá unir sólo aquellos registros que tengan todos esos campos en común (no uno de los campos)."
+
+#. module: duplicate
+#: selection:base.partner.merge.automatic.wizard,state:0
+msgid "Selection"
+msgstr "Selección"
+
+#. module: duplicate
+#: code:addons\duplicate\base_hotel_merge.py:35
+#: field:result.list,similar_product_id:0
+#, python-format
+msgid "Similar Product"
+msgstr "Producto Similar"
+
+#. module: duplicate
+#: view:base.product.merge.automatic.wizard:duplicate.base_product_merge_automatic_wizard_form
+msgid "Similars"
+msgstr "Similares"
+
+#. module: duplicate
+#: view:base.partner.merge.automatic.wizard:duplicate.base_partner_merge_automatic_wizard_form
+msgid "Skip these contacts"
+msgstr "Saltar estos contactos"
+
+#. module: duplicate
+#: code:addons\duplicate\base_hotel_merge.py:104
+#, python-format
+msgid "Something went wrong!!!\n"
+" Message: "
+msgstr "Ocurrió un error!!!\n"
+" Mensaje: "
+
+#. module: duplicate
+#: code:addons\duplicate\base_hotel_merge.py:118
+#: field:base.partner.merge.automatic.wizard,state:0
+#: field:base.product.merge.automatic.wizard,state:0
+#, python-format
+msgid "State"
+msgstr "Provincia"
+
+#. module: duplicate
+#: view:base.partner.merge.automatic.wizard:duplicate.base_partner_merge_automatic_wizard_form
+msgid "The selected contacts will be merged together. All\n"
+"                                documents linking to one of these contacts will be\n"
+"                                redirected to the aggregated contact. You can remove\n"
+"                                contacts from this list to avoid merging them."
+msgstr "Los siguientes contactos serán combinados. Todos los documentos enlazados a uno de esos contactos serán reasignados al contacto resultante. Puede eliminar contactos desde la lista para evitar fusionarlos."
+
+#. module: duplicate
+#: view:base.partner.merge.automatic.wizard:duplicate.base_partner_merge_automatic_wizard_form
+msgid "There is no more contacts to merge for this request..."
+msgstr "No hay mas contactos para fusionar en esta petición..."
+
+#. module: duplicate
+#: code:addons\duplicate\base_hotel_merge.py:88
+#, python-format
+msgid "This product belongs to a order, it can't be deleted"
+msgstr "Este producto pertenece a una orden, no puede ser borrado"
+
+#. module: duplicate
+#: view:base.product.merge.automatic.wizard:duplicate.base_product_merge_automatic_wizard_form
+msgid "Update Changes"
+msgstr "Actualizar Cambios"
+
+#. module: duplicate
+#: field:base.partner.merge.automatic.wizard,group_by_vat:0
+msgid "VAT"
+msgstr "NIF"
+
+#. module: duplicate
+#: code:addons\duplicate\base_hotel_merge.py:34
+#: field:base.partner.merge.line,wizard_id:0
+#: field:result.list,merge_id:0
+#, python-format
+msgid "Wizard"
+msgstr "Asistente"
+
+#. module: duplicate
+#: code:addons\duplicate\base_partner_merge.py:460
+#, python-format
+msgid "You have to specify a filter for your selection"
+msgstr "Tiene que especificar un filtro para su selección"
+
+#. module: duplicate
+#: view:base.partner.merge.automatic.wizard:duplicate.base_partner_merge_automatic_wizard_form
+#: view:base.product.merge.automatic.wizard:duplicate.base_product_merge_automatic_wizard_form
+msgid "or"
+msgstr "o"
+
+#. module: duplicate
+#: view:base.product.merge.automatic.wizard:duplicate.base_product_merge_automatic_wizard_form
+msgid "products"
+msgstr "productos"
+

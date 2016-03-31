@@ -6,14 +6,171 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 8.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-01-29 16:34+0000\n"
-"PO-Revision-Date: 2016-01-29 16:34+0000\n"
+"POT-Creation-Date: 2016-03-31 14:14+0000\n"
+"PO-Revision-Date: 2016-03-31 14:14+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: \n"
+
+#. module: travel_hotel
+#: model:email.template,body_html:travel_hotel.email_template_edi_sale
+msgid "\n"
+"<div style=\"font-family: 'Lucica Grande', Ubuntu, Arial, Verdana, sans-serif; font-size: 12px; color: rgb(34, 34, 34); background-color: #FFF; \">\n"
+"\n"
+"    <p>Hello ${object.partner_id.name},</p>\n"
+"\n"
+"    <p>Here is your ${object.state in ('draft', 'sent') and 'quotation' or 'order confirmation'} from ${object.company_id.name}: </p>\n"
+"\n"
+"    <p style=\"border-left: 1px solid #8e0000; margin-left: 30px;\">\n"
+"       &nbsp;&nbsp;<strong>REFERENCES</strong><br />\n"
+"       &nbsp;&nbsp;Order number: <strong>${object.name}</strong><br />\n"
+"       &nbsp;&nbsp;Order total: <strong>${object.amount_total} ${object.pricelist_id.currency_id.name}</strong><br />\n"
+"       &nbsp;&nbsp;Order date:  ${format_tz(object.date_order, tz=user.tz, context={'lang':object.partner_id.lang})} <br />\n"
+"       % if object.origin:\n"
+"       &nbsp;&nbsp;Order reference: ${object.origin}<br />\n"
+"       % endif\n"
+"       % if object.client_order_ref:\n"
+"       &nbsp;&nbsp;Your reference: ${object.client_order_ref}<br />\n"
+"       % endif\n"
+"       % if object.user_id:\n"
+"       &nbsp;&nbsp;Your contact: <a href=\"mailto:${object.user_id.email or ''}?subject=Order%20${object.name}\">${object.user_id.name}</a>\n"
+"       % endif\n"
+"    </p>\n"
+"\n"
+"    % if object.paypal_url:\n"
+"    <br/>\n"
+"    <p>It is also possible to directly pay with Paypal:</p>\n"
+"        <a style=\"margin-left: 120px;\" href=\"${object.paypal_url}\">\n"
+"            <img class=\"oe_edi_paypal_button\" src=\"/sale/static/img/btn_paynowcc_lg.gif\"/>\n"
+"        </a>\n"
+"    % endif\n"
+"\n"
+"    <br/>\n"
+"    <p>If you have any question, do not hesitate to contact us.</p>\n"
+"    <p>Thank you for choosing ${object.company_id.name or 'us'}!</p>\n"
+"    <br/>\n"
+"    <br/>\n"
+"    <div style=\"width: 375px; margin: 0px; padding: 0px; background-color: #8E0000; border-top-left-radius: 5px 5px; border-top-right-radius: 5px 5px; background-repeat: repeat no-repeat;\">\n"
+"        <h3 style=\"margin: 0px; padding: 2px 14px; font-size: 12px; color: #DDD;\">\n"
+"            <strong style=\"text-transform:uppercase;\">${object.company_id.name}</strong></h3>\n"
+"    </div>\n"
+"    <div style=\"width: 347px; margin: 0px; padding: 5px 14px; line-height: 16px; background-color: #F2F2F2;\">\n"
+"        <span style=\"color: #222; margin-bottom: 5px; display: block; \">\n"
+"        % if object.company_id.street:\n"
+"            ${object.company_id.street}<br/>\n"
+"        % endif\n"
+"        % if object.company_id.street2:\n"
+"            ${object.company_id.street2}<br/>\n"
+"        % endif\n"
+"        % if object.company_id.city or object.company_id.zip:\n"
+"            ${object.company_id.zip} ${object.company_id.city}<br/>\n"
+"        % endif\n"
+"        % if object.company_id.country_id:\n"
+"            ${object.company_id.state_id and ('%s, ' % object.company_id.state_id.name) or ''} ${object.company_id.country_id.name or ''}<br/>\n"
+"        % endif\n"
+"        </span>\n"
+"        % if object.company_id.phone:\n"
+"            <div style=\"margin-top: 0px; margin-right: 0px; margin-bottom: 0px; margin-left: 0px; padding-top: 0px; padding-right: 0px; padding-bottom: 0px; padding-left: 0px; \">\n"
+"                Phone:&nbsp; ${object.company_id.phone}\n"
+"            </div>\n"
+"        % endif\n"
+"        % if object.company_id.website:\n"
+"            <div>\n"
+"                Web :&nbsp;<a href=\"${object.company_id.website}\">${object.company_id.website}</a>\n"
+"            </div>\n"
+"        %endif\n"
+"        <p></p>\n"
+"    </div>\n"
+"</div>\n"
+"            "
+msgstr "\n"
+"<div style=\"font-family: 'Lucica Grande', Ubuntu, Arial, Verdana, sans-serif; font-size: 12px; color: rgb(34, 34, 34); background-color: #FFF; \">\n"
+"\n"
+"    <p>Hello ${object.partner_id.name},</p>\n"
+"\n"
+"    <p>Here is your ${object.state in ('draft', 'sent') and 'quotation' or 'order confirmation'} from ${object.company_id.name}: </p>\n"
+"\n"
+"    <p style=\"border-left: 1px solid #8e0000; margin-left: 30px;\">\n"
+"       &nbsp;&nbsp;<strong>REFERENCES</strong><br />\n"
+"       &nbsp;&nbsp;Order number: <strong>${object.name}</strong><br />\n"
+"       &nbsp;&nbsp;Order total: <strong>${object.amount_total} ${object.pricelist_id.currency_id.name}</strong><br />\n"
+"       &nbsp;&nbsp;Order date:  ${format_tz(object.date_order, tz=user.tz, context={'lang':object.partner_id.lang})} <br />\n"
+"       % if object.origin:\n"
+"       &nbsp;&nbsp;Order reference: ${object.origin}<br />\n"
+"       % endif\n"
+"       % if object.client_order_ref:\n"
+"       &nbsp;&nbsp;Your reference: ${object.client_order_ref}<br />\n"
+"       % endif\n"
+"       % if object.user_id:\n"
+"       &nbsp;&nbsp;Your contact: <a href=\"mailto:${object.user_id.email or ''}?subject=Order%20${object.name}\">${object.user_id.name}</a>\n"
+"       % endif\n"
+"    </p>\n"
+"\n"
+"    % if object.paypal_url:\n"
+"    <br/>\n"
+"    <p>It is also possible to directly pay with Paypal:</p>\n"
+"        <a style=\"margin-left: 120px;\" href=\"${object.paypal_url}\">\n"
+"            <img class=\"oe_edi_paypal_button\" src=\"/sale/static/img/btn_paynowcc_lg.gif\"/>\n"
+"        </a>\n"
+"    % endif\n"
+"\n"
+"    <br/>\n"
+"    <p>If you have any question, do not hesitate to contact us.</p>\n"
+"    <p>Thank you for choosing ${object.company_id.name or 'us'}!</p>\n"
+"    <br/>\n"
+"    <br/>\n"
+"    <div style=\"width: 375px; margin: 0px; padding: 0px; background-color: #8E0000; border-top-left-radius: 5px 5px; border-top-right-radius: 5px 5px; background-repeat: repeat no-repeat;\">\n"
+"        <h3 style=\"margin: 0px; padding: 2px 14px; font-size: 12px; color: #DDD;\">\n"
+"            <strong style=\"text-transform:uppercase;\">${object.company_id.name}</strong></h3>\n"
+"    </div>\n"
+"    <div style=\"width: 347px; margin: 0px; padding: 5px 14px; line-height: 16px; background-color: #F2F2F2;\">\n"
+"        <span style=\"color: #222; margin-bottom: 5px; display: block; \">\n"
+"        % if object.company_id.street:\n"
+"            ${object.company_id.street}<br/>\n"
+"        % endif\n"
+"        % if object.company_id.street2:\n"
+"            ${object.company_id.street2}<br/>\n"
+"        % endif\n"
+"        % if object.company_id.city or object.company_id.zip:\n"
+"            ${object.company_id.zip} ${object.company_id.city}<br/>\n"
+"        % endif\n"
+"        % if object.company_id.country_id:\n"
+"            ${object.company_id.state_id and ('%s, ' % object.company_id.state_id.name) or ''} ${object.company_id.country_id.name or ''}<br/>\n"
+"        % endif\n"
+"        </span>\n"
+"        % if object.company_id.phone:\n"
+"            <div style=\"margin-top: 0px; margin-right: 0px; margin-bottom: 0px; margin-left: 0px; padding-top: 0px; padding-right: 0px; padding-bottom: 0px; padding-left: 0px; \">\n"
+"                Phone:&nbsp; ${object.company_id.phone}\n"
+"            </div>\n"
+"        % endif\n"
+"        % if object.company_id.website:\n"
+"            <div>\n"
+"                Web :&nbsp;<a href=\"${object.company_id.website}\">${object.company_id.website}</a>\n"
+"            </div>\n"
+"        %endif\n"
+"        <p></p>\n"
+"    </div>\n"
+"</div>\n"
+"            "
+
+#. module: travel_hotel
+#: code:addons\travel_hotel\imports.py:135
+#, python-format
+msgid " not found!!!!!!"
+msgstr " no se encontró!!!!!!"
+
+#. module: travel_hotel
+#: model:email.template,report_name:travel_hotel.email_template_edi_sale
+msgid "${(object.name or '').replace('/','_')}_${object.state == 'draft' and 'draft' or ''}"
+msgstr "${(object.name or '').replace('/','_')}_${object.state == 'draft' and 'borrador' or ''}"
+
+#. module: travel_hotel
+#: model:email.template,subject:travel_hotel.email_template_edi_sale
+msgid "${object.company_id.name|safe} ${object.state in ('draft', 'sent') and 'Quotation' or 'Order'} (Ref ${object.name or 'n/a' })"
+msgstr "${object.company_id.name|safe} ${object.state in ('draft', 'sent') and 'Presupuesto' or 'Pedido'} (Ref ${object.name or 'n/a' })"
 
 #. module: travel_hotel
 #: model:ir.actions.act_window,help:travel_hotel.travel_product_hotel_action
@@ -37,7 +194,10 @@ msgid "Additional Information"
 msgstr "Información Adicional"
 
 #. module: travel_hotel
+#: code:addons\travel_hotel\reservations.py:37
+#: field:hotels.reservations,adults:0
 #: field:sale.rooming,adults:0
+#, python-format
 msgid "Adults"
 msgstr "Adultos"
 
@@ -59,21 +219,16 @@ msgid "Available"
 msgstr "Disponible"
 
 #. module: travel_hotel
-#: view:import.hotel:travel_hotel.import_hotel_form
+#: view:hotels.reservations:travel_hotel.travel_reservations_hotel_tree_view
 #: view:product.hotel:travel_hotel.travel_product_hotel_form_view
-#: view:sale.order.line:travel_hotel.travel_reservations_hotel_tree_view
 msgid "Cancel"
 msgstr "Cancelar"
 
 #. module: travel_hotel
-#: view:sale.order.line:travel_hotel.travel_reservations_hotel_search_view
+#: view:hotels.reservations:travel_hotel.travel_reservations_hotel_search_view
+#: selection:hotels.reservations,state:0
 msgid "Cancelled"
 msgstr "Cancelado"
-
-#. module: travel_hotel
-#: view:sale.order.line:travel_hotel.travel_reservations_hotel_search_view
-msgid "Category"
-msgstr "Categorias"
 
 #. module: travel_hotel
 #: view:website:travel_hotel.hotel_sale_order_line_report_id
@@ -81,7 +236,9 @@ msgid "Ch:"
 msgstr "Ch:"
 
 #. module: travel_hotel
+#: code:addons\travel_hotel\hotel.py:38
 #: field:product.hotel,chain_id:0
+#, python-format
 msgid "Chain"
 msgstr "Cadena"
 
@@ -92,7 +249,10 @@ msgid "Child"
 msgstr "Hijo"
 
 #. module: travel_hotel
+#: code:addons\travel_hotel\reservations.py:38
+#: field:hotels.reservations,children:0
 #: field:sale.rooming,children:0
+#, python-format
 msgid "Children"
 msgstr "Hijos"
 
@@ -104,11 +264,11 @@ msgstr "Cliente"
 #. module: travel_hotel
 #: view:product.hotel:travel_hotel.travel_product_hotel_search_view
 msgid "Company"
-msgstr "Compañias"
+msgstr "Compañía"
 
 #. module: travel_hotel
+#: view:hotels.reservations:travel_hotel.travel_reservations_hotel_tree_view
 #: view:product.hotel:travel_hotel.travel_product_hotel_form_view
-#: view:sale.order.line:travel_hotel.travel_reservations_hotel_tree_view
 msgid "Confirm"
 msgstr "Confirmar"
 
@@ -118,12 +278,15 @@ msgid "Confirmation"
 msgstr "Confirmación"
 
 #. module: travel_hotel
-#: view:sale.order.line:travel_hotel.travel_reservations_hotel_search_view
+#: view:hotels.reservations:travel_hotel.travel_reservations_hotel_search_view
+#: selection:hotels.reservations,state:0
 msgid "Confirmed"
 msgstr "Confirmado"
 
 #. module: travel_hotel
+#: code:addons\travel_hotel\hotel.py:37
 #: field:product.hotel,res_partner_id:0
+#, python-format
 msgid "Contact"
 msgstr "Contacto"
 
@@ -134,7 +297,7 @@ msgstr "Contexto"
 
 #. module: travel_hotel
 #: field:allotment.state,create_uid:0
-#: field:import.hotel,create_uid:0
+#: field:hotels.reservations,create_uid:0
 #: field:product.hotel,create_uid:0
 #: field:product.rate.allotment,create_uid:0
 #: field:sale.rooming,create_uid:0
@@ -143,7 +306,7 @@ msgstr "Creado por"
 
 #. module: travel_hotel
 #: field:allotment.state,create_date:0
-#: field:import.hotel,create_date:0
+#: field:hotels.reservations,create_date:0
 #: field:product.hotel,create_date:0
 #: field:product.rate.allotment,create_date:0
 #: field:sale.rooming,create_date:0
@@ -156,12 +319,15 @@ msgid "Currency"
 msgstr "Moneda"
 
 #. module: travel_hotel
-#: view:sale.order.line:travel_hotel.travel_reservations_hotel_search_view
+#: code:addons\travel_hotel\reservations.py:36
+#: view:hotels.reservations:travel_hotel.travel_reservations_hotel_search_view
+#: field:hotels.reservations,customer:0
+#, python-format
 msgid "Customer"
 msgstr "Cliente"
 
 #. module: travel_hotel
-#: view:sale.order.line:travel_hotel.travel_reservations_hotel_search_view
+#: view:hotels.reservations:travel_hotel.travel_reservations_hotel_search_view
 msgid "Date"
 msgstr "Fecha"
 
@@ -182,10 +348,17 @@ msgid "Description for Suppliers"
 msgstr "Descripción para los Proveedores"
 
 #. module: travel_hotel
+#: code:addons\travel_hotel\hotel.py:40
 #: view:product.hotel:travel_hotel.travel_product_hotel_search_view
 #: field:product.hotel,destination:0
+#, python-format
 msgid "Destination"
 msgstr "Destino"
+
+#. module: travel_hotel
+#: selection:hotels.reservations,state:0
+msgid "Done"
+msgstr "Realizado"
 
 #. module: travel_hotel
 #: code:addons\travel_hotel\hotels_report.py:42
@@ -196,7 +369,8 @@ msgid "Double"
 msgstr "Doble"
 
 #. module: travel_hotel
-#: view:sale.order.line:travel_hotel.travel_reservations_hotel_search_view
+#: view:hotels.reservations:travel_hotel.travel_reservations_hotel_search_view
+#: selection:hotels.reservations,state:0
 msgid "Draft"
 msgstr "Borrador"
 
@@ -207,7 +381,9 @@ msgstr "Hilo de mensajes"
 
 #. module: travel_hotel
 #: code:addons\travel_hotel\hotels_report.py:36
+#: code:addons\travel_hotel\reservations.py:35
 #: view:hotels.report:travel_hotel.travel_hotels_report_search_view
+#: field:hotels.reservations,end_date:0
 #: view:website:travel_hotel.hotel_sale_order_line_report_id
 #, python-format
 msgid "End Date"
@@ -219,16 +395,17 @@ msgid "End date"
 msgstr "Fecha Final"
 
 #. module: travel_hotel
+#: selection:hotels.reservations,state:0
+msgid "Exception"
+msgstr "Excepción"
+
+#. module: travel_hotel
+#: code:addons\travel_hotel\hotel.py:137
 #: code:addons\travel_hotel\hotels_report.py:45
 #: field:product.rate,extra_adult:0
 #, python-format
 msgid "Extra Adult"
 msgstr "Adulto Extra"
-
-#. module: travel_hotel
-#: field:import.hotel,file:0
-msgid "File"
-msgstr "Fichero"
 
 #. module: travel_hotel
 #: field:product.hotel,message_follower_ids:0
@@ -246,14 +423,14 @@ msgid "General Conditions"
 msgstr "Condiciones Generales"
 
 #. module: travel_hotel
+#: view:hotels.reservations:travel_hotel.travel_reservations_hotel_tree_view
 #: view:product.hotel:travel_hotel.travel_product_hotel_form_view
-#: view:sale.order.line:travel_hotel.travel_reservations_hotel_tree_view
 msgid "Go to Order"
 msgstr "Ir a la orden"
 
 #. module: travel_hotel
 #: view:hotels.report:travel_hotel.travel_hotels_report_search_view
-#: view:sale.order.line:travel_hotel.travel_reservations_hotel_search_view
+#: view:hotels.reservations:travel_hotel.travel_reservations_hotel_search_view
 msgid "Group By..."
 msgstr "Agrupar por..."
 
@@ -266,7 +443,7 @@ msgstr "Agrupar por..."
 #. module: travel_hotel
 #: help:product.hotel,message_summary:0
 msgid "Holds the Chatter summary (number of messages, ...). This summary is directly in html format in order to be inserted in kanban views."
-msgstr "Holds the Chatter summary (number of messages, ...). This summary is directly in html format in order to be inserted in kanban views."
+msgstr "Mantén el resumen 'Chatter' (número de mensajes, ...). Este resumen está en formato html listo para ser insertado en vistas kanban."
 
 #. module: travel_hotel
 #: view:allotment.state:travel_hotel.travel_allotment_state_search_view
@@ -286,6 +463,12 @@ msgstr "Reporte de Hoteles"
 #: model:ir.actions.report.xml,name:travel_hotel.hotel_travel_voucher_report_id
 msgid "Hotel Travel Voucher Report"
 msgstr "Voucher de Hotel"
+
+#. module: travel_hotel
+#: code:addons\travel_hotel\imports.py:35
+#, python-format
+msgid "Hotel's Excels"
+msgstr "Excels de los Hoteles"
 
 #. module: travel_hotel
 #: model:ir.actions.act_window,name:travel_hotel.travel_product_hotel_action
@@ -308,8 +491,13 @@ msgid "Hotels Report"
 msgstr "Reporte de Hoteles"
 
 #. module: travel_hotel
+#: model:ir.model,name:travel_hotel.model_hotels_reservations
+msgid "Hotels Reservations"
+msgstr "Reservaciones de los Hoteles"
+
+#. module: travel_hotel
 #: field:allotment.state,id:0
-#: field:import.hotel,id:0
+#: field:hotels.reservations,id:0
 #: field:product.hotel,id:0
 #: field:product.rate.allotment,id:0
 #: field:sale.rooming,id:0
@@ -320,11 +508,6 @@ msgstr "ID"
 #: help:product.hotel,message_unread:0
 msgid "If checked new messages require your attention."
 msgstr "Si se marca nuevos mensajes requieren su atención."
-
-#. module: travel_hotel
-#: view:import.hotel:travel_hotel.import_hotel_form
-msgid "Import"
-msgstr "Importar"
 
 #. module: travel_hotel
 #: view:product.hotel:travel_hotel.travel_product_hotel_form_view
@@ -348,7 +531,7 @@ msgstr "Fecha del último mensaje"
 
 #. module: travel_hotel
 #: field:allotment.state,write_uid:0
-#: field:import.hotel,write_uid:0
+#: field:hotels.reservations,write_uid:0
 #: field:product.hotel,write_uid:0
 #: field:product.rate.allotment,write_uid:0
 #: field:sale.rooming,write_uid:0
@@ -357,7 +540,7 @@ msgstr "Última actualización por"
 
 #. module: travel_hotel
 #: field:allotment.state,write_date:0
-#: field:import.hotel,write_date:0
+#: field:hotels.reservations,write_date:0
 #: field:product.hotel,write_date:0
 #: field:product.rate.allotment,write_date:0
 #: field:sale.rooming,write_date:0
@@ -381,15 +564,18 @@ msgid "Messages and communication history"
 msgstr "Historial de mensajes y comunicación"
 
 #. module: travel_hotel
+#: code:addons\travel_hotel\hotel.py:41
 #: code:addons\travel_hotel\hotels_report.py:34
+#: code:addons\travel_hotel\reservations.py:33
 #: view:hotels.report:travel_hotel.travel_hotels_report_search_view
+#: field:hotels.reservations,name:0
 #: field:product.hotel,hotel_name:0
 #, python-format
 msgid "Name"
 msgstr "Nombre"
 
 #. module: travel_hotel
-#: view:sale.order.line:travel_hotel.travel_reservations_hotel_search_view
+#: view:hotels.reservations:travel_hotel.travel_reservations_hotel_search_view
 msgid "Next"
 msgstr "Siguiente"
 
@@ -399,7 +585,7 @@ msgid "Not Available"
 msgstr "No Disponible"
 
 #. module: travel_hotel
-#: view:sale.order.line:travel_hotel.travel_reservations_hotel_search_view
+#: view:hotels.reservations:travel_hotel.travel_reservations_hotel_search_view
 msgid "Now"
 msgstr "Ahora"
 
@@ -414,13 +600,24 @@ msgid "Office Telephones: (+53 7)"
 msgstr "Teléfono de la oficina: (+53 7)"
 
 #. module: travel_hotel
+#: code:addons\travel_hotel\reservations.py:40
+#: field:hotels.reservations,original:0
+#, python-format
+msgid "Original"
+msgstr "Original"
+
+#. module: travel_hotel
 #: view:website:travel_hotel.hotel_sale_order_line_report_id
 msgid "Passenger Names"
 msgstr "Nombre de los pasajeros"
 
 #. module: travel_hotel
+#: code:addons\travel_hotel\hotel.py:134
 #: code:addons\travel_hotel\hotels_report.py:39
+#: code:addons\travel_hotel\reservations.py:42
 #: view:hotels.report:travel_hotel.travel_hotels_report_search_view
+#: view:hotels.reservations:travel_hotel.travel_reservations_hotel_search_view
+#: field:hotels.reservations,plan:0
 #: field:product.rate,meal_plan_id:0
 #: field:sale.context,hotel_2_meal_plan_id:0
 #, python-format
@@ -428,7 +625,10 @@ msgid "Plan"
 msgstr "Plan"
 
 #. module: travel_hotel
-#: view:sale.order.line:travel_hotel.travel_reservations_hotel_tree_view
+#: code:addons\travel_hotel\reservations.py:39
+#: view:hotels.reservations:travel_hotel.travel_reservations_hotel_tree_view
+#: field:hotels.reservations,price:0
+#, python-format
 msgid "Price"
 msgstr "Precio"
 
@@ -438,23 +638,20 @@ msgid "Pricelist"
 msgstr "Tarifa"
 
 #. module: travel_hotel
-#: model:ir.ui.menu,name:travel_hotel.pricelist_next_id_64
-msgid "Prices"
-msgstr "Precios"
-
-#. module: travel_hotel
 #: view:product.hotel:travel_hotel.travel_product_hotel_form_view
 msgid "Procurements"
 msgstr "Contratos"
 
 #. module: travel_hotel
+#: code:addons\travel_hotel\hotel.py:36
 #: view:allotment.state:travel_hotel.travel_allotment_state_search_view
+#: view:hotels.reservations:travel_hotel.travel_reservations_hotel_search_view
+#: view:hotels.reservations:travel_hotel.travel_reservations_hotel_tree_view
 #: view:product.hotel:travel_hotel.travel_product_hotel_form_view
 #: view:product.hotel:travel_hotel.travel_product_hotel_search_view
 #: field:product.hotel,product_id:0
-#: view:sale.order.line:travel_hotel.travel_reservations_hotel_search_view
-#: view:sale.order.line:travel_hotel.travel_reservations_hotel_tree_view
 #: view:website:travel_hotel.hotel_sale_order_line_report_id
+#, python-format
 msgid "Product"
 msgstr "Producto"
 
@@ -464,8 +661,8 @@ msgid "Product Name"
 msgstr "Nombre del Producto"
 
 #. module: travel_hotel
+#: view:hotels.reservations:travel_hotel.travel_reservations_hotel_tree_view
 #: view:product.hotel:travel_hotel.travel_product_hotel_tree_view
-#: view:sale.order.line:travel_hotel.travel_reservations_hotel_tree_view
 msgid "Products"
 msgstr "Productos"
 
@@ -485,10 +682,10 @@ msgid "Release"
 msgstr "Lanzamiento"
 
 #. module: travel_hotel
+#: view:hotels.reservations:travel_hotel.travel_reservations_hotel_search_view
 #: view:product.hotel:travel_hotel.travel_product_hotel_form_view
-#: view:sale.order.line:travel_hotel.travel_reservations_hotel_search_view
 msgid "Reservations"
-msgstr "Reservations"
+msgstr "Reservaciones"
 
 #. module: travel_hotel
 #: field:allotment.state,reserved:0
@@ -496,11 +693,7 @@ msgid "Reserved"
 msgstr "Reservado"
 
 #. module: travel_hotel
-#: field:import.hotel,result:0
-msgid "Result"
-msgstr "Resultado"
-
-#. module: travel_hotel
+#: code:addons\travel_hotel\hotel.py:133
 #: code:addons\travel_hotel\hotels_report.py:37
 #: field:allotment.state,room_id:0
 #: model:option.type,name:travel_hotel.option_type_room_type
@@ -524,9 +717,16 @@ msgid "Rooming"
 msgstr "Rooming"
 
 #. module: travel_hotel
-#: view:sale.order.line:travel_hotel.travel_reservations_hotel_search_view
-msgid "Sale"
-msgstr "Venta"
+#: code:addons\travel_hotel\reservations.py:32
+#: field:hotels.reservations,sale_order_line_id:0
+#, python-format
+msgid "Sale Order Line"
+msgstr "Línea de Ventas"
+
+#. module: travel_hotel
+#: model:ir.model,name:travel_hotel.model_sale_order
+msgid "Sales Order"
+msgstr "Pedido de venta"
 
 #. module: travel_hotel
 #: model:ir.model,name:travel_hotel.model_sale_order_line
@@ -534,6 +734,7 @@ msgid "Sales Order Line"
 msgstr "Línea pedido de venta"
 
 #. module: travel_hotel
+#: code:addons\travel_hotel\hotel.py:138
 #: code:addons\travel_hotel\hotels_report.py:47
 #: field:product.rate,second_child:0
 #, python-format
@@ -541,6 +742,7 @@ msgid "Second Child"
 msgstr "Sengundo Hijo"
 
 #. module: travel_hotel
+#: code:addons\travel_hotel\hotel.py:135
 #: code:addons\travel_hotel\hotels_report.py:41
 #: field:product.rate,simple:0
 #, python-format
@@ -553,14 +755,18 @@ msgid "Single"
 msgstr "Solo"
 
 #. module: travel_hotel
+#: code:addons\travel_hotel\hotel.py:39
 #: view:product.hotel:travel_hotel.travel_product_hotel_search_view
 #: field:product.hotel,stars:0
+#, python-format
 msgid "Stars"
 msgstr "Estrellas"
 
 #. module: travel_hotel
 #: code:addons\travel_hotel\hotels_report.py:35
+#: code:addons\travel_hotel\reservations.py:34
 #: view:hotels.report:travel_hotel.travel_hotels_report_search_view
+#: field:hotels.reservations,start_date:0
 #: view:website:travel_hotel.hotel_sale_order_line_report_id
 #, python-format
 msgid "Start Date"
@@ -572,7 +778,10 @@ msgid "Start date"
 msgstr "Fecha de Inicio"
 
 #. module: travel_hotel
-#: view:sale.order.line:travel_hotel.travel_reservations_hotel_search_view
+#: code:addons\travel_hotel\reservations.py:46
+#: view:hotels.reservations:travel_hotel.travel_reservations_hotel_search_view
+#: field:hotels.reservations,state:0
+#, python-format
 msgid "Status"
 msgstr "Estado"
 
@@ -588,11 +797,13 @@ msgstr "Suplementos"
 
 #. module: travel_hotel
 #: code:addons\travel_hotel\hotels_report.py:43
+#: code:addons\travel_hotel\reservations.py:41
 #: view:allotment.state:travel_hotel.travel_allotment_state_search_view
 #: field:allotment.state,supplier_id:0
 #: view:hotels.report:travel_hotel.travel_hotels_report_search_view
+#: view:hotels.reservations:travel_hotel.travel_reservations_hotel_search_view
+#: field:hotels.reservations,supplier:0
 #: field:product.rate.allotment,suppinfo_id:0
-#: view:sale.order.line:travel_hotel.travel_reservations_hotel_search_view
 #, python-format
 msgid "Supplier"
 msgstr "Proveedor"
@@ -605,7 +816,7 @@ msgstr "Información del Proveedor"
 #. module: travel_hotel
 #: view:product.hotel:travel_hotel.travel_product_hotel_form_view
 msgid "Suppliers"
-msgstr "Proveedor"
+msgstr "Proveedores"
 
 #. module: travel_hotel
 #: view:product.hotel:travel_hotel.travel_product_hotel_form_view
@@ -618,6 +829,7 @@ msgid "This note will be displayed on requests for quotation..."
 msgstr "Esta nota será mostrada en la solicitud de presupuesto..."
 
 #. module: travel_hotel
+#: code:addons\travel_hotel\hotel.py:136
 #: code:addons\travel_hotel\hotels_report.py:44
 #: field:product.rate,triple:0
 #: selection:sale.rooming,room:0
@@ -631,15 +843,27 @@ msgid "Unread Messages"
 msgstr "Mensajes no leídos"
 
 #. module: travel_hotel
-#: view:sale.order.line:travel_hotel.travel_reservations_hotel_search_view
+#: view:hotels.reservations:travel_hotel.travel_reservations_hotel_search_view
 msgid "Upcoming"
 msgstr "Próximas"
 
 #. module: travel_hotel
-#: view:sale.order.line:travel_hotel.travel_reservations_hotel_tree_view
+#: view:hotels.reservations:travel_hotel.travel_reservations_hotel_tree_view
 #: view:website:travel_hotel.hotel_sale_order_line_report_id
 msgid "Voucher"
 msgstr "Voucher"
+
+#. module: travel_hotel
+#: code:addons\travel_hotel\imports.py:186
+#, python-format
+msgid "Wrong excel information!!!"
+msgstr "El excel contiene errores!!!"
+
+#. module: travel_hotel
+#: code:addons\travel_hotel\imports.py:60
+#, python-format
+msgid "Wrong header: "
+msgstr "El encabezado contiene errores: "
 
 #. module: travel_hotel
 #: view:product.hotel:travel_hotel.travel_product_hotel_form_view
@@ -647,7 +871,8 @@ msgid "describe the product characteristics..."
 msgstr "describa las características del producto..."
 
 #. module: travel_hotel
-#: view:import.hotel:travel_hotel.import_hotel_form
-msgid "or"
-msgstr "o"
+#: code:addons\travel_hotel\imports.py:135
+#, python-format
+msgid "hotel: "
+msgstr "hotel: "
 

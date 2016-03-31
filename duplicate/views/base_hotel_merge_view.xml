@@ -13,7 +13,7 @@
 
         <menuitem id='product_merge_automatic_menu'
                   action='base_product_merge_automatic_act'
-                  groups='base.group_system'
+                  groups='base.group_sale_manager'
                   parent='root_menu'/>
 
         <record model='ir.ui.view' id='base_product_merge_automatic_wizard_form'>

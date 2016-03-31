@@ -28,7 +28,8 @@
     "description": ("Travel Agency - Duplicate"),
     "depends": ['travel_core'],
     "data": ['views/base_partner_merge_view.xml',
-             'views/base_hotel_merge_view.xml'
+             'views/base_hotel_merge_view.xml',
+             'security/ir.model.access.csv',
              ],
     "demo_xml": [],
     "application": False,

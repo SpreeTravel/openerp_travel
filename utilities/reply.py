@@ -35,10 +35,6 @@ if __name__ == '__main__':
                     f2.write(lines)
                 elif parts[0] == 'msgstr':
                     try:
-                        # if seed[tmp] == tmp:
-                        #     f2.write(lines)
-                        #     seed[tmp] = parts[1]
-                        # else:
                         f2.write('msgstr ' + seed[tmp])
                     except KeyError:
                         f2.write(lines)

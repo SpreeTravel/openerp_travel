@@ -83,6 +83,8 @@ class ResultList(TransientModel):
 
     @api.multi
     def unlink(self):
+        if not len(self):
+            return False
         obj = self[0]
         if self.check_sale_order(obj.similar_product_id):
             raise except_orm(_('Error'), _('This product belongs to a order, it can\'t be deleted'))

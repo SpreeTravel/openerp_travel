@@ -1,4 +1,3 @@
 id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
 access_result_list_manager,result.list,model_result_list,base.group_sale_manager,1,1,1,1
-access_travel_hotel_manager,travel.hotel,model_travel_hotel,base.group_sale_manager,1,1,1,1
 access_base_hotel_merge_automatic_wizard_manager,base.hotel.merge.automatic.wizard,model_base_hotel_merge_automatic_wizard,base.group_sale_manager,1,1,1,1

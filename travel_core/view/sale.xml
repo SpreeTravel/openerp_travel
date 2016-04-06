@@ -68,6 +68,27 @@
             <field name="model">sale.order</field>
             <field name="inherit_id" ref="sale.view_order_form"/>
             <field name="arch" type="xml">
+                <xpath expr="//form/header/button[@name='action_quotation_send']" position="attributes">
+                    <attribute name="attrs">{'invisible': ['|', ('adjustment','=', True)]}
+                    </attribute>
+                </xpath>
+                <xpath expr="//form/header/button[@name='action_button_confirm']" position="attributes">
+                    <attribute name="attrs">{'invisible': ['|',('adjustment','=', True)]}
+                    </attribute>
+                </xpath>
+                <xpath expr="//form/header/button[@name='cancel']" position="attributes">
+                    <attribute name="attrs">{'invisible': ['|',('adjustment','=', True)]}
+                    </attribute>
+                </xpath>
+                <xpath expr="//form/header/button" position="after">
+                    <button name="edit_sale_order_signal" states="done, progress" string="Adjust Orders"
+                            type="object"/>
+                    <button name="confirm_until_invoice_except"
+                            attrs="{'invisible':['|',('adjustment','=', False),('state', '!=', 'draft')]}"
+                            string="Confirm To Invoice"
+                            type="object"/>
+                </xpath>
+
 
                 <xpath expr="//form/sheet/group" position="replace">
                     <group>
@@ -81,6 +102,7 @@
                             <div>
                                 <field name="date_order" class="oe_inline" nolabel="1"/>-
                                 <field name="end_date" class="oe_inline" nolabel="1"/>
+                                <field name="adjustment" invisible="1"/>
                             </div>
                             <label for="flight_in" string="Flight"/>
                             <div>

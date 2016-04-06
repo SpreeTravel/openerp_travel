@@ -23,7 +23,7 @@ import time
 import simplejson
 import datetime as dt
 from lxml import etree
-from openerp import fields, api
+from openerp import fields, api, exceptions
 from openerp.models import Model, TransientModel
 from openerp.exceptions import except_orm
 from openerp.tools import DEFAULT_SERVER_DATE_FORMAT as DF
@@ -264,23 +264,68 @@ class sale_order(Model):
                                            'sent': [('readonly', False)]})
 
     date_order = fields.Date(_('Start Date'), required=True, readonly=True, default=get_today,
-                             select=True, states={'draft': [('readonly', False)], 'sent': [('readonly', False)]})
+                             select=True, states={'draft': [('readonly', False)], 'sent': [('readonly', False)],
+                                                  'editable': [('readonly', False)]})
     end_date = fields.Date(_('End Date'), required=True, readonly=True, select=True,
                            states={'draft': [('readonly', False)],
-                                   'sent': [('readonly', False)]})
+                                   'sent': [('readonly', False)], 'editable': [('readonly', False)]})
     flight_in = fields.Char(_('Flight In'), size=64, readonly=True, states={'draft': [('readonly', False)],
-                                                                            'sent': [('readonly', False)]})
+                                                                            'sent': [('readonly', False)],
+                                                                            'editable': [('readonly', False)]})
     flight_out = fields.Char(_('Flight Out'), size=64, readonly=True, states={'draft': [('readonly', False)],
-                                                                              'sent': [('readonly', False)]})
+                                                                              'sent': [('readonly', False)],
+                                                                              'editable': [('readonly', False)]})
     order_line = fields.One2many('sale.order.line', 'order_id', _('Order Lines'), readonly=True,
                                  states={'draft': [('readonly', False)],
-                                         'sent': [('readonly', False)],
+                                         'sent': [('readonly', False)], 'editable': [('readonly', False)]
                                          })
     pax_ids = fields.Many2many('res.partner', 'sale_order_res_partner_pax_rel', 'order_id', 'pax_id', _('Paxs'),
                                domain="[('pax', '=', True)]")
     total_paxs = fields.Integer(compute=_get_total_paxs, string=_('Total paxs'), store=True)
     lead_name = fields.Char(compute=_get_lead_name, string=_('Lead Name'), size=128,
                             search=_lead_name_search)
+    # state = fields.Selection([
+    #     ('draft', 'Draft Quotation'),
+    #     ('sent', 'Quotation Sent'),
+    #     ('cancel', 'Cancelled'),
+    #     ('waiting_date', 'Waiting Schedule'),
+    #     ('progress', 'Sales Order'),
+    #     ('manual', 'Sale to Invoice'),
+    #     ('editable', 'Edit Sale'),
+    #     ('shipping_except', 'Shipping Exception'),
+    #     ('invoice_except', 'Invoice Exception'),
+    #     ('done', 'Done'),
+    # ], 'Status', readonly=True, copy=False, help="Gives the status of the quotation or sales order.\
+    #       \nThe exception status is automatically set when a cancel operation occurs \
+    #       in the invoice validation (Invoice Exception) or in the picking list process (Shipping Exception).\nThe 'Waiting Schedule' status is set when the invoice is confirmed\
+    #        but waiting for the scheduler to run on the order date.", select=True)
+
+    adjustment = fields.Boolean(_('Adjustment'), default=False)
+
+    @api.multi
+    def edit_sale_order_signal(self):
+        for order in self:
+            if order.state != 'progress' and order.state != 'done':
+                raise exceptions.Warning(
+                    _("You can't back any order that it's not on progress or done "
+                      "state. Order: %s" % order.name))
+            order.order_line.write({'state': 'draft'})
+            # order.procurement_group_id.sudo().unlink()
+            # for line in order.order_line:
+            # line.procurement_ids.sudo().unlink()
+            order.write({'state': 'draft'})
+            order.write({'adjustment': True})
+            order.delete_workflow()
+            order.create_workflow()
+        return True
+
+    @api.multi
+    def confirm_until_invoice_except(self):
+        for order in self:
+            order.signal_workflow('invoice_except')
+            order.write({'state': 'invoice_except'})
+            order.write({'adjustment': False})
+        return True
 
     # _defaults = {
     #

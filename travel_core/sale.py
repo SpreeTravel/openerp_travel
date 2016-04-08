@@ -324,8 +324,35 @@ class sale_order(Model):
         for order in self:
             order.signal_workflow('invoice_except')
             order.write({'state': 'invoice_except'})
-            order.write({'adjustment': False})
         return True
+
+    @api.multi
+    def refund_invoice(self):
+        if len(self):
+            obj = self[0]
+            # TODO: Investigar como escoger a cual factura se le hace refund
+            _inv = None
+            for inv in obj.invoice_ids:
+                if inv.state == 'paid':
+                    _inv = inv
+            if _inv:
+                ctx = {
+                    'active_id': _inv.id,
+                    'type': _inv.type,
+                    'active_ids': [_inv.id],
+                    'active_model': 'account.invoice'
+                }
+                return {
+                    'type': 'ir.actions.act_window',
+                    'view_type': 'form',
+                    'view_mode': 'form',
+                    'res_model': 'account.invoice.refund',
+                    'view_id': self.env.ref('account.view_account_invoice_refund').id,
+                    'target': 'new',
+                    'context': ctx,
+                }
+            else:
+                raise except_orm(_('Warning'), _('No refondable invoice'))
 
     # _defaults = {
     #

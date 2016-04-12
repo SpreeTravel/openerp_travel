@@ -1,0 +1,51 @@
+<?xml version="1.0"?>
+<openerp>
+    <data>
+
+        <menuitem id='travel_api_root_menu' name='External API' parent='base.menu_base_partner' sequence="25"/>
+
+        <record model="ir.actions.act_window" id="travel_api_act">
+            <field name="name">API</field>
+            <field name="res_model">api.model</field>
+            <field name="view_id" ref="api_model_tree_view"/>
+            <field name="view_mode">tree,form</field>
+            <field name="view_type">form</field>
+        </record>
+
+        <menuitem id='travel_api_menu'
+                  action='travel_api_act'
+                  groups='base.group_system'
+                  parent='travel_api_root_menu'/>
+
+        <record id="api_model_tree_view" model="ir.ui.view">
+            <field name="name">api.model.tree.view</field>
+            <field name="model">api.model</field>
+            <!--<field name="priority">10</field>-->
+            <field name="arch" type="xml">
+                <tree string="APIs" create="0">
+                    <field name="api" string="API Name"/>
+                    <field name="url" string="API Url"/>
+                </tree>
+            </field>
+        </record>
+
+        <record model='ir.ui.view' id='travel_api_form'>
+            <field name='name'>travel.api.form</field>
+            <field name='model'>api.model</field>
+            <field name='arch' type='xml'>
+                <form>
+                    <group>
+                        <field name="api" readonly="True"/>
+                        <field name="url" readonly="True"/>
+                        <field name="active"/>
+                    </group>
+                    <group string="Credentials">
+                        <field name="user"/>
+                        <field name="password"/>
+                    </group>
+                </form>
+            </field>
+        </record>
+
+    </data>
+</openerp>

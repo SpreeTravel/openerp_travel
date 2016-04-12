@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<openerp>
+    <data>
+        <record id="travel_api_sale_order_form_view" model="ir.ui.view">
+            <field name="name">travel.api.sale.order.form.view</field>
+            <field name="model">sale.order.line</field>
+            <field name="inherit_id" ref="travel_core.travel_sale_order_line_form_view"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='category_id']" position="after">
+                    <field name="api_model_id" filter_domain="[('api_model_id.active','=',True)]"/>
+                    <field name="destination_id" attrs="{'invisible': [('api_model_id.api', '!=', 'local')]}"/>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</openerp>

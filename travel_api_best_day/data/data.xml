@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data noupdate="0">
+        <record model="api.model" id="api_model_best_day">
+            <field name="api">best_day</field>
+            <field name="url">http://testxml.e-tsw.com/AffiliateService/AffiliateService.svc/restful</field>
+            <field name="username">MOREMEX</field>
+            <field name="password">200.55.139.220</field>
+        </record>
+
+        <record model="res.partner" id="res_partner_localhost">
+            <field name="name">Best Day</field>
+           <field name="api_model" eval="True"/>
+            <field name="customer" eval="False"/>
+            <field name="supplier" eval="True"/>
+        </record>
+    </data>
+</openerp>

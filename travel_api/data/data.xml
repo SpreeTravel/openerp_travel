@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data noupdate="0">
+        <record model="api.model" id="api_model_localhost">
+            <field name="api">local</field>
+            <field name="url">localhost</field>
+        </record>
+        <record model="res.partner" id="res_partner_localhost">
+            <field name="name">local</field>
+            <field name="api_model" eval="True"/>
+            <field name="customer" eval="False"/>
+            <field name="supplier" eval="True"/>
+        </record>
+    </data>
+</openerp>

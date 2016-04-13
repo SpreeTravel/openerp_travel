@@ -4,7 +4,7 @@
         <record model="api.model" id="api_model_best_day">
             <field name="api">best_day</field>
             <field name="url">http://testxml.e-tsw.com/AffiliateService/AffiliateService.svc/restful</field>
-            <field name="username">MOREMEX</field>
+            <field name="user">MOREMEX</field>
             <field name="password">200.55.139.220</field>
         </record>
 

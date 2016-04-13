@@ -34,6 +34,7 @@ apis = ['best_day']
 
 class api_model(Model):
     _name = 'api.model'
+    _rec_name = 'api'
 
     api = fields.Char('Api', readonly=True)
     url = fields.Char(_('Api\'s Url'), readonly=True)
@@ -43,12 +44,14 @@ class api_model(Model):
 
     active = fields.Boolean(_('Active'), default=True)
 
-    def get_class_implementation(self):
-        if self.api not in apis:
+    def get_class_implementation(self, api):
+        import os, sys
+        # CURRENT_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+        # sys.path.append(CURRENT_DIR)
+        if not api or api not in apis:
             raise except_orm('Error', _('That API isn\'t well implemented'))
         try:
-            module = 'travel_api_' + self.api + '.' + self.api
-            module = importlib.import_module(module)
-            return getattr(module, self.api)
-        except:
-            raise except_orm('Error', _('That API isn\'t well implemented'))
+            api = str(api).replace('_', '.')
+            return self.env['api.' + api]
+        except Exception as e:
+            raise except_orm('Error', _('That API isn\'t well implemented: ') + str(e))

@@ -33,7 +33,7 @@ class sale_order(Model):
     _name = 'sale.order'
     _inherit = 'sale.order'
 
-    destination_id = fields.Many2one('destination', 'Country')
+    order_destination_id = fields.Many2one('destination', 'Country', required=True)
 
 
 class sale_context(Model):
@@ -52,6 +52,12 @@ class sale_context(Model):
             body += ", '" + f + "': " + f
         first, last = base.split("'end_date': end_date")
         return first + "'end_date': end_date" + body + last
+
+    def _update_ctx(self, ctx, ap):
+        ap = ap.replace('{', '')
+        ap = ap.replace('}', '')
+        first, last = ctx.split("'end_date': end_date")
+        return first + "'end_date': end_date," + ap + last
 
     def get_context_fields(self, cr, uid, context=None):
         context_fields = {}
@@ -76,14 +82,18 @@ class sale_context(Model):
         if parent_node:
             parent_node = parent_node[0]
             sd = doc.xpath("//field[@name='start_date']")[0]
+            ap = doc.xpath("//field[@name='api_model_id']")[0]
             ocg = sd.get('on_change', False)
             ctx = sd.get('context', False)
+            ap = ap.get('context', False)
+            if ap:
+                ctx = self._update_ctx(ctx, ap)
             if flag:
                 new_fields['api_model_id'] = res['fields']['api_model_id']
                 new_fields['destination_id'] = res['fields']['destination_id']
                 ctx = self._build_ctx(ctx, new_fields)
                 del new_fields['api_model_id']
-                del new_fields['destination_country_id']
+                del new_fields['destination_id']
             sd.set('context', ctx)
             for field in field_names:
                 if field == 'sale_line_supplement_ids':
@@ -125,12 +135,30 @@ class sale_order_line(Model):
                           lang=False, update_tax=True, date_order=False, packaging=False,
                           fiscal_position=False, flag=False, context=None):
         api_model = self.pool.get('api.model')
+        categ_table = self.pool.get('product.category')
+        dest_table = self.pool.get('destination')
         params = context.get('params', False)
         api_model_id = None
         destination_id = None
         if params:
             api_model_id = params.get('api_model_id', False)
             destination_id = params.get('destination_id', False)
+            categ = params.get('category', False)
+            country = params.get('country', False)
+            if country:
+                country = dest_table.browse(cr, uid, country)
+            else:
+                try:
+                    action = params['action']
+                    if action == 308:
+                        return super(sale_order_line, self).product_id_change(cr, uid, ids, pricelist, product, qty,
+                                                                              uom, qty_uos,
+                                                                              uos, name, partner_id, lang, update_tax,
+                                                                              date_order,
+                                                                              packaging, fiscal_position, flag, context)
+                except KeyError:
+                    pass
+                raise except_orm(_('Error'), _('You must select a country'))
             api_model_id = api_model.search(cr, uid, [('id', '=', api_model_id)])
             api_model_id = api_model.browse(cr, uid, api_model_id)
         if api_model_id and api_model_id.api == 'local':
@@ -138,19 +166,31 @@ class sale_order_line(Model):
                                                                   uos, name, partner_id, lang, update_tax, date_order,
                                                                   packaging, fiscal_position, flag, context)
         else:
-            dest = False
+            dests = False
             domain = {}
+            result = {}
             if api_model_id:
                 obj = api_model_id.get_class_implementation(api_model_id.api)
                 obj = obj.create({
                     'username': api_model_id.user,
                     'password': api_model_id.password,
                 })
-                if not destination_id:
-                    dest = obj.get_destinations()
-            if dest:
-                domain.update({'destination_id': [('id', 'in', [x.id for x in dest])]})
-            return {'domain': domain}
+
+                dests = obj.get_destinations(country)
+                if destination_id:
+                    dest = dest_table.browse(cr, uid, destination_id)
+                    function = getattr(obj, 'get_all_' + categ.lower() + 's')
+                    products = function(dest)
+                    if products:
+                        domain.update({'product_id': [('id', 'in', [x.id for x in products])]})
+            if dests:
+                domain.update({'destination_id': [('id', 'in', [x.id for x in dests])]})
+            res = super(sale_order_line, self).product_id_change(cr, uid, ids, pricelist, product, qty, uom, qty_uos,
+                                                                 uos, name, partner_id, lang, True, date_order,
+                                                                 packaging, fiscal_position, True, context)
+            res['value']['product_id'] = None
+
+            return {'value': res['value'], 'domain': domain}
 
 
 class res_partner(Model):

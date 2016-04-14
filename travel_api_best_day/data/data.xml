@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
-    <data noupdate="0">
+    <data noupdate="1">
         <record model="api.model" id="api_model_best_day">
             <field name="api">best_day</field>
             <field name="url">http://testxml.e-tsw.com/AffiliateService/AffiliateService.svc/restful</field>
@@ -8,11 +8,14 @@
             <field name="password">200.55.139.220</field>
         </record>
 
-        <record model="res.partner" id="res_partner_localhost">
+        <record model="res.partner" id="res_partner_best_day">
             <field name="name">Best Day</field>
-           <field name="api_model" eval="True"/>
+            <field name="api_model" eval="True"/>
             <field name="customer" eval="False"/>
             <field name="supplier" eval="True"/>
         </record>
+
+        <function name="get_countries" model="api.best.day">
+                </function>
     </data>
 </openerp>

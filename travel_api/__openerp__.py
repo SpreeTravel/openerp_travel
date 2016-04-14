@@ -25,7 +25,7 @@
     "author": "OpenJAF",
     "website": "http://www.openjaf.com",
     "category": "Sales",
-    "description": ("Travel Agency - API"),
+    "description": "Travel Agency - API",
     "depends": ['travel_core'],
     "data": [
         'views/sale.xml',

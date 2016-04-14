@@ -25,6 +25,8 @@
                 <tree string="APIs" create="0">
                     <field name="api" string="API Name"/>
                     <field name="url" string="API Url"/>
+                    <button name="update" type="object" string="Install countries" icon="gtk-refresh"
+                            attrs="{'invisible': [('api','=','local')]}"/>
                 </tree>
             </field>
         </record>

@@ -325,7 +325,7 @@ class product_pricelist(Model):
                                                                         price_type.field, context=context)[product.id],
                                                  round=False, context=context)
 
-                if price is not False:
+                if price:
                     params = context.get('params', {})
                     paxs = self.pool.get('sale.order.line').get_total_paxs(cr, uid, params, context)
                     days = self.pool.get('sale.order.line').get_margin_days(cr, uid, params, context)

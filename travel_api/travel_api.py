@@ -24,7 +24,8 @@ import simplejson
 import datetime as dt
 from lxml import etree
 import importlib
-from openerp import fields, api, exceptions
+from openerp import api as api_odoo
+from openerp import fields, exceptions
 from openerp.models import Model
 from openerp.exceptions import except_orm
 from openerp.tools.translate import _
@@ -45,7 +46,6 @@ class api_model(Model):
     active = fields.Boolean(_('Active'), default=True)
 
     def get_class_implementation(self, api):
-        import os, sys
         # CURRENT_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
         # sys.path.append(CURRENT_DIR)
         if not api or api not in apis:
@@ -55,3 +55,13 @@ class api_model(Model):
             return self.env['api.' + api]
         except Exception as e:
             raise except_orm('Error', _('That API isn\'t well implemented: ') + str(e))
+
+    @api_odoo.multi
+    def update(self):
+        if len(self):
+            obj = self[0]
+            model = self.get_class_implementation(obj.api)
+            try:
+                model.get_countries()
+            except Exception as e:
+                raise except_orm(_('Error'), str(e))

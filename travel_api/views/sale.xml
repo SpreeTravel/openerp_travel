@@ -7,7 +7,7 @@
             <field name="inherit_id" ref="travel_core.travel_sale_order_line_form_view"/>
             <field name="arch" type="xml">
                 <xpath expr="//field[@name='category_id']" position="after">
-                    <field name="api_model_id" filter_domain="[('active','=',True)]"
+                    <field name="api_model_id" domain="[('active','=',True)]"
                            context="{'country':parent.order_destination_id}"/>
                     <field name="destination_id" attrs="{'invisible': [('api_model_id', '=', 'local')]}"/>
                 </xpath>

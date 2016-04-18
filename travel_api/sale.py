@@ -86,8 +86,7 @@ class sale_context(Model):
             ocg = sd.get('on_change', False)
             ctx = sd.get('context', False)
             ap = ap.get('context', False)
-            if ap:
-                ctx = self._update_ctx(ctx, ap)
+            ctx = self._update_ctx(ctx, ap)
             if flag:
                 new_fields['api_model_id'] = res['fields']['api_model_id']
                 new_fields['destination_id'] = res['fields']['destination_id']
@@ -106,6 +105,9 @@ class sale_context(Model):
                 ed.set('context', ctx)
                 if field == 'api_model_id' or field == 'destination_id':
                     ed.set('on_change', ocg)
+                    trigger = ", 'trigger': " + field + "}"
+                    ctx_trigger = ctx[::-1].replace('}', trigger[::-1], 1)[::-1]
+                    ed.set('context', ctx_trigger)
             keys = new_fields.keys()
             keys.sort()
             for f in keys:
@@ -180,17 +182,27 @@ class sale_order_line(Model):
                 if destination_id:
                     dest = dest_table.browse(cr, uid, destination_id)
                     function = getattr(obj, 'get_all_' + categ.lower() + 's')
-                    products = function(dest)
+                    function(dest)
+                    products = obj.get_products('hotel', destination_id)
                     if products:
-                        domain.update({'product_id': [('id', 'in', [x.id for x in products])]})
+                        domain.update({'product_id': [('id', 'in', products)]})
             if dests:
                 domain.update({'destination_id': [('id', 'in', [x.id for x in dests])]})
-            res = super(sale_order_line, self).product_id_change(cr, uid, ids, pricelist, product, qty, uom, qty_uos,
-                                                                 uos, name, partner_id, lang, True, date_order,
-                                                                 packaging, fiscal_position, True, context)
-            res['value']['product_id'] = None
-
-            return {'value': res['value'], 'domain': domain}
+            res = {'domain': {}, 'value': {}}
+            if partner_id:
+                res = super(sale_order_line, self).product_id_change(cr, uid, ids, pricelist, product, qty, uom,
+                                                                     qty_uos,
+                                                                     uos, name, partner_id, lang, True, date_order,
+                                                                     packaging, fiscal_position, True, context)
+            res['domain'].update(domain)
+            res['value']['product_id'] = product
+            res['value']['product_uom_qty'] = qty
+            res['value']['product_uos_qty'] = qty_uos
+            res['value']['product_uom'] = uom
+            res['value']['product_uos'] = uos
+            res['value']['name'] = name
+            res['value']['partner_id'] = partner_id
+            return res
 
 
 class res_partner(Model):

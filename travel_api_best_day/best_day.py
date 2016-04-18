@@ -48,13 +48,11 @@ class api_best_day(models.TransientModel):
                         'name': name,
                         'categ_id': categ.id
                     })
-                    pp = pp_table.create({
-                        'name_template': name,
-                        'product_tmpl_id': pt.id
-                    })
+                    pp = pp_table.search([('product_tmpl_id', '=', pt.id)])
                     p = hotels_table.create({
                         'hotel_name': name,
-                        'product_id': pp.id
+                        'product_id': pp.id,
+                        'destination': dest.id
                     })
                     partner = rp.search([('name', '=', 'Best Day')])
                     if partner and partner.id:
@@ -64,7 +62,6 @@ class api_best_day(models.TransientModel):
                         })
                     else:
                         raise except_orm('Error', _("Partner error in api implementation"))
-        return self.get_products('hotel')
 
     def get_all_cars(self, dest):
         url = 'http://testxml.e-tsw.com/AffiliateService/AffiliateService.svc/restful/GetHotelsComplete'
@@ -94,16 +91,21 @@ class api_best_day(models.TransientModel):
                     raise except_orm('Error', _("Partner error in api implementation"))
         return self.get_products('hotel')
 
-    def get_products(self, _type):
+    def get_products(self, _type, destination, api='openerp'):
         prod = self.env['product.product']
+        prod_type_table = self.env['product.' + _type]
         categ_table = self.env['product.category']
         categ = categ_table.search([('name', '=', str(_type).capitalize())])
         ps = self.env['product.supplierinfo']
         rp = self.env['res.partner']
         partner = rp.search([('name', '=', 'Best Day')])
         prods = [x.product_tmpl_id.id for x in ps.search([('name', '=', partner.id)])]
-        prods = prod.search([('product_tmpl_id.id', 'in', prods), ('product_tmpl_id.categ_id', '=', categ.id)])
-        return prods
+        ids = [x.product_id.id for x in prod_type_table.search([('destination', '=', destination)])]
+        prods = prod.search(
+            [('product_tmpl_id.id', 'in', prods), ('product_tmpl_id.categ_id', '=', categ.id)])
+        if api == 'openerp':
+            return [y.id for y in prods if y.id in ids]
+        return [x for x in prods if x.id in ids]
 
     def hotels_request(self, params):
         url = 'http://testxml.e-tsw.com/AffiliateService/AffiliateService.svc/restful/GetHotels'

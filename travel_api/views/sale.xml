@@ -9,7 +9,9 @@
                 <xpath expr="//field[@name='category_id']" position="after">
                     <field name="api_model_id" domain="[('active','=',True)]"
                            context="{'country':parent.order_destination_id}"/>
-                    <field name="destination_id" attrs="{'invisible': [('api_model_id', '=', 'local')]}"/>
+                    <field name="api_model_name" invisible="1"/>
+                    <field name="destination_id" attrs="{'invisible': [('api_model_name', '=', 'local')]}"/>
+
                 </xpath>
             </field>
         </record>

@@ -130,6 +130,8 @@ class sale_order_line(Model):
 
     api_model_id = fields.Many2one('api.model', _('API'))
 
+    api_model_name = fields.Char(related='api_model_id.api', string=_('Name'))
+
     destination_id = fields.Many2one('destination', _('City'))
 
     def product_id_change(self, cr, uid, ids, pricelist, product, qty=0,
@@ -177,13 +179,12 @@ class sale_order_line(Model):
                     'username': api_model_id.user,
                     'password': api_model_id.password,
                 })
-
                 dests = obj.get_destinations(country)
                 if destination_id:
                     dest = dest_table.browse(cr, uid, destination_id)
                     function = getattr(obj, 'get_all_' + categ.lower() + 's')
                     function(dest)
-                    products = obj.get_products('hotel', destination_id)
+                    products = obj.get_products(categ.lower(), destination_id)
                     if products:
                         domain.update({'product_id': [('id', 'in', products)]})
             if dests:
@@ -202,6 +203,8 @@ class sale_order_line(Model):
             res['value']['product_uos'] = uos
             res['value']['name'] = name
             res['value']['partner_id'] = partner_id
+            res['value']['price_unit'] = 1.0
+            res['value']['price_unit_cost'] = 1.0
             return res
 
 

@@ -24,6 +24,7 @@ import simplejson
 import datetime as dt
 from lxml import etree
 import importlib
+import openerp
 from openerp import api as api_odoo
 from openerp import fields, exceptions
 from openerp.models import Model
@@ -45,6 +46,7 @@ class api_model(Model):
 
     active = fields.Boolean(_('Active'), default=True)
 
+    @api_odoo.model
     def get_class_implementation(self, api):
         # CURRENT_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
         # sys.path.append(CURRENT_DIR)
@@ -55,6 +57,22 @@ class api_model(Model):
             return self.env['api.' + api]
         except Exception as e:
             raise except_orm('Error', _('That API isn\'t well implemented: ') + str(e))
+
+    @api_odoo.model
+    def change_env(self, destination_id, api, obj, categ):
+        obj = self.get_class_implementation(api)
+        dest_table = self.env['destination']
+        dest = dest_table.search([('id', '=', destination_id)])
+        method = 'get_all_' + categ + 's'
+
+        getattr(obj.sudo(), method)(dest)
+
+        # cache = self._cache
+        # with openerp.api.Environment.manage():
+        #     with openerp.registry(self.env.cr.dbname).cursor() as new_cr:
+        #         new_env = api_odoo.Environment(new_cr, self.env.uid, self.env.context)
+        #         getattr(obj.with_env(new_env), method)(dest)
+        #         new_env.cr.commit()
 
     @api_odoo.multi
     def update(self):

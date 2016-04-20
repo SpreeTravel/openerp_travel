@@ -1,7 +1,7 @@
 import requests
 from lxml import etree
 
-from openerp import models, fields
+from openerp import models, fields, api
 from openerp.tools.translate import _
 from openerp.exceptions import except_orm
 import time
@@ -25,6 +25,7 @@ class api_best_day(models.TransientModel):
             'ip': self.password
         }
 
+    @api.model
     def get_all_hotels(self, dest):
         url = 'http://testxml.e-tsw.com/AffiliateService/AffiliateService.svc/restful/GetHotelsComplete'
         params = self.fill_credentials()
@@ -62,6 +63,18 @@ class api_best_day(models.TransientModel):
                         })
                     else:
                         raise except_orm('Error', _("Partner error in api implementation"))
+            else:
+                partner = rp.search([('name', '=', 'Best Day')])
+                if partner and partner.id:
+                    ps_item = ps.search(
+                        [('name', '=', partner.id), ('product_tmpl_id', '=', h.product_id.product_tmpl_id.id)])
+                    if not (ps_item and ps_item.id):
+                        ps.create({
+                            'name': partner.id,
+                            'product_tmpl_id': h.product_id.product_tmpl_id.id
+                        })
+                else:
+                    raise except_orm('Error', _("Partner error in api implementation"))
 
     def get_all_cars(self, dest):
         url = 'http://testxml.e-tsw.com/AffiliateService/AffiliateService.svc/restful/GetHotelsComplete'
@@ -91,6 +104,7 @@ class api_best_day(models.TransientModel):
                     raise except_orm('Error', _("Partner error in api implementation"))
         return self.get_products('hotel')
 
+    @api.model
     def get_products(self, _type, destination, api='openerp'):
         prod = self.env['product.product']
         prod_type_table = self.env['product.' + _type]
@@ -170,6 +184,7 @@ class api_best_day(models.TransientModel):
                             'parent_id': parent.id
                         })
 
+    @api.model
     def get_destinations(self, name):
         params = self.fill_credentials()
         destinations = self.env['destination']

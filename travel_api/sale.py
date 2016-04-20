@@ -21,6 +21,7 @@
 
 import time
 import simplejson
+import openerp
 import datetime as dt
 from lxml import etree
 from openerp import fields, api, exceptions
@@ -134,12 +135,15 @@ class sale_order_line(Model):
 
     destination_id = fields.Many2one('destination', _('City'))
 
+    singleton_partner_id = None
+
     def product_id_change(self, cr, uid, ids, pricelist, product, qty=0,
                           uom=False, qty_uos=0, uos=False, name='', partner_id=False,
                           lang=False, update_tax=True, date_order=False, packaging=False,
                           fiscal_position=False, flag=False, context=None):
+        if partner_id:
+            self.singleton_partner_id = partner_id
         api_model = self.pool.get('api.model')
-        categ_table = self.pool.get('product.category')
         dest_table = self.pool.get('destination')
         params = context.get('params', False)
         api_model_id = None
@@ -147,7 +151,7 @@ class sale_order_line(Model):
         if params:
             api_model_id = params.get('api_model_id', False)
             destination_id = params.get('destination_id', False)
-            categ = params.get('category', False)
+            categ = params.get('category', '').lower()
             country = params.get('country', False)
             if country:
                 country = dest_table.browse(cr, uid, country)
@@ -172,19 +176,19 @@ class sale_order_line(Model):
         else:
             dests = False
             domain = {}
-            result = {}
             if api_model_id:
-                obj = api_model_id.get_class_implementation(api_model_id.api)
-                obj = obj.create({
+                obj_table = api_model.get_class_implementation(cr, uid, api_model_id.api)
+                obj = obj_table.create({
                     'username': api_model_id.user,
                     'password': api_model_id.password,
                 })
-                dests = obj.get_destinations(country)
+                dests = obj_table.get_destinations(country)
                 if destination_id:
-                    dest = dest_table.browse(cr, uid, destination_id)
-                    function = getattr(obj, 'get_all_' + categ.lower() + 's')
-                    function(dest)
-                    products = obj.get_products(categ.lower(), destination_id)
+                    dest_ids = dest_table.search(cr, uid, [('id', '=', destination_id)])
+                    dest = dest_table.browse(cr, uid, dest_ids)
+                    method = 'get_all_' + categ + 's'
+                    getattr(obj_table, method)(dest)
+                    products = obj_table.get_products(categ, destination_id)
                     if products:
                         domain.update({'product_id': [('id', 'in', products)]})
             if dests:
@@ -202,9 +206,11 @@ class sale_order_line(Model):
             res['value']['product_uom'] = uom
             res['value']['product_uos'] = uos
             res['value']['name'] = name
-            res['value']['partner_id'] = partner_id
+            # res['value']['customer_id'] = partner_id or self.singleton_partner_id
             res['value']['price_unit'] = 1.0
             res['value']['price_unit_cost'] = 1.0
+            print 'Partner id: ' + str(partner_id)
+            print 'Singleton Partner id: ' + str(self.singleton_partner_id)
             return res
 
 

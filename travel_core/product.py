@@ -29,19 +29,13 @@ class product_category(Model):
     _name = 'product.category'
     _inherit = 'product.category'
 
-    def name_get(self, cr, uid, ids, context=None):
-        if isinstance(ids, (list, tuple)) and not len(ids):
-            return []
-        if isinstance(ids, (long, int)):
-            ids = [ids]
-        reads = self.read(cr, uid, ids, ['name'], context=context)
-        return [(r['id'], r['name']) for r in reads]
+    @api.multi
+    def _name_get_fnc(self):
+        for x in self:
+            x.complete_name = x.name
+        # return {r['id']: r['name'] for r in self.read(['name'])}
 
-    def _name_get_fnc(self, cr, uid, ids, prop, unknow_none, context=None):
-        res = self.name_get(cr, uid, ids, context=context)
-        return dict(res)
-
-    complete_name = fields.Char(compute=_name_get_fnc, string=_('Name'))
+    complete_name = fields.Char(compute="_name_get_fnc", string=_('Name'))
     voucher_name = fields.Char(_('Voucher name'), size=64)
     model_name = fields.Char(_('Model name'), size=64)
 

@@ -202,6 +202,12 @@ class product_pricelist(Model):
 
         results = {}
         for product, qty, partner in products_by_qty_by_partner:
+            if hasattr(product, 'product_tmpl_id'):
+                pass
+            else:
+                prod_prod = self.pool.get('product.product')
+                product_ids = prod_prod.search(cr, uid, [('product_tmpl_id', '=', product.id)])
+                product = prod_prod.browse(cr, uid, product_ids)
             uom_price_already_computed = False
             results[product.id] = 0.0
             price = False

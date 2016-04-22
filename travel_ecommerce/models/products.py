@@ -47,3 +47,10 @@ class product_category(Model):
                     'public_categ_ids': [(4, categ.id)],
                     'website_published': True
                 })
+
+
+class product_public_category(Model):
+    _name = "product.public.category"
+    _inherit = "product.public.category"
+
+    saleable = fields.Boolean(_('Website Saleable?'), default=True)

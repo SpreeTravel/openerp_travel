@@ -4,5 +4,9 @@
         <record id="product.menu_product_category_action_form" model="ir.ui.menu">
             <field name="parent_id" ref="base.menu_base_config"/>
         </record>
+
+        <!--<record id="website_sale.product_public_category_form_view" model="ir.ui.menu">-->
+            <!--<field name="parent_id" ref="base.menu_base_config"/>-->
+        <!--</record>-->
     </data>
 </openerp>

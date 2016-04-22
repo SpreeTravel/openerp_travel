@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<openerp>
+    <data>
+        <template id="travel_layout" inherit_id="website.layout" name="Travel Website Layout">
+            <xpath expr="//header" position="after">
+                <h1>HELLO WORLD
+                    <t t-esc="name"/>
+                    <t t-esc="test"/>
+                </h1>
+            </xpath>
+        </template>
+    </data>
+</openerp>

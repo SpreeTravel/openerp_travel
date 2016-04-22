@@ -44,5 +44,6 @@ class product_category(Model):
             prods = pt.search([('categ_id', '=', obj.id)])
             for x in prods:
                 x.write({
-                    'public_categ_ids': [(4, categ.id)]
+                    'public_categ_ids': [(4, categ.id)],
+                    'website_published': True
                 })

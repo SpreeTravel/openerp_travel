@@ -203,6 +203,18 @@ class website_sale(http.Controller):
         style_obj = pool['product.style']
         style_ids = style_obj.search(cr, uid, [], context=context)
         styles = style_obj.browse(cr, uid, style_ids, context=context)
+        # cars website_published
+        option_type = pool['option.type']
+        option_value = pool['option.value']
+        ot_ids = option_type.search(cr, uid, [('code', '=', 'cl')])
+        ot = option_type.browse(cr, uid, ot_ids)
+        ot_ids = option_value.search(cr, uid, [('option_type_id', '=', ot.id)])
+        ot = option_value.browse(cr, uid, ot_ids)
+
+        # hotels website_published
+        destination = pool['destination']
+        dest_ids = destination.search(cr, uid, [('parent_id', '!=', False)])
+        dest = destination.browse(cr, uid, dest_ids)
 
         category_obj = pool['product.public.category']
         category_ids = category_obj.search(cr, uid, [('parent_id', '=', False), ('saleable', '=', True)],
@@ -223,6 +235,8 @@ class website_sale(http.Controller):
             'category': category,
             'attrib_values': attrib_values,
             'attrib_set': attrib_set,
+            'cars': ot,
+            'destination': dest,
             'pager': pager,
             'pricelist': pricelist,
             'products': products,

@@ -63,19 +63,22 @@ class Website(openerp.addons.web.controllers.main.Home):
         values = {
             'path': page,
         }
-        if page == 'homepage':
-            values.update({'name': 'Roly', 'test': request.registry['product.category'].search(request.cr, request.uid,
-                                                                                               [('id', '=', 2)])})
+        # categs_ids = request.registry['product.public.category'].search(request.cr, request.uid,
+        #                                                                 [('saleable', '=', True)])
+        # if page == 'homepage':
+        #     context = {
+        #         'categories': request.registry['product.public.category'].browse(request.cr, request.uid, categs_ids)
+        #     }
+            # values.update(context)
         values.update(opt)
         # /page/website.XXX --> /page/XXX
         if page.startswith('website.'):
             return request.redirect('/page/' + page[8:], code=301)
         elif '.' not in page:
             page = 'website.%s' % page
-
         try:
             request.website.get_template(page)
-        except ValueError, e:
+        except ValueError as e:
             # page not found
             if request.website.is_publisher():
                 page = 'website.page_404'

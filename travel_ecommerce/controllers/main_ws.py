@@ -211,6 +211,12 @@ class website_sale(http.Controller):
         ot_ids = option_value.search(cr, uid, [('option_type_id', '=', ot.id)])
         ot = option_value.browse(cr, uid, ot_ids)
 
+        # transfers website_published
+        ot_transfer_ids = option_type.search(cr, uid, [('code', '=', 'vt')])
+        ot_type_transfer = option_type.browse(cr, uid, ot_transfer_ids)
+        ot_value_ids = option_value.search(cr, uid, [('option_type_id', '=', ot_type_transfer.id)])
+        ot_transfers = option_value.browse(cr, uid, ot_value_ids)
+
         # hotels website_published
         destination = pool['destination']
         dest_ids = destination.search(cr, uid, [('parent_id', '!=', False)])
@@ -236,6 +242,7 @@ class website_sale(http.Controller):
             'attrib_values': attrib_values,
             'attrib_set': attrib_set,
             'cars': ot,
+            'transfers': ot_transfers,
             'destination': dest,
             'pager': pager,
             'pricelist': pricelist,
@@ -244,6 +251,7 @@ class website_sale(http.Controller):
             'rows': PPR,
             'styles': styles,
             'categories': categs,
+            'categories_name': [(x.name, x.name.lower()) for x in categs],
             'attributes': attributes,
             'compute_currency': compute_currency,
             'keep': keep,

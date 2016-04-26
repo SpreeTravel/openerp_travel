@@ -1,9 +1,9 @@
 <?xml version="1.0"?>
 <openerp>
     <data>
-        <template id="ecommerce_assets_frontend" inherit_id="website_sale.assets_frontend" name="My Shop">
+        <template id="ecommerce_assets_frontend" inherit_id="website_sale.assets_frontend" name="Comely Shop">
             <xpath expr="." position="inside">
-                <!--<link rel='stylesheet' href='/website_sale/static/src/css/website_sale.css'/>-->
+                <link rel='stylesheet' href='/travel_ecommerce/static/src/css/extra_functions.css'/>
 
                 <!--<script type="text/javascript" src="/travel_ecommerce/static/src/js/extra_functions.js"></script>-->
             </xpath>
@@ -14,26 +14,24 @@
                     <div class="col-md-2"/>
                     <div class="col-md-6">
                         <div class="container">
+                            <t t-set="first_category" t-value="1"/>
                             <!-- Putting saleable categories  -->
                             <ul class="nav nav-tabs" role="tablist">
-                                <t t-foreach="categories" t-as="categ">
-                                    <t t-set="id" t-value="'#' +  categ.name + '_region'"/>
-                                    <t t-set="name" t-value="categ.name"/>
+                                <t t-foreach="categories_name" t-as="categ">
+                                    <t t-set="id" t-value="'#' + categ[0] + '_region'"/>
+                                    <t t-set="name" t-value="categ[0]"/>
                                     <t t-if="categ_first">
+                                        <t t-set="first_category" t-value="categ[0]"/>
                                         <li role="presentation" class="active">
                                             <a aria-controls="profile" role="tab" data-toggle="tab" t-att-href="id">
-                                                <t t-esc="categ.name"/>
+                                                <t t-esc="categ[0]"/>
                                             </a>
                                         </li>
-                                        <script>
-                                            alert({{id}}.toString());
-                                            $(id.toString()).add_class('active');
-                                        </script>
                                     </t>
                                     <t t-if="categ_index != 0">
                                         <li role="presentation">
                                             <a aria-controls="profile" role="tab" data-toggle="tab" t-att-href="id">
-                                                <t t-esc="categ.name"/>
+                                                <t t-esc="categ[0]"/>
                                             </a>
                                         </li>
                                     </t>
@@ -44,91 +42,21 @@
                         <div class="tab-content">
                             <!-- -->
                             <!-- Car Region -->
-                            <div id="Car_region" role="tabpanel" class="tab-pane" style="padding-top:2%">
-                                <form action="/" method="post" class="">
-                                    <div class="form-group">
-                                        <label for="date_from_car">From:</label>
-                                        <input type="date" id="date_from_car" class="form-control" placeholder="From"/>
+                            <t t-foreach="categories_name" t-as="categ">
+                                <t t-set="id_name" t-value="categ[0] + '_region'"/>
+                                <t t-if="first_category == categ[0]">
+                                    <div t-att-id="id_name" role="tabpanel" class="tab-pane active"
+                                         style="padding-top:2%">
+                                        <t t-call="travel_{{categ[1]}}.{{categ[1]}}_form"/>
                                     </div>
-                                    <div class="form-group">
-                                        <label for="date_to_car">To:</label>
-                                        <input type="date" id="date_to_car" class="form-control" placeholder="To"/>
+                                </t>
+                                <t t-if="first_category != categ[0]">
+                                    <div t-att-id="id_name" role="tabpanel" class="tab-pane"
+                                         style="padding-top:2%">
+                                        <t t-call="travel_{{ categ[1] }}.{{ categ[1] }}_form"/>
                                     </div>
-                                    <div class="form-group">
-                                        <label for="input_people_car">Number of people</label>
-                                        <select class="form-control" id="input_people_car">
-                                            <option>1</option>
-                                            <option>2</option>
-                                            <option>3</option>
-                                            <option>4</option>
-                                            <option>5</option>
-                                            <option>6</option>
-                                            <option>7</option>
-                                            <option>8</option>
-                                            <option>9</option>
-                                            <option>10</option>
-                                            <option>>10</option>
-                                        </select>
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="input_car">Car type:</label>
-                                        <select class="form-control" id="input_car">
-                                            <t t-foreach="cars" t-as="car">
-                                                <t t-set="car_id" t-value="car.id"/>
-                                                <option t-att-id="car_id" t-att-value="car_id ">
-                                                    <t t-esc="car.name"/>
-                                                </option>
-                                            </t>
-                                        </select>
-                                    </div>
-                                    <button type="submit" class="btn btn-default">Search</button>
-                                </form>
-
-                            </div>
-
-                            <!-- Hotel Region -->
-                            <div id="Hotel_region" role="tabpanel" class="tab-pane" style="padding-top:2%">
-                                <form action="/" method="post" class="">
-                                    <div class="form-group">
-                                        <label for="date_from_hotel">From:</label>
-                                        <input type="date" id="date_from_hotel" class="form-control"
-                                               placeholder="From"/>
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="date_to_hotel">To:</label>
-                                        <input type="date" id="date_to_hotel" class="form-control" placeholder="To"/>
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="input_people_hotel">Number of people</label>
-                                        <select class="form-control" id="input_people_hotel">
-                                            <option>1</option>
-                                            <option>2</option>
-                                            <option>3</option>
-                                            <option>4</option>
-                                            <option>5</option>
-                                            <option>6</option>
-                                            <option>7</option>
-                                            <option>8</option>
-                                            <option>9</option>
-                                            <option>10</option>
-                                            <option>>10</option>
-                                        </select>
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="input_destination">Destination:</label>
-                                        <select class="form-control" id="input_destination">
-                                            <t t-foreach="destination" t-as="dest">
-                                                <t t-set="dest_id" t-value="dest.id"/>
-                                                <option t-att-id="dest_id" t-att-value="dest_id ">
-                                                    <t t-esc="dest.name"/>
-                                                </option>
-                                            </t>
-                                        </select>
-                                    </div>
-                                    <button type="submit" class="btn btn-default">Search</button>
-                                </form>
-
-                            </div>
+                                </t>
+                            </t>
                         </div>
                     </div>
                     <div class="col-md-4"/>

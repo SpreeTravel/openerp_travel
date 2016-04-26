@@ -34,6 +34,7 @@
              'security/ir.model.access.csv',
              'report/car_voucher.xml',
              'view/reservations.xml',
+             'view/templates.xml',
              'report/car_voucher_html.xml',
              'report/car_report_report_view.xml',
              ],

@@ -29,7 +29,12 @@
     "depends": ['travel_core'],
     "data": ['data/options.xml',
              'view/imports.xml',
-             'data/categories.xml', 'view/hotel.xml', 'view/sale.xml', 'view/rooming.xml', 'view/reservation.xml',
+             'view/templates.xml',
+             'data/categories.xml',
+             'view/hotel.xml',
+             'view/sale.xml',
+             'view/rooming.xml',
+             'view/reservation.xml',
              'security/ir.model.access.csv', 'report/hotel_voucher.xml',
              'report/hotels_report_view.xml',
              'report/hotel_voucher_html.xml'

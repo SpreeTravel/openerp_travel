@@ -32,6 +32,7 @@
              'view/sale.xml',
              'view/imports.xml',
              'view/reservations.xml',
+             'view/templates.xml',
              'security/ir.model.access.csv',
              'report/flight_voucher.xml',
              'report/flights_report_view.xml',

@@ -1,0 +1,39 @@
+<?xml version="1.0"?>
+<openerp>
+    <data>
+        <template id="flight_form">
+            <form action="/" method="post" class="">
+                <input type="hidden" value="flight"/>
+                <div class="form-group form-inline">
+                    <label for="input_destination_from">From:</label>
+                    <select class="form-control initial" id="input_destination_from">
+                        <t t-foreach="destination" t-as="dest">
+                            <t t-set="dest_id" t-value="dest.id"/>
+                            <option t-att-id="dest_id" t-att-value="dest_id ">
+                                <t t-esc="dest.name"/>
+                            </option>
+                        </t>
+                    </select>
+                    <label for="input_destination_to">To:</label>
+                    <select class="form-control initial" id="input_destination_to">
+                        <t t-foreach="destination" t-as="dest">
+                            <t t-set="dest_id" t-value="dest.id"/>
+                            <option t-att-id="dest_id" t-att-value="dest_id ">
+                                <t t-esc="dest.name"/>
+                            </option>
+                        </t>
+                    </select>
+                </div>
+                <div class="form-group form-inline">
+                    <label for="date_from_flight">Flight In:</label>
+                    <input type="date" id="date_from_flight" class="form-control"
+                           placeholder="From"/>
+                    <label for="date_to_flight">Flight Out:</label>
+                    <input type="date" id="date_to_flight" class="form-control" placeholder="To"/>
+                </div>
+                <button type="submit" class="btn btn-default">Search</button>
+            </form>
+
+        </template>
+    </data>
+</openerp>

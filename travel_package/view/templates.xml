@@ -5,23 +5,23 @@
             <form action="/" method="post" class="">
                 <input type="hidden" value="Package"/>
                 <div class="form-group form-inline">
-                    <label for="input_destination_from">From:</label>
-                    <select class="form-control initial" id="input_destination_from">
-                        <t t-foreach="destination" t-as="dest">
-                            <t t-set="dest_id" t-value="dest.id"/>
-                            <option t-att-id="dest_id" t-att-value="dest_id ">
-                                <t t-esc="dest.name"/>
+                    <label for="input_min_pax_package">Min Pax:</label>
+                    <select class="form-control initial" id="input_min_pax_package">
+                        <t t-foreach="range(1,31)" t-as="i">
+                            <option>
+                                <t t-esc="i"/>
                             </option>
                         </t>
+                        <option>more</option>
                     </select>
-                    <label for="input_destination_to">To:</label>
-                    <select class="form-control initial" id="input_destination_to">
-                        <t t-foreach="destination" t-as="dest">
-                            <t t-set="dest_id" t-value="dest.id"/>
-                            <option t-att-id="dest_id" t-att-value="dest_id ">
-                                <t t-esc="dest.name"/>
+                    <label for="input_max_pax_package">Max Pax:</label>
+                    <select class="form-control initial" id="input_max_pax_package">
+                        <t t-foreach="range(1,31)" t-as="i">
+                            <option>
+                                <t t-esc="i"/>
                             </option>
                         </t>
+                        <option>more</option>
                     </select>
                 </div>
                 <button type="submit" class="btn btn-default">Search</button>

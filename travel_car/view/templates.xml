@@ -5,14 +5,14 @@
             <form action="/" method="post" class="">
                 <input type="hidden" value="Car"/>
                 <div class="form-group form-inline">
-                    <label for="date_from_car">From</label>
+                    <label for="date_from_car">From:</label>
                     <input type="date" id="date_from_car" class="form-control"
                            placeholder="From"/>
-                    <label for="date_to_car">To</label>
+                    <label for="date_to_car">To:</label>
                     <input type="date" id="date_to_car" class="form-control" placeholder="To"/>
                 </div>
                 <div class="form-group form-inline">
-                    <label for="input_people_car">Number of people</label>
+                    <label for="input_people_car">Passengers:</label>
                     <select class="form-control initial" id="input_people_car">
                         <option>1</option>
                         <option>2</option>
@@ -28,7 +28,7 @@
                     </select>
                 </div>
                 <div class="form-group form-inline">
-                    <label for="input_car">Car type</label>
+                    <label for="input_car">Car type:</label>
                     <select class="form-control initial" id="input_car">
                         <t t-foreach="cars" t-as="car">
                             <t t-set="car_id" t-value="car.id"/>

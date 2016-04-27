@@ -4,8 +4,7 @@
         <template id="ecommerce_assets_frontend" inherit_id="website_sale.assets_frontend" name="Comely Shop">
             <xpath expr="." position="inside">
                 <link rel='stylesheet' href='/travel_ecommerce/static/src/css/extra_functions.css'/>
-
-                <!--<script type="text/javascript" src="/travel_ecommerce/static/src/js/extra_functions.js"></script>-->
+                <script type="text/javascript" src='/travel_ecommerce/static/src/js/extra_functions.js'/>
             </xpath>
         </template>
         <template id="travel_layout" inherit_id="website_sale.products" name="Travel Website Layout">

@@ -6,6 +6,7 @@ from openerp.http import request
 from openerp.tools.translate import _
 from openerp.addons.website.models.website import slug
 from openerp.addons.web.controllers.main import login_redirect
+import simplejson
 
 PPG = 20  # Products Per Page
 PPR = 4  # Products Per Row
@@ -259,6 +260,18 @@ class website_sale(http.Controller):
             'attrib_encode': lambda attribs: werkzeug.url_encode([('attrib', i) for i in attribs]),
         }
         return request.website.render("website_sale.products", values)
+
+    @http.route(['/get_destinations'], type='http', auth="public", methods=['POST'], website=True)
+    def get_destiantions(self, name):
+        cr, uid, pool = request.cr, request.uid, request.registry
+        dest_table = pool['destination']
+        dest_ids = dest_table.search(cr, uid, [('name', 'ilike', '%' + name + '%')])
+        dest = [x.name for x in dest_table.browse(cr, uid, dest_ids)]
+        context = {
+            'dest': dest
+        }
+
+        return request.make_response(simplejson.dumps(context), headers=[('Content-Type', 'application/json')])
 
     @http.route(['/shop/product/<model("product.template"):product>'], type='http', auth="public", website=True)
     def product(self, product, category='', search='', **kwargs):

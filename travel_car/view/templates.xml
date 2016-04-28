@@ -14,16 +14,11 @@
                 <div class="form-group form-inline">
                     <label for="input_people_car">Passengers:</label>
                     <select class="form-control initial" id="input_people_car">
-                        <option>1</option>
-                        <option>2</option>
-                        <option>3</option>
-                        <option>4</option>
-                        <option>5</option>
-                        <option>6</option>
-                        <option>7</option>
-                        <option>8</option>
-                        <option>9</option>
-                        <option>10</option>
+                        <t t-foreach="range(1,11)" t-as="i">
+                            <option>
+                                <t t-esc="i"/>
+                            </option>
+                        </t>
                         <option>more</option>
                     </select>
                 </div>

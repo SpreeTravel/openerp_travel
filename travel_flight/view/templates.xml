@@ -2,21 +2,20 @@
 <openerp>
     <data>
         <template id="flight_form">
-            <form action="/" method="post" class="">
-                <input type="hidden" value="flight"/>
+            <form action="/search" method="POST" class="">
+                <input type="hidden" name="category" value="flight"/>
                 <div class="form-group form-inline">
                     <label for="input_destination_from">From:</label>
-                    <input type="text" class="autocomplete" id="input_destination_from"/>
+                    <input type="text" name="destination_from" class="autocomplete" id="input_destination_from"/>
 
                     <label for="input_destination_to">To:</label>
-                    <input type="text" class="autocomplete" id="input_destination_to"/>
+                    <input type="text" name="destination_to" class="autocomplete" id="input_destination_to"/>
                 </div>
                 <div class="form-group form-inline">
                     <label for="date_from_flight">Flight In:</label>
-                    <input type="date" id="date_from_flight" class="form-control"
-                           placeholder="From"/>
+                    <input type="date" name="date_from" id="date_from_flight" class="form-control"/>
                     <label for="date_to_flight">Flight Out:</label>
-                    <input type="date" id="date_to_flight" class="form-control" placeholder="To"/>
+                    <input type="date" name="date_to" id="date_to_flight" class="form-control"/>
                 </div>
                 <button type="submit" class="btn btn-default">Search</button>
             </form>

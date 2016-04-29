@@ -7,6 +7,7 @@ from openerp.tools.translate import _
 from openerp.addons.website.models.website import slug
 from openerp.addons.web.controllers.main import login_redirect
 import simplejson
+import datetime
 from dateutil import parser
 
 PPG = 20  # Products Per Page
@@ -149,22 +150,51 @@ class website_sale(http.Controller):
         pricelist_pi = pool.get('pricelist.partnerinfo')
         product_supplierinfo = pool.get('product.supplierinfo')
 
-        ov_ids = option_value.search(cr, uid, [('name', '=', vehycle_type)])
+        ov_ids = option_value.search(cr, uid, [('id', '=', vehycle_type)])
         ov = option_value.browse(cr, uid, ov_ids)
 
-        pc_ids = prod_car.search(cr, uid, [('passenger', '>=', passengers), ('class_id', '=', ov.id)])
-        psi_ids = product_supplierinfo.search(cr, uid, [('product_tmpl_id', 'in', pc_ids)])
-
-        ppi_ids = pricelist_pi.search(cr, uid, [('start_date', '>=', date_in), ('end_date', '<=', date_out),
+        pc_ids = prod_car.search(cr, uid, [('passengers', '>=', passengers), ('class_id', '=', ov.id)])
+        pc = prod_car.browse(cr, uid, pc_ids)
+        psi_ids = product_supplierinfo.search(cr, uid, [
+            ('product_tmpl_id', 'in', [x.product_id.product_tmpl_id.id for x in pc])])
+        ppi_ids = pricelist_pi.search(cr, uid, [('start_date', '<=', date_in), ('end_date', '>=', date_out),
                                                 ('suppinfo_id', 'in', psi_ids)])
+
         ppi = pricelist_pi.browse(cr, uid, ppi_ids)
 
-        return [c.suppinfo_id.product_tmpl_id.id for c in ppi]
+        return list(set([c.suppinfo_id.product_tmpl_id.id for c in ppi]))
+
+    def flight_search(self, cr, uid, pool, date_from, date_to, destination_from, destination_to):
+        prod_flight = pool.get('product.flight')
+        destination = pool.get('destination')
+        pricelist_pi = pool.get('pricelist.partnerinfo')
+        product_supplierinfo = pool.get('product.supplierinfo')
+
+        dest_ids = destination.search(cr, uid, [('name', '=', destination_from)])
+        dest_from = destination.browse(cr, uid, dest_ids)
+        dest_ids = destination.search(cr, uid, [('name', '=', destination_to)])
+        dest_to = destination.browse(cr, uid, dest_ids)
+        if dest_from and dest_to:
+            pf_ids = prod_flight.search(cr, uid, [('origin', '=', dest_from.id), ('to', '=', dest_to.id)])
+            pf = prod_flight.browse(cr, uid, pf_ids)
+            psi_ids = product_supplierinfo.search(cr, uid, [
+                ('product_tmpl_id', 'in', [x.product_id.product_tmpl_id.id for x in pf])])
+            ppi_ids = pricelist_pi.search(cr, uid, [('start_date', '<=', date_from), ('end_date', '>=', date_to),
+                                                    ('suppinfo_id', 'in', psi_ids)])
+            ppi = pricelist_pi.browse(cr, uid, ppi_ids)
+            return list(set([c.suppinfo_id.product_tmpl_id.id for c in ppi]))
+        return []
+
+    def fix_date(self, date):
+        if date:
+            return parser.parse(date, yearfirst=True)
+        else:
+            return False
 
     def validate_dates(self, date_in, date_out):
         if date_in and date_out:
-            date_in = parser.parser(date_in)
-            date_out = parser.parser(date_out)
+            date_in = self.fix_date(date_in)
+            date_out = self.fix_date(date_out)
             return date_out >= date_in
         else:
             return 0
@@ -172,15 +202,21 @@ class website_sale(http.Controller):
     @http.route(['/search'], type='http', auth='public', methods=['POST'], website=True)
     def search(self, **post):
         cr, uid, context, pool = request.cr, request.uid, request.context, request.registry
-        category = post.get('category', '')
+        category = post.get('category', '').lower()
         if category:
-            if category.lower() == 'car' and self.validate_dates(post.get('date_from', False),
-                                                                 post.get('date_to', False)):
-                products = self.car_search(cr, uid, pool, post.get('date_from', False), post.get('date_to', False),
+            products = []
+            if category == 'car' and self.validate_dates(post.get('date_from', False),
+                                                         post.get('date_to', False)):
+                products = self.car_search(cr, uid, pool, self.fix_date(post.get('date_from', False)),
+                                           self.fix_date(post.get('date_to', False)),
                                            post.get('people_car', False), post.get('type_car', False))
-                return request.redirect('/shop?products=' + ','.join(str(n) for n in products))
-            else:
-                request.redirect('/shop')
+            elif category == 'flight':
+                products = self.flight_search(cr, uid, pool, self.fix_date(post.get('date_from', False)),
+                                              self.fix_date(post.get('date_to', False)),
+                                              post.get('destination_from', False), post.get('destination_to', False))
+            return request.redirect(
+                '/shop/?products=' + ','.join(
+                    str(n) for n in products) if products else '/shop/?products=' + 'empty')
         else:
             request.website.render('website.404')
 
@@ -239,8 +275,12 @@ class website_sale(http.Controller):
         if attrib_list:
             post['attrib'] = attrib_list
         pager = request.website.pager(url=url, total=product_count, page=page, step=PPG, scope=7, url_args=post)
-        if products:
-            products = product_obj.browse(cr, uid, [int(n) for n in products.split(',')], context=context)
+        if products or products == 'empty':
+            if products == 'empty':
+                products = []
+            else:
+                products = product_obj.browse(cr, uid, [int(n) for n in products.split(',')], context=context)
+            pager = request.website.pager(url=url, total=len(products), page=page, step=PPG, scope=7, url_args=post)
         else:
             product_ids = product_obj.search(cr, uid, domain, limit=PPG, offset=pager['offset'],
                                              order='website_published desc, website_sequence desc', context=context)

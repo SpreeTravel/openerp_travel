@@ -61,7 +61,6 @@ function create_select(type, number, quantity) {
     return select
 }
 
-
 function create_child(number) {
     var div = document.createElement('div');
     div.setAttribute('class', 'form-group form-inline');

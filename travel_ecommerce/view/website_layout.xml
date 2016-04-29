@@ -40,7 +40,7 @@
 
                         <div class="tab-content">
                             <!-- -->
-                            <!-- Car Region -->
+                            <!-- Categories Region -->
                             <t t-foreach="categories_name" t-as="categ">
                                 <t t-set="id_name" t-value="categ[0] + '_region'"/>
                                 <t t-if="first_category == categ[0]">

@@ -7,6 +7,7 @@ from openerp.tools.translate import _
 from openerp.addons.website.models.website import slug
 from openerp.addons.web.controllers.main import login_redirect
 import simplejson
+from dateutil import parser
 
 PPG = 20  # Products Per Page
 PPR = 4  # Products Per Row
@@ -142,12 +143,53 @@ class website_sale(http.Controller):
 
         return attribute_value_ids
 
+    def car_search(self, cr, uid, pool, date_in, date_out, passengers, vehycle_type):
+        prod_car = pool.get('product.car')
+        option_value = pool.get('option.value')
+        pricelist_pi = pool.get('pricelist.partnerinfo')
+        product_supplierinfo = pool.get('product.supplierinfo')
+
+        ov_ids = option_value.search(cr, uid, [('name', '=', vehycle_type)])
+        ov = option_value.browse(cr, uid, ov_ids)
+
+        pc_ids = prod_car.search(cr, uid, [('passenger', '>=', passengers), ('class_id', '=', ov.id)])
+        psi_ids = product_supplierinfo.search(cr, uid, [('product_tmpl_id', 'in', pc_ids)])
+
+        ppi_ids = pricelist_pi.search(cr, uid, [('start_date', '>=', date_in), ('end_date', '<=', date_out),
+                                                ('suppinfo_id', 'in', psi_ids)])
+        ppi = pricelist_pi.browse(cr, uid, ppi_ids)
+
+        return [c.suppinfo_id.product_tmpl_id.id for c in ppi]
+
+    def validate_dates(self, date_in, date_out):
+        if date_in and date_out:
+            date_in = parser.parser(date_in)
+            date_out = parser.parser(date_out)
+            return date_out >= date_in
+        else:
+            return 0
+
+    @http.route(['/search'], type='http', auth='public', methods=['POST'], website=True)
+    def search(self, **post):
+        cr, uid, context, pool = request.cr, request.uid, request.context, request.registry
+        category = post.get('category', '')
+        if category:
+            if category.lower() == 'car' and self.validate_dates(post.get('date_from', False),
+                                                                 post.get('date_to', False)):
+                products = self.car_search(cr, uid, pool, post.get('date_from', False), post.get('date_to', False),
+                                           post.get('people_car', False), post.get('type_car', False))
+                return request.redirect('/shop?products=' + ','.join(str(n) for n in products))
+            else:
+                request.redirect('/shop')
+        else:
+            request.website.render('website.404')
+
     @http.route(['/shop',
                  '/shop/page/<int:page>',
                  '/shop/category/<model("product.public.category"):category>',
                  '/shop/category/<model("product.public.category"):category>/page/<int:page>'
                  ], type='http', auth="public", website=True)
-    def shop(self, page=0, category=None, search='', **post):
+    def shop(self, page=0, category=None, search='', products=None, **post):
         cr, uid, context, pool = request.cr, request.uid, request.context, request.registry
 
         domain = request.website.sale_product_domain()
@@ -197,9 +239,12 @@ class website_sale(http.Controller):
         if attrib_list:
             post['attrib'] = attrib_list
         pager = request.website.pager(url=url, total=product_count, page=page, step=PPG, scope=7, url_args=post)
-        product_ids = product_obj.search(cr, uid, domain, limit=PPG, offset=pager['offset'],
-                                         order='website_published desc, website_sequence desc', context=context)
-        products = product_obj.browse(cr, uid, product_ids, context=context)
+        if products:
+            products = product_obj.browse(cr, uid, [int(n) for n in products.split(',')], context=context)
+        else:
+            product_ids = product_obj.search(cr, uid, domain, limit=PPG, offset=pager['offset'],
+                                             order='website_published desc, website_sequence desc', context=context)
+            products = product_obj.browse(cr, uid, product_ids, context=context)
 
         style_obj = pool['product.style']
         style_ids = style_obj.search(cr, uid, [], context=context)

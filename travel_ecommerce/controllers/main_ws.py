@@ -162,7 +162,33 @@ class website_sale(http.Controller):
 
         ppi = pricelist_pi.browse(cr, uid, ppi_ids)
 
-        return list(set([c.suppinfo_id.product_tmpl_id.id for c in ppi]))
+        return self.get_products_templates_published(ppi)
+
+    def transfer_search(self, cr, uid, pool, destination_from, destination_to, date_in, vehycle_type):
+        prod_transfer = pool.get('product.transfer')
+        option_value = pool.get('option.value')
+        destination = pool.get('destination')
+        pricelist_pi = pool.get('pricelist.partnerinfo')
+        product_supplierinfo = pool.get('product.supplierinfo')
+
+        dest_ids = destination.search(cr, uid, [('name', '=', destination_from)])
+        dest_from = destination.browse(cr, uid, dest_ids)
+        dest_ids = destination.search(cr, uid, [('name', '=', destination_to)])
+        dest_to = destination.browse(cr, uid, dest_ids)
+
+        ov_ids = option_value.search(cr, uid, [('id', '=', vehycle_type)])
+        ov = option_value.browse(cr, uid, ov_ids)
+
+        pc_ids = prod_transfer.search(cr, uid, [('origin', '=', dest_from.id), ('to', '=', dest_to.id)])
+        pc = prod_transfer.browse(cr, uid, pc_ids)
+        psi_ids = product_supplierinfo.search(cr, uid, [
+            ('product_tmpl_id', 'in', [x.product_id.product_tmpl_id.id for x in pc])])
+        ppi_ids = pricelist_pi.search(cr, uid, [('suppinfo_id', 'in', psi_ids), ('start_date', '<=', date_in),
+                                                ('end_date', '>=', date_in), ('vehycle_type_id', '=', ov.id)])
+
+        ppi = pricelist_pi.browse(cr, uid, ppi_ids)
+
+        return self.get_products_templates_published(ppi)
 
     def flight_search(self, cr, uid, pool, date_from, date_to, destination_from, destination_to):
         prod_flight = pool.get('product.flight')
@@ -182,8 +208,12 @@ class website_sale(http.Controller):
             ppi_ids = pricelist_pi.search(cr, uid, [('start_date', '<=', date_from), ('end_date', '>=', date_to),
                                                     ('suppinfo_id', 'in', psi_ids)])
             ppi = pricelist_pi.browse(cr, uid, ppi_ids)
-            return list(set([c.suppinfo_id.product_tmpl_id.id for c in ppi]))
+            return self.get_products_templates_published(ppi)
         return []
+
+    def get_products_templates_published(self, ppi):
+        return list(
+            set([c.suppinfo_id.product_tmpl_id.id for c in ppi if c.suppinfo_id.product_tmpl_id.website_published]))
 
     def fix_date(self, date):
         if date:
@@ -214,6 +244,11 @@ class website_sale(http.Controller):
                 products = self.flight_search(cr, uid, pool, self.fix_date(post.get('date_from', False)),
                                               self.fix_date(post.get('date_to', False)),
                                               post.get('destination_from', False), post.get('destination_to', False))
+            elif category == 'transfer':
+                products = self.transfer_search(cr, uid, pool, post.get('destination_from', False),
+                                                post.get('destination_to', False),
+                                                self.fix_date(post.get('date_in', False)),
+                                                post.get('transfer_type', False))
             return request.redirect(
                 '/shop/?products=' + ','.join(
                     str(n) for n in products) if products else '/shop/?products=' + 'empty')

@@ -2,17 +2,17 @@
 <openerp>
     <data>
         <template id="transfer_form">
-            <form action="/" method="post" class="">
-                <input type="hidden" value="Transfer"/>
+            <form action="/search" method="post" class="">
+                <input type="hidden" name="category" value="transfer"/>
                 <div class="form-group form-inline">
                     <label for="input_destination_from">From:</label>
-                    <input type="text" class="autocomplete" id="input_destination_from"/>
+                    <input type="text" name="destination_from" class="autocomplete" id="input_destination_from"/>
                     <label for="input_destination_to">To:</label>
-                    <input type="text" class="autocomplete" id="input_destination_to"/>
+                    <input type="text" name="destination_to" class="autocomplete" id="input_destination_to"/>
                 </div>
                 <div class="form-group form-inline">
                     <label for="date_from_hotel">Date In:</label>
-                    <input type="date" id="date_from_hotel" class="form-control"
+                    <input type="date" name="date_in" id="date_from_hotel" class="form-control"
                            placeholder="From"/>
                 </div>
                 <!--<div class="form-group">-->
@@ -20,7 +20,7 @@
                 <!--</div>-->
                 <div class="form-group form-inline">
                     <label for="input_transfer_type">Transfer Type:</label>
-                    <select class="form-control initial" id="input_transfer_type">
+                    <select class="form-control initial" name="transfer_type" id="input_transfer_type">
                         <t t-foreach="transfers" t-as="transf">
                             <t t-set="transf_id" t-value="transf.id"/>
                             <option t-att-id="transf_id" t-att-value="transf_id ">

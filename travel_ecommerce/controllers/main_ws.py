@@ -144,6 +144,28 @@ class website_sale(http.Controller):
 
         return attribute_value_ids
 
+    def hotel_search(self, cr, uid, pool, destination, date_in, date_out, rooms, post):
+        prod_hotel = pool.get('product.hotel')
+        destination = pool.get('destination')
+        pricelist_pi = pool.get('pricelist.partnerinfo')
+        product_supplierinfo = pool.get('product.supplierinfo')
+        rooms_conf = [
+            (post.get('adults_hotel_' + str(room + 1), 0), post.get('children_hotel_' + str(room + 1), 0)) for room in
+            range(rooms)]
+        dest_ids = destination.search(cr, uid, [('name', '=', destination)])
+        dest = destination.browse(cr, uid, dest_ids)
+
+        pc_ids = prod_hotel.search(cr, uid, [('destination_id', '=', dest.id)])
+        pc = prod_hotel.browse(cr, uid, pc_ids)
+        psi_ids = product_supplierinfo.search(cr, uid, [
+            ('product_tmpl_id', 'in', [x.product_id.product_tmpl_id.id for x in pc])])
+        ppi_ids = pricelist_pi.search(cr, uid, [('start_date', '<=', date_in), ('end_date', '>=', date_out),
+                                                ('suppinfo_id', 'in', psi_ids)])
+
+        ppi = pricelist_pi.browse(cr, uid, ppi_ids)
+
+        return self.get_products_templates_published(ppi)
+
     def package_search(self, cr, uid, pool, min_pax, max_pax):
         prod_package = pool.get('product.package')
         pricelist_pi = pool.get('pricelist.partnerinfo')
@@ -268,6 +290,11 @@ class website_sale(http.Controller):
             elif category == 'package':
                 products = self.package_search(cr, uid, pool, post.get('min_pax', False),
                                                post.get('max_pax', False))
+            elif category == 'hotel':
+                products = self.hotel_search(cr, uid, pool, post.get('destination', False),
+                                             self.fix_date(post.get('date_in', False)),
+                                             self.fix_date(post.get('date_out', False)),
+                                             int(post.get('rooms', False)), post)
             return request.redirect(
                 '/shop/?products=' + ','.join(
                     str(n) for n in products) if products else '/shop/?products=' + 'empty')

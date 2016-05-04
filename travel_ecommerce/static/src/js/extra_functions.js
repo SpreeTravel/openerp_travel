@@ -52,6 +52,7 @@ function create_select(type, number, quantity) {
     var select = document.createElement('select');
     select.setAttribute('class', 'form-control');
     select.setAttribute('id', 'input_' + type + '_hotel_' + number.toString());
+    select.setAttribute('name', type + '_hotel_' + number.toString());
     for (var index = 0; index < quantity; index++) {
         var option = create_option(index + 1);
         select.appendChild(option);

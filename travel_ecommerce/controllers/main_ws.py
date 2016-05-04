@@ -144,6 +144,22 @@ class website_sale(http.Controller):
 
         return attribute_value_ids
 
+    def package_search(self, cr, uid, pool, min_pax, max_pax):
+        prod_package = pool.get('product.package')
+        pricelist_pi = pool.get('pricelist.partnerinfo')
+        product_supplierinfo = pool.get('product.supplierinfo')
+
+        pc_ids = prod_package.search(cr, uid, [])
+        pc = prod_package.browse(cr, uid, pc_ids)
+        psi_ids = product_supplierinfo.search(cr, uid, [
+            ('product_tmpl_id', 'in', [x.product_id.product_tmpl_id.id for x in pc])])
+        ppi_ids = pricelist_pi.search(cr, uid, [('min_paxs', '<=', min_pax), ('max_paxs', '>=', max_pax),
+                                                ('suppinfo_id', 'in', psi_ids)])
+
+        ppi = pricelist_pi.browse(cr, uid, ppi_ids)
+
+        return self.get_products_templates_published(ppi)
+
     def car_search(self, cr, uid, pool, date_in, date_out, passengers, vehycle_type):
         prod_car = pool.get('product.car')
         option_value = pool.get('option.value')
@@ -249,6 +265,9 @@ class website_sale(http.Controller):
                                                 post.get('destination_to', False),
                                                 self.fix_date(post.get('date_in', False)),
                                                 post.get('transfer_type', False))
+            elif category == 'package':
+                products = self.package_search(cr, uid, pool, post.get('min_pax', False),
+                                               post.get('max_pax', False))
             return request.redirect(
                 '/shop/?products=' + ','.join(
                     str(n) for n in products) if products else '/shop/?products=' + 'empty')

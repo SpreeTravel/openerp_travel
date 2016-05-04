@@ -2,11 +2,11 @@
 <openerp>
     <data>
         <template id="package_form">
-            <form action="/" method="post" class="">
-                <input type="hidden" value="Package"/>
+            <form action="/search" method="post" class="">
+                <input type="hidden" name="category" value="Package"/>
                 <div class="form-group form-inline">
                     <label for="input_min_pax_package">Min Pax:</label>
-                    <select class="form-control initial" id="input_min_pax_package">
+                    <select class="form-control initial" name="min_pax" id="input_min_pax_package">
                         <t t-foreach="range(1,31)" t-as="i">
                             <option>
                                 <t t-esc="i"/>
@@ -15,7 +15,7 @@
                         <option>more</option>
                     </select>
                     <label for="input_max_pax_package">Max Pax:</label>
-                    <select class="form-control initial" id="input_max_pax_package">
+                    <select class="form-control initial" name="max_pax" id="input_max_pax_package">
                         <t t-foreach="range(1,31)" t-as="i">
                             <option>
                                 <t t-esc="i"/>

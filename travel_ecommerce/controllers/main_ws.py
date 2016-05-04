@@ -184,7 +184,7 @@ class website_sale(http.Controller):
         psi_ids = product_supplierinfo.search(cr, uid, [
             ('product_tmpl_id', 'in', [x.product_id.product_tmpl_id.id for x in pc])])
         ppi_ids = pricelist_pi.search(cr, uid, [('suppinfo_id', 'in', psi_ids), ('start_date', '<=', date_in),
-                                                ('end_date', '>=', date_in), ('vehycle_type_id', '=', ov.id)])
+                                                ('end_date', '>=', date_in), ('vehicle_type_id', '=', ov.id)])
 
         ppi = pricelist_pi.browse(cr, uid, ppi_ids)
 

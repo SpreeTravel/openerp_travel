@@ -90,10 +90,7 @@ class import_transfer(TransientModel):
                             'name': name,
                             'categ_id': cat.id,
                         })
-                        pp_temp = pp.create({
-                            'product_tmpl_id': pt_temp.id,
-                            'name_template': name
-                        })
+                        pp_temp = pp.search([('product_tmpl_id', '=', pt_temp.id)])
                         transfer.create({
                             'transfer_name': name,
                             'product_id': pp_temp.id,

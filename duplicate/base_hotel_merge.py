@@ -85,25 +85,25 @@ class ResultList(TransientModel):
     def unlink(self):
         if not len(self):
             return False
-        obj = self[0]
-        if self.check_sale_order(obj.similar_product_id):
-            raise except_orm(_('Error'), _('This product belongs to a order, it can\'t be deleted'))
-        else:
-            pp = self.env['product.product']
-            pt = self.env['product.product']
-            pc = self.env['product.category']
-            product_p = pp.search([('id', '=', obj.similar_product_id.id)])
-            product_t = pt.search([('id', '=', obj.similar_product_id.product_tmpl_id.id)])
-            product_c = pc.search([('id', '=', product_t.categ_id.id)])
-            table = self.env['product.' + product_c.name.lower()]
-            element = table.search([('product_id', '=', product_p.id)])
+            obj = self[0]
+            if self.check_sale_order(obj.similar_product_id):
+                raise except_orm(_('Error'), _('This product belongs to a order, it can\'t be deleted'))
+            else:
+                pp = self.env['product.product']
+                pt = self.env['product.product']
+                pc = self.env['product.category']
+                product_p = pp.search([('id', '=', obj.similar_product_id.id)])
+                product_t = pt.search([('id', '=', obj.similar_product_id.product_tmpl_id.id)])
+                product_c = pc.search([('id', '=', product_t.categ_id.id)])
+                table = self.env['product.' + product_c.name.lower()]
+                element = table.search([('product_id', '=', product_p.id)])
 
-            try:
-                element.unlink()
-                product_p.unlink()
-                product_t.unlink()
-            except Exception as e:
-                raise except_orm(_('Error'), _('Something went wrong!!!\n Message: ' + str(e)))
+                try:
+                    element.unlink()
+                    product_p.unlink()
+                    product_t.unlink()
+                except Exception as e:
+                    raise except_orm(_('Error'), _('Something went wrong!!!\n Message: ' + str(e)))
         return super(ResultList, self).unlink()
 
     @api.multi

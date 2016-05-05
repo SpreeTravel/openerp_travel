@@ -1,0 +1,29 @@
+<?xml version="1.0"?>
+<openerp>
+    <data>
+        <record id="travel_product_category_tree_view" model="ir.ui.view">
+            <field name="name">travel.product.category.tree.view</field>
+            <field name="model">product.category</field>
+            <field name="inherit_id" ref="product.product_category_list_view"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='complete_name']" position="after">
+                    <button name="update_categories" type="object" string="Add to website" icon="gtk-add"/>
+                </xpath>
+            </field>
+        </record>
+        <record id="travel_product_public_category_form_view" model="ir.ui.view">
+            <field name="name">travel.product.public.category.form</field>
+            <field name="model">product.public.category</field>
+            <!--<field name="parent_id" ref="base.menu_base_config"/>-->
+            <field name="inherit_id" ref="website_sale.product_public_category_form_view"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='name']" position="after">
+                    <field name="saleable"/>
+                </xpath>
+
+            </field>
+        </record>
+        <menuitem action="website_sale.product_public_category_action" id="travel_menu_product_public_category"
+                  parent="base.menu_base_config" sequence="10"/>
+    </data>
+</openerp>

@@ -1,0 +1,31 @@
+<?xml version="1.0"?>
+<openerp>
+    <data>
+        <template id="package_form">
+            <form action="/search" method="post" class="">
+                <input type="hidden" name="category" value="Package"/>
+                <div class="form-group form-inline">
+                    <label for="input_min_pax_package">Min Pax:</label>
+                    <select class="form-control initial" name="min_pax" id="input_min_pax_package">
+                        <t t-foreach="range(1,31)" t-as="i">
+                            <option>
+                                <t t-esc="i"/>
+                            </option>
+                        </t>
+                        <option>more</option>
+                    </select>
+                    <label for="input_max_pax_package">Max Pax:</label>
+                    <select class="form-control initial" name="max_pax" id="input_max_pax_package">
+                        <t t-foreach="range(1,31)" t-as="i">
+                            <option>
+                                <t t-esc="i"/>
+                            </option>
+                        </t>
+                        <option>more</option>
+                    </select>
+                </div>
+                <button type="submit" class="btn btn-default">Search</button>
+            </form>
+        </template>
+    </data>
+</openerp>

@@ -1,0 +1,58 @@
+<?xml version="1.0"?>
+<openerp>
+    <data>
+        <template id="hotel_form">
+            <form action="/search" method="post" class="">
+                <input type="hidden" name="category" value="Hotel"/>
+                <div class="form-group form-inline">
+                    <label for="input_destination_to">Destination:</label>
+                    <input type="text" class="autocomplete" name="destination" id="input_destination_to"/>
+                </div>
+                <div class="form-group form-inline">
+                    <label for="date_from_hotel">From:</label>
+                    <input type="date" id="date_from_hotel" name="date_in" class="form-control"
+                           placeholder="From"/>
+                    <label for="date_to_hotel">To:</label>
+                    <input type="date" id="date_to_hotel" name="date_out" class="form-control"
+                           placeholder="To"/>
+                </div>
+                <!--<div class="form-group">-->
+
+                <!--</div>-->
+                <div class="form-group form-inline">
+                    <label for="input_room_hotel">Rooms:</label>
+                    <select class="form-control" name="rooms" id="input_room_hotel">
+                        <option>1</option>
+                        <option>2</option>
+                        <option>3</option>
+                        <option>4</option>
+                        <option>5</option>
+                    </select>
+                </div>
+                <div id="ad_ch_region">
+                    <div class="form-group form-inline">
+                        <label for="input_adults_hotel_1">Adults:</label>
+                        <select class="form-control" name="adults_hotel_1" id="input_adults_hotel_1">
+                            <option>1</option>
+                            <option>2</option>
+                            <option>3</option>
+                            <option>4</option>
+                            <option>5</option>
+                            <option>more</option>
+                        </select>
+                        <label for="input_children_hotel_1">Children:</label>
+                        <select class="form-control" name="children_hotel_1" id="input_children_hotel_1">
+                            <option>1</option>
+                            <option>2</option>
+                            <option>3</option>
+                            <option>4</option>
+                            <option>more</option>
+                        </select>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn btn-default">Search</button>
+            </form>
+        </template>
+    </data>
+</openerp>

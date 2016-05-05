@@ -32,6 +32,7 @@
              'view/sale.xml',
              'view/imports.xml',
              'view/reservation.xml',
+             'view/templates.xml',
              'security/ir.model.access.csv',
              'report/transfer_voucher.xml',
              'report/transfer_report_view.xml',

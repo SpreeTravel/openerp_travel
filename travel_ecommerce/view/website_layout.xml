@@ -1,0 +1,67 @@
+<?xml version="1.0"?>
+<openerp>
+    <data>
+        <template id="ecommerce_assets_frontend" inherit_id="website_sale.assets_frontend" name="Comely Shop">
+            <xpath expr="." position="inside">
+                <link rel='stylesheet' href='/travel_ecommerce/static/src/css/extra_functions.css'/>
+                <script type="text/javascript" src='/travel_ecommerce/static/src/js/extra_functions.js'/>
+            </xpath>
+        </template>
+        <template id="travel_layout" inherit_id="website_sale.products" name="Travel Website Layout">
+            <xpath expr="//div[@class='products_pager']" position="replace">
+                <div class="container" style="padding-top:4%; padding-bottom:3%;">
+                    <div class="col-md-2"/>
+                    <div class="col-md-6">
+                        <div class="container">
+                            <t t-set="first_category" t-value="1"/>
+                            <!-- Putting saleable categories  -->
+                            <ul class="nav nav-tabs" role="tablist">
+                                <t t-foreach="categories_name" t-as="categ">
+                                    <t t-set="id" t-value="'#' + categ[0] + '_region'"/>
+                                    <t t-set="name" t-value="categ[0]"/>
+                                    <t t-if="categ_first">
+                                        <t t-set="first_category" t-value="categ[0]"/>
+                                        <li role="presentation" class="active">
+                                            <a aria-controls="profile" role="tab" data-toggle="tab" t-att-href="id">
+                                                <t t-esc="categ[0]"/>
+                                            </a>
+                                        </li>
+                                    </t>
+                                    <t t-if="categ_index != 0">
+                                        <li role="presentation">
+                                            <a aria-controls="profile" role="tab" data-toggle="tab" t-att-href="id">
+                                                <t t-esc="categ[0]"/>
+                                            </a>
+                                        </li>
+                                    </t>
+                                </t>
+                            </ul>
+                        </div>
+
+                        <div class="tab-content">
+                            <!-- -->
+                            <!-- Categories Region -->
+                            <t t-foreach="categories_name" t-as="categ">
+                                <t t-set="id_name" t-value="categ[0] + '_region'"/>
+                                <t t-if="first_category == categ[0]">
+                                    <div t-att-id="id_name" role="tabpanel" class="tab-pane active"
+                                         style="padding-top:2%">
+                                        <t t-call="travel_{{categ[1]}}.{{categ[1]}}_form"/>
+                                    </div>
+                                </t>
+                                <t t-if="first_category != categ[0]">
+                                    <div t-att-id="id_name" role="tabpanel" class="tab-pane"
+                                         style="padding-top:2%">
+                                        <t t-call="travel_{{ categ[1] }}.{{ categ[1] }}_form"/>
+                                    </div>
+                                </t>
+                            </t>
+                        </div>
+                    </div>
+                    <div class="col-md-4"/>
+                </div>
+
+            </xpath>
+        </template>
+    </data>
+</openerp>

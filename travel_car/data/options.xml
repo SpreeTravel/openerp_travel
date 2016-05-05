@@ -1,6 +1,6 @@
 <?xml version="1.0" ?>
 <openerp>
-	<data>
+	<data noupdate="1">
 	
 		<record id="8transmission" model="product.attribute">
 			<field name="name">Transmission</field>

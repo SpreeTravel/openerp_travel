@@ -1,36 +1,35 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data noupdate="0">
-
         <record model="option.value" id="option_value_sp1">
             <field name="name">sp1</field>
             <field name="code">sp1</field>
-            <field name="option_type_id">1</field>
+            <field name="option_type_id" ref="travel_core.option_type_supplement"/>
         </record>
 
         <record model="option.value" id="option_value_standard">
             <field name="name">standard</field>
             <field name="code">std</field>
-            <field name="option_type_id">5</field>
+            <field name="option_type_id" ref="travel_hotel.option_type_room_type"/>
         </record>
 
         <record model="option.value" id="option_value_suite">
             <field name="name">suite</field>
             <field name="code">st</field>
-            <field name="option_type_id">5</field>
+            <field name="option_type_id" ref="travel_hotel.option_type_room_type"/>
         </record>
 
 
         <record model="option.value" id="option_value_ap">
             <field name="name">ap</field>
             <field name="code">ap</field>
-            <field name="option_type_id">4</field>
+            <field name="option_type_id" ref="travel_hotel.option_type_meal_plan"/>
         </record>
 
         <record model="option.value" id="option_value_cp">
             <field name="name">cp</field>
             <field name="code">cp</field>
-            <field name="option_type_id">4</field>
+            <field name="option_type_id" ref="travel_hotel.option_type_meal_plan"/>
         </record>
 
 

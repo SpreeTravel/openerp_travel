@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <!-- Activity -->
+        <record id="act_editable" model="workflow.activity">
+            <field name="wkf_id" ref="sale.wkf_sale"/>
+            <field name="name">editable</field>
+            <field name="kind">function</field>
+            <field name="action">write({'state':'editable'})</field>
+        </record>
+        <!-- Transitions -->
+        <record id="trans_edit_sale_order" model="workflow.transition">
+            <field name="act_from" ref="sale.act_invoice_end"/>
+            <field name="act_to" ref="travel_core.act_editable"/>
+            <field name="signal">edit_sale_order_signal</field>
+        </record>
+        <record id="trans_go_to_invoice_except" model="workflow.transition">
+            <field name="act_from" ref="travel_core.act_editable"/>
+            <field name="act_to" ref="sale.act_invoice_except"/>
+            <field name="signal">go_to_invoice_except</field>
+        </record>
+    </data>
+</openerp>

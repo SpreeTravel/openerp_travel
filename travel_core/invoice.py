@@ -113,8 +113,7 @@ class account_invoice(Model):
             for l in lines:
                 sl = l['sale_line']
                 il = l['invoice_line']
-                cost_price = self.get_cost_price(cr, uid, sl, currency_id,
-                                                 context)
+                cost_price = sl.price_unit_cost
                 line_vals = {
                     'name': il.product_id.name,
                     'origin': il.invoice_id.number,

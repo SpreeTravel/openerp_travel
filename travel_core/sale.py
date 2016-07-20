@@ -123,6 +123,20 @@ class sale_order(Model):
     def to_cancel(self, cr, uid, ids, context=None):
         return self.write(cr, uid, ids, {'state': 'cancel'}, context)
     
+    def to_draft(self, cr, uid, ids, context=None):
+        for order in self.browse(cr, uid, ids, context):
+            if order.state != 'cancel':
+                raise exceptions.Warning(_("You can't back any order that it's not on cancel state"))
+            order.order_line.write({'state': 'draft'})
+            order.procurement_group_id.sudo().unlink()
+            for line in order.order_line:
+                line.procurement_ids.sudo().unlink()
+            order.write({'state': 'draft'})
+            order.delete_workflow()
+            order.create_workflow()
+        return True
+            
+     
     def onchange_start_date(self, cr, uid, ids, start_date, end_date, context=None):   
         return self.check_dates(start_date, end_date, 'start_date')
      
@@ -141,6 +155,15 @@ class sale_order(Model):
             return {'value': res, 'warning': {'title':'Dates Warning', 
                                               'message':'End Date should be after Start Date\n'}}                    
         return {'value': res}
+    
+    def action_button_confirm(self, cr, uid, ids, context=None):
+        for order in self.browse(cr, uid, ids, context):
+            for line in order.order_line:
+                if line.start_date < order.date_order or line.end_date > order.end_date:
+                    raise osv.except_osv(_('Error!'),
+                                         _("One of the order lines has wrong dates"))
+        return super(sale_order, self).action_button_confirm(cr, uid, ids, context)
+                    
         
 class sale_context(Model):
     _name = 'sale.context'
@@ -479,6 +502,7 @@ class sale_order_line(Model):
         domain = {}
         
         # Automatically load supplier field values
+        supplier_model = self.pool.get('res.partner')
         product_model   = self.pool.get('product.product')
         product_obj = product_model.browse(cr, uid, product_id, context)
         product_tmpl_id = product_obj.product_tmpl_id.id
@@ -490,7 +514,10 @@ class sale_order_line(Model):
         suppinfos    = suppinfo_model.browse(cr, uid, suppinfo_ids)
         if len(suppinfos) == 1:
             result.update({'supplier_id': suppinfos[0].name.id})
-        domain.update({'supplier_id': [('id', 'in', [s.name.id for s in suppinfos])]})    
+        if len(suppinfos) >= 1:
+            domain.update({'supplier_id': [('id', 'in', [s.name.id for s in suppinfos])]})
+        else:
+            domain.update({'supplier_id': [('id', 'in', supplier_model.search(cr, uid, [('supplier', '=', True)], context=context))]})
         
         # Automatically upload option_type values        
         params        = context.get('params')

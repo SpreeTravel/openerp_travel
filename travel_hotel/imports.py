@@ -106,6 +106,10 @@ class import_hotel(TransientModel):
                 if suppinfo_id:
                     product_supplierinfo.write(cr, uid, [suppinfo_id], {'info': hotel_info})
                     hotel_info = ''
+                    
+                suppinfo_id = False
+                date_from = False
+                date_to = False
                 
                 hotel_name = cell('HOTEL NAME').strip()
                 category_id = category.search(cr, uid, [('name', '=', 'Hotel')])[0]
@@ -167,9 +171,9 @@ class import_hotel(TransientModel):
         
             if cell('ROOM TYPE'):
                 if cell('ROOM TYPE') == 'C1':
-                    child1 = cell('NET RATE')
+                    child1 = self.get_float(cell('NET RATE'))
                 elif cell('ROOM TYPE') == 'C2':
-                    child2 = cell('NET RATE')                       
+                    child2 = self.get_float(cell('NET RATE'))                       
                 elif cell('ROOM TYPE') == 'D':
                     double_value = self.get_float(cell('NET RATE'))
                     double_option = True

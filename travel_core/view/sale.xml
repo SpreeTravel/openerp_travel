@@ -89,6 +89,10 @@
                     </group>
                 </xpath>
                 
+                <xpath expr="//form/header/button" position="before">
+                	<button name="to_draft" states="cancel" string="Back to Draft" type="object" groups="base.group_user"/>
+                </xpath>
+                
                 <page string='Order Lines' position="replace">
                     <page string='Order Lines'>
                         <field name="order_line" context="{'start': date_order, 'end': end_date}">
